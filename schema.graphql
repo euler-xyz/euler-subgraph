@@ -1,0 +1,277 @@
+type Genesis @entity(immutable: true) {
+  id: Bytes!
+
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ProxyCreated @entity(immutable: true) {
+  id: Bytes!
+  proxy: Bytes! # address
+  upgradeable: Boolean! # bool
+  implementation: Bytes! # address
+  trailingData: Bytes! # bytes
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetImplementation @entity(immutable: true) {
+  id: Bytes!
+  newImplementation: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SetUpgradeAdmin @entity(immutable: true) {
+  id: Bytes!
+  newUpgradeAdmin: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+type Approval @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  spender: Bytes! # address
+  value: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type BalanceForwarderStatus @entity(immutable: true) {
+  id: Bytes!
+  account: Bytes! # address
+  status: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Borrow @entity(immutable: true) {
+  id: Bytes!
+  account: Bytes! # address
+  assets: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ConvertFees @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  protocolReceiver: Bytes! # address
+  governorReceiver: Bytes! # address
+  protocolShares: BigInt! # uint256
+  governorShares: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type DebtSocialized @entity(immutable: true) {
+  id: Bytes!
+  account: Bytes! # address
+  assets: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Deposit @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  owner: Bytes! # address
+  assets: BigInt! # uint256
+  shares: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EVaultCreated @entity(immutable: true) {
+  id: Bytes!
+  creator: Bytes! # address
+  asset: Bytes! # address
+  dToken: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GovSetCaps @entity(immutable: true) {
+  id: Bytes!
+  newSupplyCap: Int! # uint16
+  newBorrowCap: Int! # uint16
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GovSetConfigFlags @entity(immutable: true) {
+  id: Bytes!
+  newConfigFlags: BigInt! # uint32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GovSetFeeReceiver @entity(immutable: true) {
+  id: Bytes!
+  newFeeReceiver: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GovSetGovernorAdmin @entity(immutable: true) {
+  id: Bytes!
+  newGovernorAdmin: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GovSetHookConfig @entity(immutable: true) {
+  id: Bytes!
+  newHookTarget: Bytes! # address
+  newHookedOps: BigInt! # uint32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GovSetInterestFee @entity(immutable: true) {
+  id: Bytes!
+  newFee: Int! # uint16
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GovSetInterestRateModel @entity(immutable: true) {
+  id: Bytes!
+  newInterestRateModel: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GovSetLTV @entity(immutable: true) {
+  id: Bytes!
+  collateral: Bytes! # address
+  borrowLTV: Int! # uint16
+  liquidationLTV: Int! # uint16
+  initialLiquidationLTV: Int! # uint16
+  targetTimestamp: BigInt! # uint48
+  rampDuration: BigInt! # uint32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GovSetLiquidationCoolOffTime @entity(immutable: true) {
+  id: Bytes!
+  newCoolOffTime: Int! # uint16
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type GovSetMaxLiquidationDiscount @entity(immutable: true) {
+  id: Bytes!
+  newDiscount: Int! # uint16
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type InterestAccrued @entity(immutable: true) {
+  id: Bytes!
+  account: Bytes! # address
+  assets: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Liquidate @entity(immutable: true) {
+  id: Bytes!
+  liquidator: Bytes! # address
+  violator: Bytes! # address
+  collateral: Bytes! # address
+  repayAssets: BigInt! # uint256
+  yieldBalance: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PullDebt @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  assets: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Repay @entity(immutable: true) {
+  id: Bytes!
+  account: Bytes! # address
+  assets: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Transfer @entity(immutable: true) {
+  id: Bytes!
+  from: Bytes! # address
+  to: Bytes! # address
+  value: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type VaultStatus @entity(immutable: true) {
+  id: Bytes!
+  totalShares: BigInt! # uint256
+  totalBorrows: BigInt! # uint256
+  accumulatedFees: BigInt! # uint256
+  cash: BigInt! # uint256
+  interestAccumulator: BigInt! # uint256
+  interestRate: BigInt! # uint256
+  timestamp: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Withdraw @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  receiver: Bytes! # address
+  owner: Bytes! # address
+  assets: BigInt! # uint256
+  shares: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+
+type Counter @entity(immutable: false) {
+  id: Bytes! # bytes32
+  type: String! # string
+  value: BigInt! # uint256
+  blockNumber: BigInt
+  blockTimestamp: BigInt
+  transactionHash: Bytes
+  isGlobal: Boolean!
+}
