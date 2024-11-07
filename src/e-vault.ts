@@ -74,7 +74,7 @@ export function handleApproval(event: ApprovalEvent): void {
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handleBalanceForwarderStatus(
@@ -99,7 +99,7 @@ export function handleBalanceForwarderStatus(
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handleBorrow(event: BorrowEvent): void {
@@ -121,7 +121,7 @@ export function handleBorrow(event: BorrowEvent): void {
   );
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handleConvertFees(event: ConvertFeesEvent): void {
@@ -147,7 +147,7 @@ export function handleConvertFees(event: ConvertFeesEvent): void {
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handleDebtSocialized(event: DebtSocializedEvent): void {
@@ -170,7 +170,7 @@ export function handleDebtSocialized(event: DebtSocializedEvent): void {
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handleDeposit(event: DepositEvent): void {
@@ -195,7 +195,7 @@ export function handleDeposit(event: DepositEvent): void {
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handleEVaultCreated(event: EVaultCreatedEvent): void {
@@ -219,7 +219,7 @@ export function handleEVaultCreated(event: EVaultCreatedEvent): void {
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handleInterestAccrued(event: InterestAccruedEvent): void {
@@ -242,7 +242,7 @@ export function handleInterestAccrued(event: InterestAccruedEvent): void {
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handleLiquidate(event: LiquidateEvent): void {
@@ -268,7 +268,7 @@ export function handleLiquidate(event: LiquidateEvent): void {
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handlePullDebt(event: PullDebtEvent): void {
@@ -292,7 +292,7 @@ export function handlePullDebt(event: PullDebtEvent): void {
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handleRepay(event: RepayEvent): void {
@@ -315,7 +315,7 @@ export function handleRepay(event: RepayEvent): void {
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handleTransfer(event: TransferEvent): void {
@@ -339,7 +339,7 @@ export function handleTransfer(event: TransferEvent): void {
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handleVaultStatus(event: VaultStatusEvent): void {
@@ -360,7 +360,7 @@ export function handleVaultStatus(event: VaultStatusEvent): void {
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 export function handleWithdraw(event: WithdrawEvent): void {
@@ -386,7 +386,7 @@ export function handleWithdraw(event: WithdrawEvent): void {
 
   entity.save();
 
-  upsertVault(event.address);
+  upsertVault(event.block.number, event.address);
 }
 
 //////////////////////////////////////////////////////////////////////////////

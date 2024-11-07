@@ -103,6 +103,8 @@ templates:
           file: ./abis/EVault.json
         - name: VaultLens
           file: ./abis/VaultLens.json
+        - name: EulerRouter
+          file: ./abis/EulerRouter.json
       eventHandlers:
         - event: Approval(indexed address,indexed address,uint256)
           handler: handleApproval

@@ -1,19 +1,18 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
-import { VaultLens } from "../../generated/templates/EVault/VaultLens";
 import { EVault } from "../../generated/templates/EVault/EVault";
 import { Vault } from "../../generated/schema";
-
-// CONSTANT
-// Network 1 (Mainnet)
-const VAULT_LENS = Address.fromString(
-  "0x0Dd643580a1B137DB748651A6a9be13Ba5734Fd8"
-);
+import { getVaultData } from "./lens";
+import { createOraclePrice } from "./oracle";
 
 export function createOrUpdate(vaultAddress: Address): Vault {
   let vault = Vault.load(vaultAddress);
   // If not exist we create a new one
   if (!vault) {
     vault = new Vault(vaultAddress);
+    vault.timestamp = BigInt.zero();
+    vault.asset = Address.zero();
+    vault.unitOfAccount = Address.zero();
+    vault.oracle = Address.zero();
     vault.id = vaultAddress;
     vault.vault = vaultAddress;
     // Save
@@ -23,9 +22,39 @@ export function createOrUpdate(vaultAddress: Address): Vault {
   return vault;
 }
 
-function updateByVaultContract(vault: Vault, vaultAddress: Address): void {
+function updateChangeValues(vault: Vault, vaultAddress: Address): void {
+  let eVault = EVault.bind(vaultAddress);
+  // Total shares
+  vault.totalShares = eVault.totalSupply();
+  vault.totalAssets = eVault.totalAssets();
+  vault.totalCash = eVault.cash();
+  vault.totalBorrowed = eVault.totalBorrows();
+
+  vault.accumulatedFeesShares = eVault.accumulatedFees();
+  vault.accumulatedFeesAssets = eVault.accumulatedFeesAssets();
+
+  vault.save();
+}
+
+function updateByVaultContract(
+  blockNumber: BigInt,
+  vault: Vault,
+  vaultAddress: Address
+): void {
   let eVault = EVault.bind(vaultAddress);
 
+  // If we already had information we only update few parameters
+  if (vault.asset !== Address.zero()) {
+    updateChangeValues(vault, vaultAddress);
+    createOraclePrice(
+      blockNumber,
+      vault.oracle,
+      vault.asset,
+      vault.unitOfAccount
+    );
+    return;
+  }
+  vault.timestamp = BigInt.zero();
   vault.vaultName = eVault.name();
   vault.vaultSymbol = eVault.symbol();
   vault.vaultDecimals = BigInt.fromI32(eVault.decimals());
@@ -86,64 +115,111 @@ function updateByVaultContract(vault: Vault, vaultAddress: Address): void {
   vault.governorAdmin = eVault.governorAdmin();
 
   vault.save();
+
+  createOraclePrice(
+    blockNumber,
+    vault.oracle,
+    vault.asset,
+    vault.unitOfAccount
+  );
 }
 
-export function upsertVault(vaultAddress: Address): void {
-  const vaultLens = VaultLens.bind(VAULT_LENS);
+export function upsertVault(blockNumber: BigInt, vaultAddress: Address): void {
   let vault = createOrUpdate(vaultAddress);
+  let vaultLens = getVaultData(blockNumber, vaultAddress);
 
-  const vaultInfo = vaultLens.try_getVaultInfoFull(vaultAddress);
-  if (vaultInfo.reverted) {
-    updateByVaultContract(vault, vaultAddress);
+  if (vaultLens == null) {
+    // The contract was not deployed
+    updateByVaultContract(blockNumber, vault, vaultAddress);
     return;
   }
 
-  vault.timestamp = vaultInfo.value.timestamp;
+  if (vault.timestamp === vaultLens.timestamp) {
+    // If it's the same timestamp we don't update
+    return;
+  }
+  // We only update few parameters
+
+  if (vault.timestamp && vault.timestamp.gt(BigInt.zero())) {
+    ///////////////////
+    // UPDATE VAULT
+    ///////////////////
+
+    // SHARES
+    vault.totalAssets = vaultLens.totalAssets;
+    vault.totalShares = vaultLens.totalShares;
+    vault.totalCash = vaultLens.totalCash;
+    vault.totalBorrowed = vaultLens.totalBorrowed;
+    vault.accumulatedFeesAssets = vaultLens.accumulatedFeesAssets;
+    vault.accumulatedFeesShares = vaultLens.accumulatedFeesShares;
+    vault.save();
+
+    createOraclePrice(
+      blockNumber,
+      vault.oracle,
+      vault.asset,
+      vault.unitOfAccount
+    );
+    return;
+  }
+  ///////////////////
+  // NEW VAULT
+  ///////////////////
+
+  vault.timestamp = vaultLens.timestamp;
   // Vault
-  vault.vault = vaultInfo.value.vault;
-  vault.vaultName = vaultInfo.value.vaultName;
-  vault.vaultSymbol = vaultInfo.value.vaultSymbol;
-  vault.vaultDecimals = vaultInfo.value.vaultDecimals;
+  vault.vault = vaultLens.vault;
+  vault.vaultName = vaultLens.vaultName;
+  vault.vaultSymbol = vaultLens.vaultSymbol;
+  vault.vaultDecimals = vaultLens.vaultDecimals;
   // Asset
-  vault.asset = vaultInfo.value.asset;
-  vault.assetName = vaultInfo.value.assetName;
-  vault.assetSymbol = vaultInfo.value.assetSymbol;
-  vault.assetDecimals = vaultInfo.value.assetDecimals;
-  vault.totalAssets = vaultInfo.value.totalAssets;
+  vault.asset = vaultLens.asset;
+  vault.assetName = vaultLens.assetName;
+  vault.assetSymbol = vaultLens.assetSymbol;
+  vault.assetDecimals = vaultLens.assetDecimals;
+
   // unitOfAccount
-  vault.unitOfAccount = vaultInfo.value.unitOfAccount;
-  vault.unitOfAccountName = vaultInfo.value.unitOfAccountName;
-  vault.unitOfAccountSymbol = vaultInfo.value.unitOfAccountSymbol;
-  vault.unitOfAccountDecimals = vaultInfo.value.unitOfAccountDecimals;
+  vault.unitOfAccount = vaultLens.unitOfAccount;
+  vault.unitOfAccountName = vaultLens.unitOfAccountName;
+  vault.unitOfAccountSymbol = vaultLens.unitOfAccountSymbol;
+  vault.unitOfAccountDecimals = vaultLens.unitOfAccountDecimals;
 
   // SHARES
-  vault.totalShares = vaultInfo.value.totalShares;
-  vault.totalCash = vaultInfo.value.totalCash;
-  vault.totalBorrowed = vaultInfo.value.totalBorrowed;
+  vault.totalAssets = vaultLens.totalAssets;
+  vault.totalShares = vaultLens.totalShares;
+  vault.totalCash = vaultLens.totalCash;
+  vault.totalBorrowed = vaultLens.totalBorrowed;
 
   // Fees
-  vault.accumulatedFeesAssets = vaultInfo.value.accumulatedFeesAssets;
-  vault.accumulatedFeesShares = vaultInfo.value.accumulatedFeesShares;
-  vault.governorFeeReceiver = vaultInfo.value.governorFeeReceiver;
-  vault.protocolFeeReceiver = vaultInfo.value.protocolFeeReceiver;
-  vault.protocolFeeShare = vaultInfo.value.protocolFeeShare;
-  vault.interestFee = vaultInfo.value.interestFee;
-  vault.hookedOperations = vaultInfo.value.hookedOperations;
-  vault.configFlags = vaultInfo.value.configFlags;
-  vault.supplyCap = vaultInfo.value.supplyCap;
-  vault.borrowCap = vaultInfo.value.borrowCap;
-  vault.maxLiquidationDiscount = vaultInfo.value.maxLiquidationDiscount;
-  vault.liquidationCoolOffTime = vaultInfo.value.liquidationCoolOffTime;
-  vault.dToken = vaultInfo.value.dToken;
-  vault.oracle = vaultInfo.value.oracle;
-  vault.interestRateModel = vaultInfo.value.interestRateModel;
-  vault.hookTarget = vaultInfo.value.hookTarget;
-  vault.evc = vaultInfo.value.evc;
-  vault.protocolConfig = vaultInfo.value.protocolConfig;
-  vault.balanceTracker = vaultInfo.value.balanceTracker;
-  vault.permit2 = vaultInfo.value.permit2;
-  vault.creator = vaultInfo.value.creator;
-  vault.governorAdmin = vaultInfo.value.governorAdmin;
+  vault.accumulatedFeesAssets = vaultLens.accumulatedFeesAssets;
+  vault.accumulatedFeesShares = vaultLens.accumulatedFeesShares;
+  vault.governorFeeReceiver = vaultLens.governorFeeReceiver;
+  vault.protocolFeeReceiver = vaultLens.protocolFeeReceiver;
+  vault.protocolFeeShare = vaultLens.protocolFeeShare;
+  vault.interestFee = vaultLens.interestFee;
+  vault.hookedOperations = vaultLens.hookedOperations;
+  vault.configFlags = vaultLens.configFlags;
+  vault.supplyCap = vaultLens.supplyCap;
+  vault.borrowCap = vaultLens.borrowCap;
+  vault.maxLiquidationDiscount = vaultLens.maxLiquidationDiscount;
+  vault.liquidationCoolOffTime = vaultLens.liquidationCoolOffTime;
+  vault.dToken = vaultLens.dToken;
+  vault.oracle = vaultLens.oracle;
+  vault.interestRateModel = vaultLens.interestRateModel;
+  vault.hookTarget = vaultLens.hookTarget;
+  vault.evc = vaultLens.evc;
+  vault.protocolConfig = vaultLens.protocolConfig;
+  vault.balanceTracker = vaultLens.balanceTracker;
+  vault.permit2 = vaultLens.permit2;
+  vault.creator = vaultLens.creator;
+  vault.governorAdmin = vaultLens.governorAdmin;
 
   vault.save();
+
+  createOraclePrice(
+    blockNumber,
+    vault.oracle,
+    vault.asset,
+    vault.unitOfAccount
+  );
 }

@@ -277,21 +277,20 @@ type Counter @entity(immutable: false) {
 
 type Vault @entity(immutable: false) {
   id: Bytes! # address
-  timestamp: BigInt
+  timestamp: BigInt!
   # Vault
   vault: Bytes
   vaultName: String
   vaultSymbol: String
   vaultDecimals: BigInt
   # Asset
-  asset: Bytes
+  asset: Bytes!
   assetName: String
   assetSymbol: String
   assetDecimals: BigInt
   totalAssets: BigInt
-
   # unitOfAccount
-  unitOfAccount: Bytes
+  unitOfAccount: Bytes!
   unitOfAccountName: String
   unitOfAccountSymbol: String
   unitOfAccountDecimals: BigInt
@@ -299,7 +298,6 @@ type Vault @entity(immutable: false) {
   totalShares: BigInt
   totalCash: BigInt
   totalBorrowed: BigInt
-
   # Fees
   accumulatedFeesAssets: BigInt
   accumulatedFeesShares: BigInt
@@ -311,13 +309,11 @@ type Vault @entity(immutable: false) {
   configFlags: BigInt
   supplyCap: BigInt
   borrowCap: BigInt
-
   maxLiquidationDiscount: BigInt
   liquidationCoolOffTime: BigInt
   dToken: Bytes
-  oracle: Bytes # address
+  oracle: Bytes! # address
   interestRateModel: Bytes
-
   hookTarget: Bytes
   evc: Bytes
   protocolConfig: Bytes
@@ -325,4 +321,13 @@ type Vault @entity(immutable: false) {
   permit2: Bytes
   creator: Bytes
   governorAdmin: Bytes
+}
+
+type Oracle @entity(immutable: true) {
+  id: ID! # address + blockNumber
+  value: BigInt!
+  oracle: Bytes!
+  base: Bytes!
+  quote: Bytes!
+  blockNumber: BigInt!
 }
