@@ -3,6 +3,10 @@
     "GenericFactory": {
       "address": "0x29a56a1b8214D9Cf7c5561811750D5cBDb45CC8e",
       "startBlock": 20529225
+    },
+    "GenericFactoryGoverned": {
+      "address": "0x799E9b58895d7D10306cA6C4cAb51728B142a224",
+      "startBlock": 20714730
     }
   }
 }

@@ -265,7 +265,6 @@ type Withdraw @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-
 type Counter @entity(immutable: false) {
   id: Bytes! # bytes32
   type: String! # string
@@ -274,4 +273,56 @@ type Counter @entity(immutable: false) {
   blockTimestamp: BigInt
   transactionHash: Bytes
   isGlobal: Boolean!
+}
+
+type Vault @entity(immutable: false) {
+  id: Bytes! # address
+  timestamp: BigInt
+  # Vault
+  vault: Bytes
+  vaultName: String
+  vaultSymbol: String
+  vaultDecimals: BigInt
+  # Asset
+  asset: Bytes
+  assetName: String
+  assetSymbol: String
+  assetDecimals: BigInt
+  totalAssets: BigInt
+
+  # unitOfAccount
+  unitOfAccount: Bytes
+  unitOfAccountName: String
+  unitOfAccountSymbol: String
+  unitOfAccountDecimals: BigInt
+  # shares
+  totalShares: BigInt
+  totalCash: BigInt
+  totalBorrowed: BigInt
+
+  # Fees
+  accumulatedFeesAssets: BigInt
+  accumulatedFeesShares: BigInt
+  governorFeeReceiver: Bytes
+  protocolFeeReceiver: Bytes
+  protocolFeeShare: BigInt
+  interestFee: BigInt
+  hookedOperations: BigInt
+  configFlags: BigInt
+  supplyCap: BigInt
+  borrowCap: BigInt
+
+  maxLiquidationDiscount: BigInt
+  liquidationCoolOffTime: BigInt
+  dToken: Bytes
+  oracle: Bytes # address
+  interestRateModel: Bytes
+
+  hookTarget: Bytes
+  evc: Bytes
+  protocolConfig: Bytes
+  balanceTracker: Bytes
+  permit2: Bytes
+  creator: Bytes
+  governorAdmin: Bytes
 }
