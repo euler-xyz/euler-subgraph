@@ -9,15 +9,14 @@ This subgraph indexes blockchain data from Euler Protocol V2, making it easily q
 - Deposits and withdrawals
 - Borrows and repayments
 - Liquidations
-- Interest rate updates
 - Protocol parameters changes
-- Market updates
+- Vault updates
 
 ## Quick Links
 
 - [Euler Protocol](https://www.euler.finance/)
 - [Subgraph Explorer](https://thegraph.com/explorer/subgraphs/7TKfCCjXaAeZSFaGh3ccir8JnQd1K4Rjq75G6KnVQnoP?v=1&view=Query&chain=arbitrum-one)
-- [Euler V2 Smart Contracts](https://etherscan.io/address/0x27182842E098f60e3D576794A5bFFb0777E025d3)
+- [Euler V2 Smart Contracts](https://github.com/euler-xyz/ethereum-vault-connector)
 
 ## Prerequisites
 
@@ -28,7 +27,7 @@ This subgraph indexes blockchain data from Euler Protocol V2, making it easily q
 ## Installation
 
 ```bash
-npm install
+pnpm i
 ```
 
 ## Available Scripts
@@ -46,12 +45,12 @@ npm install
 
 1. Generate types:
 ```bash
-npm run codegen
+pnpm run codegen
 ```
 
 2. Build the subgraph:
 ```bash
-npm run build
+pnpm run build
 ```
 
 ## Querying the Subgraph
@@ -60,35 +59,16 @@ You can query the subgraph using GraphQL. Here are some example queries:
 
 ```graphql
 {
-  # Get latest markets data
-  markets(first: 5) {
+  # Get latest vaults data
+  vaults(first: 5) {
     id
-    underlying
-    totalSupply
-    totalBorrows
-    supplyRate
-    borrowRate
+    vaultName
+    asset
+    oracle
+    unitOfAccount
   }
   
-  # Get user positions
-  accounts(first: 5) {
-    id
-    positions {
-      market
-      depositBalance
-      borrowBalance
-    }
-  }
-  
-  # Get liquidation events
-  liquidationEvents(first: 5, orderBy: timestamp, orderDirection: desc) {
-    id
-    liquidator
-    liquidated
-    market
-    amount
-    timestamp
-  }
+   
 }
 ```
 
@@ -101,7 +81,7 @@ graph auth --product hosted-service <ACCESS_TOKEN>
 
 2. Deploy the subgraph:
 ```bash
-graph deploy --product hosted-service <GITHUB_USER>/<SUBGRAPH_NAME>
+graph deploy --studio euler-v2-mainnet
 ```
 
 ## Contributing
