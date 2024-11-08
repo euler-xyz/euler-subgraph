@@ -1,8 +1,10 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import { EVault } from "../../generated/templates/EVault/EVault";
+import { ERC20 } from "../../generated/templates/EVault/ERC20";
 import { Vault } from "../../generated/schema";
 import { getVaultData } from "./lens";
 import { createOraclePrice } from "./oracle";
+import { BACKUP_UNITOFACCOUNT } from "./constants";
 
 export function createOrUpdate(vaultAddress: Address): Vault {
   let vault = Vault.load(vaultAddress);
@@ -13,6 +15,7 @@ export function createOrUpdate(vaultAddress: Address): Vault {
     vault.asset = Address.zero();
     vault.unitOfAccount = Address.zero();
     vault.oracle = Address.zero();
+    vault.backupOracle = Address.zero();
     vault.id = vaultAddress;
     vault.vault = vaultAddress;
     // Save
@@ -47,6 +50,7 @@ function updateByVaultContract(
   if (vault.asset !== Address.zero()) {
     updateChangeValues(vault, vaultAddress);
     createOraclePrice(
+      vault,
       blockNumber,
       vault.oracle,
       vault.asset,
@@ -63,19 +67,22 @@ function updateByVaultContract(
   let asset = eVault.asset();
   vault.asset = asset;
   if (asset !== null && asset !== Address.zero()) {
-    // let assetVault = EVault.bind(asset);
-    // vault.assetName = assetVault.name();
-    // vault.assetSymbol = assetVault.symbol();
-    // vault.assetDecimals = BigInt.fromI32(assetVault.decimals());
+    let assetContract = ERC20.bind(asset);
+    vault.assetName = assetContract.name();
+    vault.assetSymbol = assetContract.symbol();
+    vault.assetDecimals = BigInt.fromI32(assetContract.decimals());
   }
 
   // Unit of account
   let unitOfAccount = eVault.unitOfAccount();
   vault.unitOfAccount = unitOfAccount;
   if (unitOfAccount !== null && unitOfAccount !== Address.zero()) {
-    //  vault.unitOfAccountDecimals
-    //  vault.unitOfAccountName
-    //  vault.unitOfAccountSymbol
+    let assetContract = ERC20.bind(unitOfAccount);
+    vault.unitOfAccountName = assetContract.name();
+    vault.unitOfAccountSymbol = assetContract.symbol();
+    vault.unitOfAccountDecimals = BigInt.fromI32(assetContract.decimals());
+  } else {
+    vault.unitOfAccount = BACKUP_UNITOFACCOUNT;
   }
 
   // Total shares
@@ -105,6 +112,7 @@ function updateByVaultContract(
 
   vault.dToken = eVault.dToken();
   vault.oracle = eVault.oracle();
+  vault.backupOracle = Address.zero();
   vault.interestRateModel = eVault.interestRateModel();
   vault.evc = eVault.EVC();
   vault.protocolConfig = eVault.protocolConfigAddress();
@@ -117,6 +125,7 @@ function updateByVaultContract(
   vault.save();
 
   createOraclePrice(
+    vault,
     blockNumber,
     vault.oracle,
     vault.asset,
@@ -155,8 +164,9 @@ export function upsertVault(blockNumber: BigInt, vaultAddress: Address): void {
     vault.save();
 
     createOraclePrice(
+      vault,
       blockNumber,
-      vault.oracle,
+      vault.oracle === Address.zero() ? vault.backupOracle : vault.oracle,
       vault.asset,
       vault.unitOfAccount
     );
@@ -179,7 +189,11 @@ export function upsertVault(blockNumber: BigInt, vaultAddress: Address): void {
   vault.assetDecimals = vaultLens.assetDecimals;
 
   // unitOfAccount
-  vault.unitOfAccount = vaultLens.unitOfAccount;
+  if (vaultLens.unitOfAccount === Address.zero()) {
+    vault.unitOfAccount = BACKUP_UNITOFACCOUNT;
+  } else {
+    vault.unitOfAccount = vaultLens.unitOfAccount;
+  }
   vault.unitOfAccountName = vaultLens.unitOfAccountName;
   vault.unitOfAccountSymbol = vaultLens.unitOfAccountSymbol;
   vault.unitOfAccountDecimals = vaultLens.unitOfAccountDecimals;
@@ -213,12 +227,13 @@ export function upsertVault(blockNumber: BigInt, vaultAddress: Address): void {
   vault.permit2 = vaultLens.permit2;
   vault.creator = vaultLens.creator;
   vault.governorAdmin = vaultLens.governorAdmin;
-
+  vault.backupOracle = vaultLens.backupAssetOracleInfo.oracle;
   vault.save();
 
   createOraclePrice(
+    vault,
     blockNumber,
-    vault.oracle,
+    vault.oracle === Address.zero() ? vault.backupOracle : vault.oracle,
     vault.asset,
     vault.unitOfAccount
   );

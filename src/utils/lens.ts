@@ -1,17 +1,9 @@
-// CONSTANT
-// Network 1 (Mainnet)
-
 import { Address, BigInt } from "@graphprotocol/graph-ts";
 import {
   VaultLens,
   VaultLens__getVaultInfoFullResultValue0Struct,
 } from "../../generated/templates/EVault/VaultLens";
-
-// Deployed on block 20971247
-const VAULT_LENS_BLOCK = BigInt.fromI32(20971247);
-const VAULT_LENS = Address.fromString(
-  "0x0Dd643580a1B137DB748651A6a9be13Ba5734Fd8"
-);
+import { VAULT_LENS, VAULT_LENS_BLOCK } from "./constants";
 
 export function getVaultLens(blockNumber: BigInt): VaultLens | null {
   if (blockNumber < VAULT_LENS_BLOCK) {

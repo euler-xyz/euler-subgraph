@@ -313,6 +313,7 @@ type Vault @entity(immutable: false) {
   liquidationCoolOffTime: BigInt
   dToken: Bytes
   oracle: Bytes! # address
+  backupOracle: Bytes! # address
   interestRateModel: Bytes
   hookTarget: Bytes
   evc: Bytes
@@ -321,12 +322,16 @@ type Vault @entity(immutable: false) {
   permit2: Bytes
   creator: Bytes
   governorAdmin: Bytes
+
+  #oracle
+  oracleValues: [Oracle!]! @derivedFrom(field: "vault")
 }
 
 type Oracle @entity(immutable: true) {
-  id: ID! # address + blockNumber
+  id: ID! # base + quote + blockNumber
   value: BigInt!
   oracle: Bytes!
+  vault: Vault!
   base: Bytes!
   quote: Bytes!
   blockNumber: BigInt!

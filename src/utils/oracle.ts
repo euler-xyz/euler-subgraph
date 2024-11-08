@@ -1,17 +1,18 @@
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { EulerRouter } from "../../generated/templates/EVault/EulerRouter";
-import { Oracle } from "../../generated/schema";
+import { Oracle, Vault } from "../../generated/schema";
 
 export function createOraclePrice(
+  vault: Vault,
   blockNumber: BigInt,
   oracleAddress: Bytes,
   base: Bytes,
   quote: Bytes
 ): void {
   if (
-    oracleAddress === Address.zero() ||
-    base === Address.zero() ||
-    quote === Address.zero()
+    oracleAddress == Address.zero() ||
+    base == Address.zero() ||
+    quote == Address.zero()
   ) {
     // If one of them is 0 then we don't create pricing
     return;
@@ -25,7 +26,13 @@ export function createOraclePrice(
 
   if (price.reverted) return;
   let oracle = new Oracle(
-    oracleAddress.toHexString() + "-" + blockNumber.toString()
+    vault.id.toHexString() +
+      "-" +
+      base.toHexString() +
+      "-" +
+      quote.toHexString() +
+      "-" +
+      blockNumber.toString()
   );
 
   oracle.value = price.value;
@@ -33,7 +40,7 @@ export function createOraclePrice(
   oracle.base = base;
   oracle.quote = quote;
   oracle.blockNumber = blockNumber;
-
+  oracle.vault = vault.id;
   oracle.save();
   return;
 }
