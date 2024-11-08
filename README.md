@@ -1,15 +1,23 @@
+# Euler Protocol V2 Subgraph
 
-# Ethereum Subgraph
-
-This repository contains a subgraph for indexing and querying data from smart contracts on the Ethereum One network.
+This repository contains a subgraph for indexing and querying data from Euler Protocol V2 smart contracts on the Ethereum Mainnet.
 
 ## Overview
 
-This subgraph indexes blockchain data and makes it easily queryable via GraphQL API. It provides real-time access to contract events and state changes on the Arbitrum One network.
+This subgraph indexes blockchain data from Euler Protocol V2, making it easily queryable via GraphQL API. It provides real-time access to lending protocol events and state changes on the Ethereum Mainnet, including:
+
+- Deposits and withdrawals
+- Borrows and repayments
+- Liquidations
+- Interest rate updates
+- Protocol parameters changes
+- Market updates
 
 ## Quick Links
 
+- [Euler Protocol](https://www.euler.finance/)
 - [Subgraph Explorer](https://thegraph.com/explorer/subgraphs/7TKfCCjXaAeZSFaGh3ccir8JnQd1K4Rjq75G6KnVQnoP?v=1&view=Query&chain=arbitrum-one)
+- [Euler V2 Smart Contracts](https://etherscan.io/address/0x27182842E098f60e3D576794A5bFFb0777E025d3)
 
 ## Prerequisites
 
@@ -48,16 +56,38 @@ npm run build
 
 ## Querying the Subgraph
 
-You can query the subgraph using GraphQL. Visit the [Subgraph Explorer](https://thegraph.com/explorer/subgraphs/7TKfCCjXaAeZSFaGh3ccir8JnQd1K4Rjq75G6KnVQnoP?v=1&view=Query&chain=arbitrum-one) to interact with the data.
+You can query the subgraph using GraphQL. Here are some example queries:
 
-Example query:
 ```graphql
 {
-  tokens(first: 5) {
+  # Get latest markets data
+  markets(first: 5) {
     id
-    symbol
-    name
-    decimals
+    underlying
+    totalSupply
+    totalBorrows
+    supplyRate
+    borrowRate
+  }
+  
+  # Get user positions
+  accounts(first: 5) {
+    id
+    positions {
+      market
+      depositBalance
+      borrowBalance
+    }
+  }
+  
+  # Get liquidation events
+  liquidationEvents(first: 5, orderBy: timestamp, orderDirection: desc) {
+    id
+    liquidator
+    liquidated
+    market
+    amount
+    timestamp
   }
 }
 ```
