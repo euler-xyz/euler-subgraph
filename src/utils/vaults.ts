@@ -4,7 +4,6 @@ import { ERC20 } from "../../generated/templates/EVault/ERC20";
 import { Vault } from "../../generated/schema";
 import { getVaultData } from "./lens";
 import { createOraclePrice } from "./oracle";
-import { BACKUP_UNITOFACCOUNT } from "./constants";
 
 export function createOrUpdate(vaultAddress: Address): Vault {
   let vault = Vault.load(vaultAddress);
@@ -25,20 +24,6 @@ export function createOrUpdate(vaultAddress: Address): Vault {
   return vault;
 }
 
-function updateChangeValues(vault: Vault, vaultAddress: Address): void {
-  let eVault = EVault.bind(vaultAddress);
-  // Total shares
-  vault.totalShares = eVault.totalSupply();
-  vault.totalAssets = eVault.totalAssets();
-  vault.totalCash = eVault.cash();
-  vault.totalBorrowed = eVault.totalBorrows();
-
-  vault.accumulatedFeesShares = eVault.accumulatedFees();
-  vault.accumulatedFeesAssets = eVault.accumulatedFeesAssets();
-
-  vault.save();
-}
-
 function updateByVaultContract(
   blockNumber: BigInt,
   vault: Vault,
@@ -46,19 +31,8 @@ function updateByVaultContract(
 ): void {
   let eVault = EVault.bind(vaultAddress);
 
-  // If we already had information we only update few parameters
-  if (vault.asset !== Address.zero()) {
-    updateChangeValues(vault, vaultAddress);
-    createOraclePrice(
-      vault,
-      blockNumber,
-      vault.oracle,
-      vault.asset,
-      vault.unitOfAccount
-    );
-    return;
-  }
   vault.timestamp = BigInt.zero();
+
   vault.vaultName = eVault.name();
   vault.vaultSymbol = eVault.symbol();
   vault.vaultDecimals = BigInt.fromI32(eVault.decimals());
@@ -66,23 +40,15 @@ function updateByVaultContract(
   // ASSET
   let asset = eVault.asset();
   vault.asset = asset;
-  if (asset !== null && asset !== Address.zero()) {
+  if (asset !== null && asset.notEqual(Address.zero())) {
     let assetContract = ERC20.bind(asset);
-    vault.assetName = assetContract.name();
-    vault.assetSymbol = assetContract.symbol();
-    vault.assetDecimals = BigInt.fromI32(assetContract.decimals());
-  }
-
-  // Unit of account
-  let unitOfAccount = eVault.unitOfAccount();
-  vault.unitOfAccount = unitOfAccount;
-  if (unitOfAccount !== null && unitOfAccount !== Address.zero()) {
-    let assetContract = ERC20.bind(unitOfAccount);
-    vault.unitOfAccountName = assetContract.name();
-    vault.unitOfAccountSymbol = assetContract.symbol();
-    vault.unitOfAccountDecimals = BigInt.fromI32(assetContract.decimals());
-  } else {
-    vault.unitOfAccount = BACKUP_UNITOFACCOUNT;
+    let name = assetContract.try_name();
+    if (!name.reverted) vault.assetName = name.value;
+    let symbol = assetContract.try_symbol();
+    if (!symbol.reverted) vault.assetSymbol = symbol.value;
+    let decimals = assetContract.try_decimals();
+    if (!decimals.reverted)
+      vault.assetDecimals = BigInt.fromI32(decimals.value);
   }
 
   // Total shares
@@ -122,6 +88,20 @@ function updateByVaultContract(
   vault.creator = eVault.creator();
   vault.governorAdmin = eVault.governorAdmin();
 
+  // Unit of account
+  let unitOfAccount = eVault.unitOfAccount();
+  vault.unitOfAccount = unitOfAccount;
+  if (unitOfAccount !== null && unitOfAccount.notEqual(Address.zero())) {
+    let assetContract = ERC20.bind(unitOfAccount);
+    let name = assetContract.try_name();
+    if (!name.reverted) vault.unitOfAccountName = name.value;
+    let symbol = assetContract.try_symbol();
+    if (!symbol.reverted) vault.unitOfAccountSymbol = symbol.value;
+    let decimals = assetContract.try_decimals();
+    if (!decimals.reverted)
+      vault.unitOfAccountDecimals = BigInt.fromI32(decimals.value);
+  }
+
   vault.save();
 
   createOraclePrice(
@@ -137,44 +117,11 @@ export function upsertVault(blockNumber: BigInt, vaultAddress: Address): void {
   let vault = createOrUpdate(vaultAddress);
   let vaultLens = getVaultData(blockNumber, vaultAddress);
 
-  if (vaultLens == null) {
+  if (vaultLens === null) {
     // The contract was not deployed
     updateByVaultContract(blockNumber, vault, vaultAddress);
     return;
   }
-
-  if (vault.timestamp === vaultLens.timestamp) {
-    // If it's the same timestamp we don't update
-    return;
-  }
-  // We only update few parameters
-
-  if (vault.timestamp && vault.timestamp.gt(BigInt.zero())) {
-    ///////////////////
-    // UPDATE VAULT
-    ///////////////////
-
-    // SHARES
-    vault.totalAssets = vaultLens.totalAssets;
-    vault.totalShares = vaultLens.totalShares;
-    vault.totalCash = vaultLens.totalCash;
-    vault.totalBorrowed = vaultLens.totalBorrowed;
-    vault.accumulatedFeesAssets = vaultLens.accumulatedFeesAssets;
-    vault.accumulatedFeesShares = vaultLens.accumulatedFeesShares;
-    vault.save();
-
-    createOraclePrice(
-      vault,
-      blockNumber,
-      vault.oracle === Address.zero() ? vault.backupOracle : vault.oracle,
-      vault.asset,
-      vault.unitOfAccount
-    );
-    return;
-  }
-  ///////////////////
-  // NEW VAULT
-  ///////////////////
 
   vault.timestamp = vaultLens.timestamp;
   // Vault
@@ -188,12 +135,6 @@ export function upsertVault(blockNumber: BigInt, vaultAddress: Address): void {
   vault.assetSymbol = vaultLens.assetSymbol;
   vault.assetDecimals = vaultLens.assetDecimals;
 
-  // unitOfAccount
-  if (vaultLens.unitOfAccount === Address.zero()) {
-    vault.unitOfAccount = BACKUP_UNITOFACCOUNT;
-  } else {
-    vault.unitOfAccount = vaultLens.unitOfAccount;
-  }
   vault.unitOfAccountName = vaultLens.unitOfAccountName;
   vault.unitOfAccountSymbol = vaultLens.unitOfAccountSymbol;
   vault.unitOfAccountDecimals = vaultLens.unitOfAccountDecimals;
@@ -228,12 +169,16 @@ export function upsertVault(blockNumber: BigInt, vaultAddress: Address): void {
   vault.creator = vaultLens.creator;
   vault.governorAdmin = vaultLens.governorAdmin;
   vault.backupOracle = vaultLens.backupAssetOracleInfo.oracle;
+
+  // Only if oracle or backup oracle is defined
+  vault.unitOfAccount = vaultLens.unitOfAccount;
+
   vault.save();
 
   createOraclePrice(
     vault,
     blockNumber,
-    vault.oracle === Address.zero() ? vault.backupOracle : vault.oracle,
+    vault.oracle.equals(Address.zero()) ? vault.backupOracle : vault.oracle,
     vault.asset,
     vault.unitOfAccount
   );
