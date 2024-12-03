@@ -108,7 +108,7 @@ export function handleBorrow(event: BorrowEvent): void {
   );
   entity.account = event.params.account;
   entity.assets = event.params.assets;
-
+  entity.vault = event.address;
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
@@ -181,7 +181,7 @@ export function handleDeposit(event: DepositEvent): void {
   entity.owner = event.params.owner;
   entity.assets = event.params.assets;
   entity.shares = event.params.shares;
-
+  entity.vault = event.address;
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
@@ -278,7 +278,7 @@ export function handlePullDebt(event: PullDebtEvent): void {
   entity.from = event.params.from;
   entity.to = event.params.to;
   entity.assets = event.params.assets;
-
+  entity.vault = event.address;
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
@@ -301,7 +301,7 @@ export function handleRepay(event: RepayEvent): void {
   );
   entity.account = event.params.account;
   entity.assets = event.params.assets;
-
+  entity.vault = event.address;
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
@@ -346,6 +346,7 @@ export function handleVaultStatus(event: VaultStatusEvent): void {
   const entity = new VaultStatus(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
+  entity.vault = event.address;
   entity.totalShares = event.params.totalShares;
   entity.totalBorrows = event.params.totalBorrows;
   entity.accumulatedFees = event.params.accumulatedFees;
@@ -372,7 +373,7 @@ export function handleWithdraw(event: WithdrawEvent): void {
   entity.owner = event.params.owner;
   entity.assets = event.params.assets;
   entity.shares = event.params.shares;
-
+  entity.vault = event.address;
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;

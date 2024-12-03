@@ -44,11 +44,13 @@ pnpm i
 ## Development
 
 1. Generate types:
+
 ```bash
 pnpm run codegen
 ```
 
 2. Build the subgraph:
+
 ```bash
 pnpm run build
 ```
@@ -67,21 +69,21 @@ You can query the subgraph using GraphQL. Here are some example queries:
     oracle
     unitOfAccount
   }
-  
-   
 }
 ```
 
 ## Deployment
 
 1. Authenticate with the Graph CLI:
+
 ```bash
-graph auth --product hosted-service <ACCESS_TOKEN>
+graph auth <ACCESS_TOKEN>
 ```
 
 2. Deploy the subgraph:
+
 ```bash
-graph deploy --studio euler-v2-mainnet
+graph deploy euler-v2-mainnet
 ```
 
 ## Contributing

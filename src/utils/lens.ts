@@ -3,13 +3,13 @@ import {
   VaultLens,
   VaultLens__getVaultInfoFullResultValue0Struct,
 } from "../../generated/templates/EVault/VaultLens";
-import { VAULT_LENS, VAULT_LENS_BLOCK } from "./constants";
+import { getVaultLensBlockNumber, getVaultLensAddress } from "./constants";
 
 export function getVaultLens(blockNumber: BigInt): VaultLens | null {
-  if (blockNumber < VAULT_LENS_BLOCK) {
+  if (blockNumber < getVaultLensBlockNumber()) {
     return null;
   }
-  return VaultLens.bind(VAULT_LENS);
+  return VaultLens.bind(getVaultLensAddress());
 }
 
 export function getVaultData(

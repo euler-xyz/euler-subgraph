@@ -5,12 +5,33 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: GenericFactory
-    network: mainnet
+    name: EthereumVaultConnector
+    network: base
     source:
-      address: "0x29a56a1b8214D9Cf7c5561811750D5cBDb45CC8e"
+      abi: EthereumVaultConnector
+      address: "0x5301c7dD20bD945D2013b48ed0DEE3A284ca8989"
+      startBlock: 22952408
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VaultAccount
+      abis:
+        - name: EthereumVaultConnector
+          file: ./abis/EVC.json
+      eventHandlers:
+        - event: CallWithContext(indexed address,indexed bytes19,address,indexed
+            address,bytes4)
+          handler: handleCallWithContext
+      file: ./src/ethereum-vault-connector.ts
+  - kind: ethereum
+    name: GenericFactory
+    network: base
+    source:
       abi: GenericFactory
-      startBlock: 20529225
+      address: "0x7F321498A801A191a93C840750ed637149dDf8D0"
+      startBlock: 22282411
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -33,40 +54,10 @@ dataSources:
         - event: SetUpgradeAdmin(indexed address)
           handler: handleSetUpgradeAdmin
       file: ./src/generic-factory.ts
-  - kind: ethereum
-    name: GenericFactoryGoverned
-    network: mainnet
-    source:
-      address: "0x799E9b58895d7D10306cA6C4cAb51728B142a224"
-      abi: GenericFactory
-      startBlock: 20529225
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Genesis
-        - ProxyCreated
-        - SetImplementation
-        - SetUpgradeAdmin
-      abis:
-        - name: GenericFactory
-          file: ./abis/GenericFactory.json
-      eventHandlers:
-        - event: Genesis()
-          handler: handleGenesis
-        - event: ProxyCreated(indexed address,bool,address,bytes)
-          handler: handleProxyCreated
-        - event: SetImplementation(indexed address)
-          handler: handleSetImplementation
-        - event: SetUpgradeAdmin(indexed address)
-          handler: handleSetUpgradeAdmin
-      file: ./src/generic-factory-gov.ts
-
 templates:
   - kind: ethereum
     name: EVault
-    network: mainnet
+    network: base
     source:
       abi: EVault
     mapping:
@@ -114,7 +105,8 @@ templates:
           handler: handleBalanceForwarderStatus
         - event: Borrow(indexed address,uint256)
           handler: handleBorrow
-        - event: ConvertFees(indexed address,indexed address,indexed address,uint256,uint256)
+        - event: ConvertFees(indexed address,indexed address,indexed
+            address,uint256,uint256)
           handler: handleConvertFees
         - event: DebtSocialized(indexed address,uint256)
           handler: handleDebtSocialized

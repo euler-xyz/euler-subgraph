@@ -1,7 +1,7 @@
 import { Address, BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { EulerRouter } from "../../generated/templates/EVault/EulerRouter";
 import { Oracle, Vault } from "../../generated/schema";
-import { BACKUP_UNITOFACCOUNT, BACKUP_UNITOFACCOUNT_WETH } from "./constants";
+import { BACKUP_UNITOFACCOUNT, getUnitOfAccountWETH } from "./constants";
 import { ERC20 } from "../../generated/templates/EVault/ERC20";
 import { ResultQuotePrice } from "./types";
 
@@ -25,7 +25,7 @@ function findValidBackup(
       return new ResultQuotePrice(posibleUnitOfAccount, price.value);
     }
     // By default WETH
-    return new ResultQuotePrice(BACKUP_UNITOFACCOUNT_WETH, null);
+    return new ResultQuotePrice(getUnitOfAccountWETH(), null);
   }
   let price = eulerRouter.try_getQuote(
     BigInt.fromString("1"),

@@ -3,7 +3,9 @@
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
-    "build": "graph build",
+    "build:mainnet": "graph build --network mainnet",
+    "build:base": "graph build --network base",
+    "build:arbitrum": "graph build --network arbitrum-one",
     "create-local": "graph create --node http://localhost:8020/ euler-v2",
     "remove-local": "graph remove --node http://localhost:8020/ euler-v2",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 euler-v2",
@@ -13,5 +15,7 @@
     "@graphprotocol/graph-cli": "0.87.0",
     "@graphprotocol/graph-ts": "0.32.0"
   },
-  "devDependencies": { "matchstick-as": "0.5.0" }
+  "devDependencies": {
+    "matchstick-as": "0.5.0"
+  }
 }
