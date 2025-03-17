@@ -31,6 +31,7 @@
     "verify:accountVaultBalances": "env-cmd -f ../../.env.local bun ./verify/checkAccountVaultBalances.ts",
     "test": "graph test",
     "deploy:mainnet": "pnpm build:mainnet && bun scripts/deploy.ts mainnet",
+    "deploy:mainnet:test": "pnpm build:mainnet && bun scripts/deploy.ts mainnet test",
     "deploy:arbitrum": "pnpm build:arbitrum && bun scripts/deploy.ts arbitrum",
     "deploy:base": "pnpm build:base && bun scripts/deploy.ts base",
     "deploy:swell": "pnpm build:swell && bun scripts/deploy.ts swell",

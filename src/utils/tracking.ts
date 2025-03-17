@@ -31,11 +31,10 @@ function loadSubAccount(userAccount: Bytes, evcAddress: Address): Account {
     if (!accountEntity) {
         accountEntity = new Account(userAccount)
         const evcContract = EthereumVaultConnector.bind(evcAddress)
-        let mainAddress = zeroAddress;
+        let mainAddress = Address.fromBytes(userAccount);
         const mainAddressResult = evcContract.try_getAccountOwner(Address.fromBytes(userAccount))
-        if (mainAddressResult.reverted || mainAddressResult.value.equals(zeroAddress)) {
-            // this means that the account is not a main account
-            mainAddress = Address.fromBytes(userAccount)
+        if (!mainAddressResult.reverted && mainAddressResult.value.notEqual(zeroAddress)) {
+            mainAddress = mainAddressResult.value
         }
         accountEntity.subAccount = userAccount
         accountEntity.owner = mainAddress
@@ -61,7 +60,7 @@ export function trackActionsInEVaults(
     updateActiveAccountsInEVaults(accountEntity.owner, account, vault, evcContractAddress, blockNumber, blockTimestamp, transactionHash)
 }
 
-export function updateActiveAccountsInEVaults(
+function updateActiveAccountsInEVaults(
     mainAddress: Bytes,
     account: Bytes,
     vault: Bytes,
@@ -159,7 +158,7 @@ export function trackActionsInEarnVaults(
     updateActiveAccountsInEarnVaults(accountEntity.owner, account, vault, evcContractAddress, blockNumber, blockTimestamp, transactionHash)
 }
 
-export function updateActiveAccountsInEarnVaults(
+function updateActiveAccountsInEarnVaults(
     mainAddress: Bytes,
     account: Bytes,
     vault: Bytes,

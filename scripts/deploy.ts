@@ -62,17 +62,18 @@ function incrementVersion(version: Version): Version {
   }
 }
 
-function deployNewVersion(network: Network) {
+function deployNewVersion(network: Network, isTest: boolean = false) {
   const currentVersion = getLatestVersion(network)
-
   const newVersion = incrementVersion(currentVersion)
   const versionString = formatVersion(newVersion)
+  const subgraphName = isTest ? `euler-v2-${network}-test` : `euler-v2-${network}`
+
   console.log(`Current version: v${formatVersion(currentVersion)}`)
   console.log(`New version: v${versionString}`)
   try {
-    console.log(`Deploying euler-v2-${network} v${versionString}...`)
-    console.log(`>> goldsky subgraph deploy euler-v2-${network}/${versionString}`)
-    execSync(`goldsky subgraph deploy euler-v2-${network}/${versionString}`, { stdio: 'inherit' })
+    console.log(`Deploying ${subgraphName} v${versionString}...`)
+    console.log(`>> goldsky subgraph deploy ${subgraphName}/${versionString}`)
+    execSync(`goldsky subgraph deploy ${subgraphName}/${versionString}`, { stdio: 'inherit' })
     console.log(`Successfully deployed v${versionString}`)
   } catch (error) {
     console.error('Error deploying:', error)
@@ -83,9 +84,11 @@ function deployNewVersion(network: Network) {
 
 // Get network from command line args
 const network = process.argv[2] as Network
+const isTest = process.argv[3] === 'test'
+
 if (!NETWORKS.includes(network)) {
   console.error(`Invalid network. Must be one of: ${NETWORKS.join(', ')}`)
   process.exit(1)
 }
 
-deployNewVersion(network) 
+deployNewVersion(network, isTest) 

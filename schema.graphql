@@ -189,7 +189,7 @@ type CallWithContext @entity(immutable: true) {
   selector: String!
   vault: Bytes!
   mainAddress: Bytes!
-  account: Bytes!
+  accounts: [Bytes!]!
   type: String!
   evc: Bytes!
   blockNumber: BigInt!

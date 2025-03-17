@@ -40,8 +40,8 @@ import {
   Withdraw,
 } from "../generated/schema"
 import { increaseCounter } from "./utils/counter"
-import { trackActionsInEVaults, updateActiveAccountsInEVaults } from "./utils/tracking"
- 
+import { trackActionsInEVaults } from "./utils/tracking"
+
 
 //////////////////////////////////////////////////////////
 // STATUS EVENTS
@@ -67,7 +67,6 @@ export function handleEVaultCreated(event: EVaultCreatedEvent): void {
 
   entity.save()
 }
-
 export function handleBalanceForwarderStatus(
   event: BalanceForwarderStatusEvent,
 ): void {
@@ -146,6 +145,7 @@ export function handleInterestAccrued(event: InterestAccruedEvent): void {
   )
 
   entity.save()
+
 }
 export function handleConvertFees(event: ConvertFeesEvent): void {
   let entity = new ConvertFee(
@@ -170,6 +170,7 @@ export function handleConvertFees(event: ConvertFeesEvent): void {
 
   entity.save()
 }
+
 export function handleVaultStatus(event: VaultStatusEvent): void {
   let entity = new VaultStatus(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
@@ -192,15 +193,15 @@ export function handleVaultStatus(event: VaultStatusEvent): void {
   let callWithContext = CallWithContext.load(event.transaction.hash.concat(event.address))
 
   if (callWithContext) {
-    updateActiveAccountsInEVaults(
-      callWithContext.mainAddress,
-      callWithContext.account,
-      callWithContext.vault,
-      callWithContext.evc,
-      event.block.number,
-      event.block.timestamp,
-      event.transaction.hash,
-    )
+    for (let i = 0; i < callWithContext.accounts.length; i++) {
+      trackActionsInEVaults(
+        callWithContext.accounts[i],
+        event.address,
+        event.block.number,
+        event.block.timestamp,
+        event.transaction.hash,
+      )
+    }
   }
 
 
@@ -231,8 +232,8 @@ export function handleBorrow(event: BorrowEvent): void {
     event.transaction.hash,
   )
 
-  
-    
+
+
   trackActionsInEVaults(
     event.params.account,
     event.address,
@@ -364,7 +365,7 @@ export function handleTransfer(event: TransferEvent): void {
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
-  )  
+  )
 }
 
 export function handleWithdraw(event: WithdrawEvent): void {
