@@ -1,0 +1,4 @@
+export const tokenAddresses = {
+  EUL: "0x1323a02946877e0F0c1CA99468f4429Cc0F0954c",
+  rEUL: "0xbfB6318123dA1682B8bD963846C1e9608F5F3Cda",
+} as const

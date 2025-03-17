@@ -3,19 +3,53 @@
   "license": "UNLICENSED",
   "scripts": {
     "codegen": "graph codegen",
-    "build:mainnet": "graph build --network mainnet",
-    "build:base": "graph build --network base",
-    "build:arbitrum": "graph build --network arbitrum-one",
-    "create-local": "graph create --node http://localhost:8020/ euler-v2",
-    "remove-local": "graph remove --node http://localhost:8020/ euler-v2",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 euler-v2",
-    "test": "graph test"
+    "build": "graph build",
+    "abis:sync": "./scripts/abisAddressesSync.sh",
+    "prepare:mainnet": "bun scripts/prepare.ts mainnet",
+    "prepare:base": "bun scripts/prepare.ts base",
+    "prepare:arbitrum": "bun scripts/prepare.ts arbitrum",
+    "prepare:swell": "bun scripts/prepare.ts swell",
+    "prepare:sonic": "bun scripts/prepare.ts sonic",
+    "prepare:ink": "bun scripts/prepare.ts ink",
+    "prepare:berachain": "bun scripts/prepare.ts berachain",
+    "prepare:bob": "bun scripts/prepare.ts bob",
+    "prepare:unichain": "bun scripts/prepare.ts unichain",
+    "prepare:avalanche": "bun scripts/prepare.ts avalanche",
+    "build:mainnet": "pnpm prepare:mainnet && graph build",
+    "build:base": "pnpm prepare:base && graph build",
+    "build:arbitrum": "pnpm prepare:arbitrum && graph build",
+    "build:swell": "pnpm prepare:swell && graph build",
+    "build:sonic": "pnpm prepare:sonic && graph build",
+    "build:ink": "pnpm prepare:ink && graph build",
+    "build:berachain": "pnpm prepare:berachain && graph build",
+    "build:berachain:thegraph": "pnpm prepare:berachain && graph build",
+    "build:bob": "pnpm prepare:bob && graph build",
+    "build:unichain": "pnpm prepare:unichain && graph build",
+    "build:avalanche": "pnpm prepare:avalanche && graph build",
+    "verify:accountPositions": "env-cmd -f ../../.env.local bun ./verify/checkAccountPositions.ts",
+    "verify:accountVaultBalances": "env-cmd -f ../../.env.local bun ./verify/checkAccountVaultBalances.ts",
+    "test": "graph test",
+    "deploy:mainnet": "pnpm build:mainnet && bun scripts/deploy.ts mainnet",
+    "deploy:arbitrum": "pnpm build:arbitrum && bun scripts/deploy.ts arbitrum",
+    "deploy:base": "pnpm build:base && bun scripts/deploy.ts base",
+    "deploy:swell": "pnpm build:swell && bun scripts/deploy.ts swell",
+    "deploy:sonic": "pnpm build:sonic && bun scripts/deploy.ts sonic",
+    "deploy:ink": "pnpm build:ink && bun scripts/deploy.ts ink",
+    "deploy:berachain": "pnpm build:berachain && bun scripts/deploy.ts berachain",
+    "deploy:bob": "pnpm build:bob && bun scripts/deploy.ts bob",
+    "deploy:unichain": "pnpm build:unichain && bun scripts/deploy.ts unichain",
+    "deploy:avalanche": "pnpm build:avalanche && bun scripts/deploy.ts avalanche"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.87.0",
-    "@graphprotocol/graph-ts": "0.32.0"
+    "viem": "^2.22.22"
   },
   "devDependencies": {
-    "matchstick-as": "0.5.0"
+    "env-cmd": "^10.1.0",
+    "matchstick-as": "0.6.0",
+    "mustache": "^4.2.0"
+  },
+  "peerDependencies": {
+    "@graphprotocol/graph-ts": "0.30.0"
   }
 }

@@ -1,0 +1,23 @@
+export const peripheryAddresses = {
+  adaptiveCurveIRMFactory: "0x1515a13551fDF554203f2a86021e0370a08a8D94",
+  edgeFactory: "0x262761D43309ba3b05C240cd8825D3689E600Ef3",
+  edgeFactoryPerspective: "0xBB3C87743126F6CD025569be8af89Aeb43384ef1",
+  escrowedCollateralPerspective: "0xb70DbFBBaB2B9F01A86B397F0954beA2EAF3Bce5",
+  eulerEarnFactoryPerspective: "0xA912262Ba05D9C0233D6D652BaB6810Cb2405972",
+  eulerEarnGovernedPerspective: "0xa5F5b253D0Fd9D0fA79078540AC7e56299eF65c9",
+  eulerUngoverned0xPerspective: "0x770500Ee92d2C395Aa39f2C573A08D78D5FF8090",
+  eulerUngovernedNzxPerspective: "0x2a75a1D4e4bba15e74693141f8D75f206BFa2967",
+  evkFactoryPerspective: "0x69D2403d9a0715CDc89AcB015Ec2AfB200C4f6BD",
+  externalVaultRegistry: "0x650737Bf472588A04530494189c3c30eaF5f6C50",
+  feeFlowController: "0xD3Cf3Ec3D7849F2C7Bb9Ff5a8662Ae36a177bEb8",
+  governedPerspective: "0x93478469b049e75B8d20b6d2c5A8da84E35f14D0",
+  governorAccessControlEmergencyFactory:
+    "0xE83A3ba3D2D04b6bfeeA198e27d2f6cA7e125bA1",
+  irmRegistry: "0xeEF91153b27fabF42a2F88e753285D0aFb736d09",
+  kinkIRMFactory: "0x52E856790779fD4fCa34bA52C67Cd191338572C0",
+  oracleAdapterRegistry: "0x93Fd7A2b4E6BEa3c35D06468a7Bd7b0eA202d075",
+  oracleRouterFactory: "0xc5b9B95a769C24c18c344c2659db61a0AdFB736E",
+  swapVerifier: "0x003ef4048b45a5A79D4499aaBd52108B3Bc9209f",
+  swapper: "0xbAf5B12c92711a3657DD4adA6b3C7801e83Bb56a",
+  termsOfUseSigner: "0xe82F78560A2a15561f2A6778295B0C55048b6053",
+} as const

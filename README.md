@@ -1,103 +1,108 @@
-# Euler Protocol V2 Subgraph
 
-This repository contains a subgraph for indexing and querying data from Euler Protocol V2 smart contracts on the Ethereum Mainnet.
+# Deployment Guide
 
-## Overview
+## 1. Update Addresses
+Update the `network.json` file and add the required chain details.
 
-This subgraph indexes blockchain data from Euler Protocol V2, making it easily queryable via GraphQL API. It provides real-time access to lending protocol events and state changes on the Ethereum Mainnet, including:
+---
 
-- Deposits and withdrawals
-- Borrows and repayments
-- Liquidations
-- Protocol parameters changes
-- Vault updates
-
-## Quick Links
-
-- [Euler Protocol](https://www.euler.finance/)
-- [Subgraph Explorer](https://thegraph.com/explorer/subgraphs/7TKfCCjXaAeZSFaGh3ccir8JnQd1K4Rjq75G6KnVQnoP?v=1&view=Query&chain=arbitrum-one)
-- [Euler V2 Smart Contracts](https://github.com/euler-xyz/ethereum-vault-connector)
-
-## Prerequisites
-
-- Node.js
-- NPM or Yarn
-- Graph CLI (`npm install -g @graphprotocol/graph-cli`)
-
-## Installation
-
-```bash
-pnpm i
-```
-
-## Available Scripts
-
-```json
-{
-  "scripts": {
-    "codegen": "graph codegen",
-    "build": "graph build"
-  }
-}
-```
-
-## Development
-
-1. Generate types:
-
+## 2. Generate Code
+Run the following command to generate the necessary code:
 ```bash
 pnpm run codegen
 ```
 
-2. Build the subgraph:
+---
 
-```bash
-pnpm run build
-```
+## 3. Deployment Steps
 
-## Querying the Subgraph
+REMEMBER TO CHECK https://thegraph.com/docs/en/supported-networks/
 
-You can query the subgraph using GraphQL. Here are some example queries:
-
-```graphql
-{
-  # Get latest vaults data
-  vaults(first: 5) {
-    id
-    vaultName
-    asset
-    oracle
-    unitOfAccount
-  }
-}
-```
-
-## Deployment
-
-1. Authenticate with the Graph CLI:
-
-```bash
-graph auth <ACCESS_TOKEN>
-```
-
+### Deploy on Mainnet
+1. Build the project for Mainnet:
+   ```bash
+   pnpm run build:mainnet
+   ```
 2. Deploy the subgraph:
+   ```bash
+   graph deploy euler-v2-mainnet
+   ```
 
-```bash
-graph deploy euler-v2-mainnet
-```
+### Deploy on BASE
+1. Build the project for BASE:
+   ```bash
+   pnpm run build:base
+   ```
+2. Deploy the subgraph:
+   ```bash
+   graph deploy euler-v2-base
+   ```
 
-## Contributing
+### Deploy on SWELL
+1. Build the project for SWELL:
+   ```bash
+   pnpm run build:swell
+   ```
+2. Deploy the subgraph:
+   ```bash
+   goldsky subgraph deploy euler-v2-swell/1.0.2
+   ```
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Create a new Pull Request
+### Deploy on SONIC
+1. Build the project for SONIC:
+   ```bash
+   pnpm run build:sonic
+   ```
+2. Deploy the subgraph:
+   ```bash
+   graph deploy euler-v2-sonic
+   ```
 
-## License
+### Deploy on INK
+1. Build the project for INK:
+   ```bash
+   pnpm run build:ink
+   ```
+2. Deploy the subgraph:
+   ```bash
+   graph deploy euler-v2-ink
+   ```
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+### Deploy on BERACHAIN 
+1. Build the project for BERACHAIN:
+   ```bash
+   pnpm run build:berachain
+   ```
+2. Deploy the subgraph:
+   ```bash
+   graph deploy euler-v2-berachain  
+   ```
 
-## Support
+### Deploy on BOB
+1. Build the project for BOB:
+   ```bash
+   pnpm run build:bob
+   ```   
+2. Deploy the subgraph:
+   ```bash
+   goldsky subgraph deploy euler-v2-bob/1.0.2
+   ```
+### Deploy on UNICHAIN 
+1. Build the project for UNICHAIN:
+   ```bash
+   pnpm run build:unichain
+   ```
+2. Deploy the subgraph:
+   ```bash
+   graph deploy euler-v2-unichain  
+   ```
+### Run verify scripts
+1. Run the verify script for account positions:
+   ```bash
+   pnpm run verify:accountPositions mainnet <mainAddress>
+   ```
 
-For support and questions, please open an issue in the repository.
+2. Run the verify script for account vault balances:
+   ```bash
+   pnpm run verify:accountVaultBalances mainnet <mainAddress>
+   ```
