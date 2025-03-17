@@ -37,7 +37,7 @@ function getLatestVersion(network: Network): Version {
     const lines = result.split('\n')
       .filter(line => line.includes(`euler-v2-${network}`))
       .map(line => {
-        console.log(">>",line)
+        console.log(">>", line)
         const versionMatch = line.match(/(?:v|\/)((\d+)\.(\d+)\.(\d+))/)
         return versionMatch ? parseVersion(versionMatch[1]) : null
       })
@@ -76,6 +76,7 @@ function deployNewVersion(network: Network) {
     console.log(`Successfully deployed v${versionString}`)
   } catch (error) {
     console.error('Error deploying:', error)
+    // @ts-ignore
     process.exit(1)
   }
 }

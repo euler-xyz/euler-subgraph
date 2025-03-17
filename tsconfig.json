@@ -3,7 +3,11 @@
   "include": [
     "src",
     "tests",
+  ],
+  "exclude": [
+    "scripts",
     "contracts",
-    "scripts"
+    "node_modules",
+    "dist"
   ]
 }

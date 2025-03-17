@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "esModuleInterop": true,
+        "target": "es2020",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "outDir": "dist/scripts",
+        "rootDir": "scripts",
+        "strict": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "include": [
+        "contracts/**/*",
+        "scripts/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import Mustache from 'mustache'
-import { 
+import {
   mainnetAddresses,
   arbitrumAddresses,
   baseAddresses,
@@ -12,7 +12,7 @@ import {
   avalancheAddresses,
   berachainAddresses,
   bobAddresses
-} from '../../../packages/core-sdk/src/addresses'
+} from '../contracts/addresses'
 
 const networks = {
   mainnet: {
@@ -64,7 +64,7 @@ const networks = {
     network: 'bob',
     ...bobAddresses.coreAddresses,
     startBlock: 13157157
-  } 
+  }
 }
 
 // Read template

@@ -4,6 +4,7 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
+    "build:scripts": "tsc -p tsconfig.scripts.json",
     "abis:sync": "./scripts/abisAddressesSync.sh",
     "prepare:mainnet": "bun scripts/prepare.ts mainnet",
     "prepare:base": "bun scripts/prepare.ts base",
@@ -42,14 +43,14 @@
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.87.0",
-    "viem": "^2.22.22"
-  },
-  "devDependencies": {
+    "@graphprotocol/graph-ts": "0.30.0",
+    "viem": "^2.22.22",
+    "@types/node": "^22.13.10",
     "env-cmd": "^10.1.0",
     "matchstick-as": "0.6.0",
     "mustache": "^4.2.0"
   },
-  "peerDependencies": {
-    "@graphprotocol/graph-ts": "0.30.0"
+  "devDependencies": {
+    "@types/node": "^22.13.10"
   }
 }
