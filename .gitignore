@@ -35,3 +35,5 @@ cache
 
 data
 ./tests/.bin
+
+subgraph.yaml
