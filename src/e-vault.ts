@@ -6,19 +6,8 @@ import {
   DebtSocialized as DebtSocializedEvent,
   Deposit as DepositEvent,
   EVaultCreated as EVaultCreatedEvent,
-  GovSetCaps as GovSetCapsEvent,
-  GovSetConfigFlags as GovSetConfigFlagsEvent,
-  GovSetFeeReceiver as GovSetFeeReceiverEvent,
-  GovSetGovernorAdmin as GovSetGovernorAdminEvent,
-  GovSetHookConfig as GovSetHookConfigEvent,
-  GovSetInterestFee as GovSetInterestFeeEvent,
-  GovSetInterestRateModel as GovSetInterestRateModelEvent,
-  GovSetLTV as GovSetLTVEvent,
-  GovSetLiquidationCoolOffTime as GovSetLiquidationCoolOffTimeEvent,
-  GovSetMaxLiquidationDiscount as GovSetMaxLiquidationDiscountEvent,
   InterestAccrued as InterestAccruedEvent,
   Liquidate as LiquidateEvent,
-  PullDebt as PullDebtEvent,
   Repay as RepayEvent,
   Transfer as TransferEvent,
   VaultStatus as VaultStatusEvent,
@@ -232,8 +221,6 @@ export function handleBorrow(event: BorrowEvent): void {
     event.transaction.hash,
   )
 
-
-
   trackActionsInEVaults(
     event.params.account,
     event.address,
@@ -267,14 +254,25 @@ export function handleDeposit(event: DepositEvent): void {
     event.transaction.hash,
   )
 
-
+  // Status from the sender
   trackActionsInEVaults(
-    event.params.owner,
+    event.params.sender,
     event.address,
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
   )
+
+  if (event.params.sender !== event.params.owner) {
+    // Status from the owner
+    trackActionsInEVaults(
+      event.params.owner,
+      event.address,
+      event.block.number,
+      event.block.timestamp,
+      event.transaction.hash,
+    )
+  }
 }
 
 export function handleLiquidate(event: LiquidateEvent): void {
@@ -299,6 +297,22 @@ export function handleLiquidate(event: LiquidateEvent): void {
   )
 
   entity.save()
+
+  trackActionsInEVaults(
+    event.params.liquidator,
+    event.address,
+    event.block.number,
+    event.block.timestamp,
+    event.transaction.hash,
+  )
+
+  trackActionsInEVaults(
+    event.params.violator,
+    event.address,
+    event.block.number,
+    event.block.timestamp,
+    event.transaction.hash,
+  )
 }
 
 export function handleRepay(event: RepayEvent): void {
@@ -390,15 +404,34 @@ export function handleWithdraw(event: WithdrawEvent): void {
     event.transaction.hash,
   )
 
-  // let callWithContext = CallWithContext.load(event.transaction.hash.concat(event.address))
-  // if (!callWithContext) {
   trackActionsInEVaults(
-    event.params.owner,
+    event.params.sender,
     event.address,
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
   )
-  // }
+
+  // If it's a self-transfer, we only track the status from the sender
+  if (event.params.sender !== event.params.receiver) {
+    trackActionsInEVaults(
+      event.params.receiver,
+      event.address,
+      event.block.number,
+      event.block.timestamp,
+      event.transaction.hash,
+    )
+  }
+
+  if (event.params.sender !== event.params.owner) {
+    trackActionsInEVaults(
+      event.params.owner,
+      event.address,
+      event.block.number,
+      event.block.timestamp,
+      event.transaction.hash,
+    )
+  }
+
 }
 

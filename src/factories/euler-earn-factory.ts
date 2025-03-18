@@ -15,6 +15,7 @@ export function handleDeployEulerEarn(event: DeployEulerEarnEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
   let context = dataSource.context()
-  EulerEarnTemplate.createWithContext(event.params._eulerEarnVault,context)
+  EulerEarnTemplate.createWithContext(event.params._eulerEarnVault, context)
 }

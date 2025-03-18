@@ -25,8 +25,8 @@ export function handleProxyCreated(event: ProxyCreatedEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
-  let context = dataSource.context()
 
+  let context = dataSource.context()
   EVaultTemplate.createWithContext(event.params.proxy, context)
 }
 

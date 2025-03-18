@@ -59,14 +59,25 @@ export function handleDeposit(event: DepositEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
-  
+
   trackActionsInEarnVaults(
-    event.params.owner,
+    event.params.sender,
     event.address,
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
   )
+
+  if (event.params.sender !== event.params.owner) {
+    // Status from the owner
+    trackActionsInEarnVaults(
+      event.params.owner,
+      event.address,
+      event.block.number,
+      event.block.timestamp,
+      event.transaction.hash,
+    )
+  }
 }
 
 export function handleTransfer(event: TransferEvent): void {
@@ -82,7 +93,6 @@ export function handleTransfer(event: TransferEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
-
 
   increaseCounter(
     "EarnVaultTransfer",
@@ -106,7 +116,7 @@ export function handleTransfer(event: TransferEvent): void {
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
-  )  
+  )
 }
 
 export function handleWithdraw(event: WithdrawEvent): void {
@@ -134,10 +144,32 @@ export function handleWithdraw(event: WithdrawEvent): void {
   )
 
   trackActionsInEarnVaults(
-    event.params.owner,
+    event.params.sender,
     event.address,
     event.block.number,
     event.block.timestamp,
     event.transaction.hash,
   )
+
+  // If it's a self-transfer, we only track the status from the sender
+  if (event.params.sender !== event.params.receiver) {
+    trackActionsInEarnVaults(
+      event.params.receiver,
+      event.address,
+      event.block.number,
+      event.block.timestamp,
+      event.transaction.hash,
+    )
+  }
+
+  // If it's a self-transfer, we only track the status from the sender
+  if (event.params.sender !== event.params.owner) {
+    trackActionsInEarnVaults(
+      event.params.owner,
+      event.address,
+      event.block.number,
+      event.block.timestamp,
+      event.transaction.hash,
+    )
+  }
 }
