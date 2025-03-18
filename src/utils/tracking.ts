@@ -70,7 +70,7 @@ function updateActiveAccountsInEVaults(
     transactionHash: Bytes,
 ): void {
     // Don't track if the main address is the zero address
-    // if (mainAddress.equals(zeroAddress)) return
+    if (mainAddress.equals(zeroAddress)) return
 
     let vaultContract = EVault.bind(Address.fromBytes(vault))
     let evcContract = EthereumVaultConnector.bind(Address.fromBytes(evc))
@@ -168,7 +168,7 @@ function updateActiveAccountsInEarnVaults(
     transactionHash: Bytes,
 ): void {
     // Don't track if the main address is the zero address
-    // if (mainAddress.equals(zeroAddress)) return
+    if (mainAddress.equals(zeroAddress)) return
 
     let vaultContract = EulerEarn.bind(Address.fromBytes(vault))
     let entity = loadTrackingActiveAccounts(mainAddress)

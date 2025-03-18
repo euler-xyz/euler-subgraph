@@ -28,7 +28,7 @@ const networks = {
   base: {
     network: 'base',
     ...baseAddresses.coreAddresses,
-    startBlock: 22952408
+    startBlock: 22282411
   },
   swell: {
     network: 'swell',
