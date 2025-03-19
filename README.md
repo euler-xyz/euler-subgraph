@@ -12,9 +12,14 @@
 pnpm install
 ```
 
-2. Update the `network.json` file and add the required chain details.
+2. Run Sync Abis to add a new network:
+```bash
+pnpm run abis:sync
+```
 
-3. Generate code:
+3. Update `prepare.ts` to add the new network name and startBlock for syncing.
+
+4. Generate code:
 ```bash
 pnpm run codegen
 ```
