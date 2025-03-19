@@ -1,4 +1,4 @@
-# Euler V2 Subgraph
+# Euler Subgraph
 
 ## Prerequisites
 - Node.js (v16 or higher)
