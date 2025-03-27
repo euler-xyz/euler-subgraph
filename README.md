@@ -145,6 +145,33 @@ pnpm run deploy:avalanche
 pnpm run deploy:bsc
 ```
 
+### Deployments Information
+The `generate:deployments` command creates a `deployments.json` file that contains information about the latest deployed version of the subgraph for each supported network. This file is automatically updated after each deployment.
+
+#### File Structure
+```json
+[
+  {
+    "network": "mainnet",
+    "url": "https://...",
+    "version": "1.2.3"
+  },
+  {
+    "network": "base",
+    "url": "https://...",
+    "version": "1.2.3"
+  }
+  // ... other networks
+]
+```
+
+#### Usage
+- The file is used by verification scripts to get the correct subgraph URL for each network
+- It's automatically updated after each deployment
+- It serves as a single source of truth for deployment information
+- Only keeps the latest version for each network
+- Versions are properly sorted (major.minor.patch)
+
 ### Verification
 To verify account data:
 ```bash
