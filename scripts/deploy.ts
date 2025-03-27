@@ -1,25 +1,6 @@
 import { execSync } from 'child_process'
-import { networks } from './prepare';
-
-const NETWORKS = Object.keys(networks)
-
-type Network = typeof NETWORKS[number]
-type Version = { major: number; minor: number; patch: number }
-
-function parseVersion(versionStr: string): Version {
-  const [major = 0, minor = 0, patch = 0] = versionStr.split('.').map(Number)
-  return { major, minor, patch }
-}
-
-function formatVersion(version: Version): string {
-  return `${version.major}.${version.minor}.${version.patch}`
-}
-
-function compareVersions(a: Version, b: Version): number {
-  if (a.major !== b.major) return b.major - a.major
-  if (a.minor !== b.minor) return b.minor - a.minor
-  return b.patch - a.patch
-}
+import { Network, NETWORKS, Version } from './config'
+import { compareVersions, formatVersion, parseVersion } from './utils/utils'
 
 function getLatestVersion(network: Network): Version {
   try {

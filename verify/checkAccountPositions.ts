@@ -1,22 +1,22 @@
 console.log('============ CHECKING POSITIONS [Account tracking] ============')
-import { getSubgraphUrl, toSubAccountId } from './utils/utils'
+import { getSubgraphUrl, toSubAccountId, getValidChains } from './utils/utils'
 
 
 const printTable = (mainAddress: string, data: string[], showCols?: string[]) => {
     const parsedData = data.reduce((acc, deposit) => {
-        const account = deposit.substring(0,42)
+        const account = deposit.substring(0, 42)
         const vault = `0x${deposit.substring(42, deposit.length)}`
-        
+
         if (!acc[account]) {
             acc[account] = []
         }
-        
+
         acc[account].push(vault)
         return acc
-    },{})
+    }, {})
     const tableData = Object.entries(parsedData).map(([subAccount, vaults]) => ({
         'subAccountId': toSubAccountId(mainAddress, subAccount),
-         subAccount,
+        subAccount,
         // @ts-ignore
         'number_of_vaults': vaults.length,
         // @ts-ignore
@@ -57,7 +57,7 @@ async function checkPositions(subgraphUrl: string, address: string) {
             console.log(`Deposits for address: ${address}`)
             printTable(address, data.trackingActiveAccount.deposits)
             console.log(`Borrow for address: ${address}`)
-            printTable(address, data.trackingActiveAccount.borrows,['subAccountId', 'subAccount', 'vaults'])
+            printTable(address, data.trackingActiveAccount.borrows, ['subAccountId', 'subAccount', 'vaults'])
         } else {
             console.log(`No tracking account found for address: ${address}`)
         }
@@ -77,7 +77,12 @@ if (!chainName || !address) {
 }
 
 // Validate chain name
-const validChains = ['base', 'mainnet', 'swell', 'sonic', 'arbitrum']
+const validChains = getValidChains()
+if (validChains.length === 0) {
+    console.error('No valid chains found. Please generate deployments.json first.')
+    process.exit(1)
+}
+
 if (!validChains.includes(chainName)) {
     console.error(`Invalid chain name. Must be one of: ${validChains.join(', ')}`)
     process.exit(1)

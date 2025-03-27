@@ -1,5 +1,5 @@
 console.log('============ CHECKING POSITIONS [Account tracking] ============')
-import { getSubgraphUrl, toSubAccountId } from './utils/utils'
+import { getSubgraphUrl, getValidChains, toSubAccountId } from './utils/utils'
 
 interface TrackingVaultBalance {
     account: string;
@@ -9,18 +9,20 @@ interface TrackingVaultBalance {
     vault: string;
 }
 const printTable = (mainAddress: string, data: TrackingVaultBalance[], showCols?: string[]) => {
-    const parsedData = data.reduce((acc: { [key: string]: { 
-        vaults: string[], 
-        totalDebt: bigint,
-        balances: { [vault: string]: string },
-        debts: { [vault: string]: string }
-    } }, deposit) => {
+    const parsedData = data.reduce((acc: {
+        [key: string]: {
+            vaults: string[],
+            totalDebt: bigint,
+            balances: { [vault: string]: string },
+            debts: { [vault: string]: string }
+        }
+    }, deposit) => {
         const account = deposit.account;
         const vault = deposit.vault;
         const debt = BigInt(deposit.debt);
         const balance = deposit.balance;
-        
-        
+
+
         if (!acc[account]) {
             acc[account] = {
                 vaults: [],
@@ -29,7 +31,7 @@ const printTable = (mainAddress: string, data: TrackingVaultBalance[], showCols?
                 debts: {}
             };
         }
-        
+
         acc[account].vaults.push(vault);
         acc[account].totalDebt += debt;
         acc[account].balances[vault] = balance;
@@ -123,7 +125,7 @@ async function checkPositions(subgraphUrl: string, address: string) {
         const combinedBalances = [
             ...(balanceData.data?.trackingVaultBalances || []),
             ...(debtData.data?.trackingVaultBalances || [])
-        ].filter((value, index, self) => 
+        ].filter((value, index, self) =>
             index === self.findIndex((t) => (
                 t.account === value.account && t.vault === value.vault
             ))
@@ -150,7 +152,7 @@ if (!chainName || !address) {
 }
 
 // Validate chain name
-const validChains = ['base', 'mainnet', 'swell', 'sonic', 'arbitrum']
+const validChains = getValidChains()
 if (!validChains.includes(chainName)) {
     console.error(`Invalid chain name. Must be one of: ${validChains.join(', ')}`)
     process.exit(1)

@@ -69,6 +69,9 @@ pnpm run deploy:mainnet:test
 # Sync ABIs and addresses
 pnpm run abis:sync
 
+# Generate deployments information
+pnpm run generate:deployments
+
 # Prepare configurations for specific networks
 pnpm run prepare:mainnet
 pnpm run prepare:base
@@ -96,6 +99,7 @@ pnpm run test
 - All deployments are handled through Goldsky
 - Test deployments are available with the `:test` suffix (e.g., `deploy:mainnet:test`)
 - Make sure you have the Goldsky CLI installed and configured with your credentials
+- You can generate a JSON file with all deployment URLs using `pnpm run generate:deployments`
 
 ### Network-Specific Deployment
 
