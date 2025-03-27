@@ -16,6 +16,7 @@
     "prepare:bob": "bun scripts/prepare.ts bob",
     "prepare:unichain": "bun scripts/prepare.ts unichain",
     "prepare:avalanche": "bun scripts/prepare.ts avalanche",
+    "prepare:bsc": "bun scripts/prepare.ts bsc",
     "build:mainnet": "pnpm prepare:mainnet && graph build",
     "build:base": "pnpm prepare:base && graph build",
     "build:arbitrum": "pnpm prepare:arbitrum && graph build",
@@ -27,6 +28,7 @@
     "build:bob": "pnpm prepare:bob && graph build",
     "build:unichain": "pnpm prepare:unichain && graph build",
     "build:avalanche": "pnpm prepare:avalanche && graph build",
+    "build:bsc": "pnpm prepare:bsc && graph build",
     "verify:accountPositions": "env-cmd -f ../../.env.local bun ./verify/checkAccountPositions.ts",
     "verify:accountVaultBalances": "env-cmd -f ../../.env.local bun ./verify/checkAccountVaultBalances.ts",
     "test": "graph test",
@@ -40,7 +42,8 @@
     "deploy:berachain": "pnpm build:berachain && bun scripts/deploy.ts berachain",
     "deploy:bob": "pnpm build:bob && bun scripts/deploy.ts bob",
     "deploy:unichain": "pnpm build:unichain && bun scripts/deploy.ts unichain",
-    "deploy:avalanche": "pnpm build:avalanche && bun scripts/deploy.ts avalanche"
+    "deploy:avalanche": "pnpm build:avalanche && bun scripts/deploy.ts avalanche",
+    "deploy:bsc": "pnpm build:bsc && bun scripts/deploy.ts bsc"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.87.0",

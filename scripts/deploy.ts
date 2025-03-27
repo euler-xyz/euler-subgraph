@@ -1,17 +1,7 @@
 import { execSync } from 'child_process'
+import { networks } from './prepare';
 
-const NETWORKS = [
-  'mainnet',
-  'arbitrum',
-  'base',
-  'swell',
-  'sonic',
-  'ink',
-  'berachain',
-  'bob',
-  'unichain',
-  'avalanche'
-] as const
+const NETWORKS = Object.keys(networks)
 
 type Network = typeof NETWORKS[number]
 type Version = { major: number; minor: number; patch: number }

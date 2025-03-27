@@ -11,10 +11,11 @@ import {
   unichainAddresses,
   avalancheAddresses,
   berachainAddresses,
-  bobAddresses
+  bobAddresses,
+  bscAddresses
 } from '../contracts/addresses'
 
-const networks = {
+export const networks = {
   mainnet: {
     network: 'mainnet',
     ...mainnetAddresses.coreAddresses,
@@ -64,6 +65,11 @@ const networks = {
     network: 'bob',
     ...bobAddresses.coreAddresses,
     startBlock: 13157157
+  },
+  bsc: {
+    network: 'bsc',
+    ...bscAddresses.coreAddresses,
+    startBlock: 46370000
   }
 }
 
