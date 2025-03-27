@@ -39,6 +39,7 @@ pnpm run build:berachain
 pnpm run build:bob
 pnpm run build:unichain
 pnpm run build:avalanche
+pnpm run build:bsc
 
 # Build scripts with TypeScript
 pnpm run build:scripts
@@ -57,6 +58,7 @@ pnpm run deploy:berachain
 pnpm run deploy:bob
 pnpm run deploy:unichain
 pnpm run deploy:avalanche
+pnpm run deploy:bsc
 
 # Deploy test versions (with -test suffix)
 pnpm run deploy:mainnet:test
@@ -78,6 +80,7 @@ pnpm run prepare:berachain
 pnpm run prepare:bob
 pnpm run prepare:unichain
 pnpm run prepare:avalanche
+pnpm run prepare:bsc
 
 # Verify account data
 pnpm run verify:accountPositions
@@ -133,6 +136,9 @@ pnpm run deploy:unichain
 
 # Avalanche
 pnpm run deploy:avalanche
+
+# BSC
+pnpm run deploy:bsc
 ```
 
 ### Verification
