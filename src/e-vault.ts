@@ -39,6 +39,7 @@ export function handleEVaultCreated(event: EVaultCreatedEvent): void {
   let entity = new EVaultCreated(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
+  entity.evault = event.address
   entity.creator = event.params.creator
   entity.asset = event.params.asset
   entity.dToken = event.params.dToken
