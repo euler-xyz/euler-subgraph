@@ -70,6 +70,7 @@ type Deposit @entity(immutable: true) {
 
 type EVaultCreated @entity(immutable: true) {
   id: Bytes!
+  evault: Bytes! # address
   creator: Bytes! # address
   asset: Bytes! # address
   dToken: Bytes! # address
