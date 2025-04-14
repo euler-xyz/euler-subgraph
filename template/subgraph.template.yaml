@@ -200,3 +200,28 @@ templates:
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
       file: ./src/euler-earn.ts
+  - kind: ethereum
+    name: EulerSwap
+    network: {{{ network }}}
+    source:
+      abi: EulerSwap
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - EulerSwapCreated
+        - EulerSwap
+      abis:
+        - name: EulerSwap
+          file: ./abis/EulerSwap.json
+        - name: EVault
+          file: ./abis/EVault.json
+        - name: EthereumVaultConnector
+          file: ./abis/EVC.json
+      eventHandlers:
+        - event: EulerSwapCreated(indexed address,indexed address)
+          handler: handleEulerSwapCreated
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,uint112,uint112,indexed address)
+          handler: handleEulerSwap
+      file: ./src/euler-swap.ts 

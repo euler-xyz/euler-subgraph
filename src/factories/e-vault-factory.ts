@@ -1,15 +1,11 @@
 import { dataSource } from "@graphprotocol/graph-ts"
 import {
-  Genesis as GenesisEvent,
   ProxyCreated as ProxyCreatedEvent,
-  SetImplementation as SetImplementationEvent,
-  SetUpgradeAdmin as SetUpgradeAdminEvent,
 } from "../../generated/EVaultFactory/EVaultFactory"
 import {
   ProxyCreated,
 } from "../../generated/schema"
 import { EVault as EVaultTemplate } from "../../generated/templates"
-
 
 export function handleProxyCreated(event: ProxyCreatedEvent): void {
   let entity = new ProxyCreated(

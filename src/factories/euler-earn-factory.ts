@@ -2,6 +2,7 @@ import { dataSource } from "@graphprotocol/graph-ts"
 import { DeployEulerEarn as DeployEulerEarnEvent } from "../../generated/EulerEarnFactory/EulerEarnFactory"
 import { DeployEulerEarn } from "../../generated/schema"
 import { EulerEarn as EulerEarnTemplate } from "../../generated/templates"
+
 export function handleDeployEulerEarn(event: DeployEulerEarnEvent): void {
   let entity = new DeployEulerEarn(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
