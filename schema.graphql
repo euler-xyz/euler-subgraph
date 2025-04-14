@@ -333,8 +333,8 @@ type EulerSwap  @entity(immutable: true) {
   amount1In: BigInt!
   amount0Out: BigInt!
   amount1Out: BigInt!
-  reserve0: Bytes!
-  reserve1: Bytes!
+  reserve0: BigInt!
+  reserve1: BigInt!
   from: Bytes!
   to: Bytes!
   pool: Bytes!

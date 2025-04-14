@@ -1,8 +1,8 @@
 [
   {
     "network": "mainnet",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-mainnet/1.0.2/gn",
-    "version": "1.0.2"
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-mainnet-swap/1.0.5/gn",
+    "version": "1.0.5"
   },
   {
     "network": "arbitrum",

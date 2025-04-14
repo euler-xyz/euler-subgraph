@@ -16,10 +16,12 @@ export function handleEulerSwap(event: EulerSwapEvent): void {
     entity.amount1In = event.params.amount1In
     entity.amount0Out = event.params.amount0Out
     entity.amount1Out = event.params.amount1Out
-    entity.to = event.params.to
-    entity.sender = event.params.sender
+    entity.reserve0 = event.params.reserve0
+    entity.reserve1 = event.params.reserve1
+    entity.from = event.params.sender
     entity.to = event.params.to
     entity.pool = event.address
+    entity.sender = event.transaction.from
     entity.blockNumber = event.block.number
     entity.blockTimestamp = event.block.timestamp
     entity.transactionHash = event.transaction.hash

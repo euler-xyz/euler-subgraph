@@ -2,11 +2,11 @@ import { execSync } from 'child_process'
 import { Network, NETWORKS, Version } from './config'
 import { compareVersions, formatVersion, parseVersion } from './utils/utils'
 
-function getLatestVersion(network: Network): Version {
+function getLatestVersion(network: Network, subgraphName: string): Version {
   try {
     const result = execSync('goldsky subgraph list').toString()
     const lines = result.split('\n')
-      .filter(line => line.includes(`euler-v2-${network}`))
+      .filter(line => line.includes(subgraphName))
       .map(line => {
         console.log(">>", line)
         const versionMatch = line.match(/(?:v|\/)((\d+)\.(\d+)\.(\d+))/)
@@ -33,11 +33,12 @@ function incrementVersion(version: Version): Version {
   }
 }
 
-function deployNewVersion(network: Network, isTest: boolean = false) {
-  const currentVersion = getLatestVersion(network)
+function deployNewVersion(network: Network, fork: string) {
+  const subgraphName = fork ? `euler-v2-${network}-${fork}` : `euler-v2-${network}`
+  const currentVersion = getLatestVersion(network, subgraphName)
   const newVersion = incrementVersion(currentVersion)
   const versionString = formatVersion(newVersion)
-  const subgraphName = isTest ? `euler-v2-${network}-test` : `euler-v2-${network}`
+
 
   console.log(`Current version: v${formatVersion(currentVersion)}`)
   console.log(`New version: v${versionString}`)
@@ -55,11 +56,11 @@ function deployNewVersion(network: Network, isTest: boolean = false) {
 
 // Get network from command line args
 const network = process.argv[2] as Network
-const isTest = process.argv[3] === 'test'
+const fork = process.argv[3]
 
 if (!NETWORKS.includes(network)) {
   console.error(`Invalid network. Must be one of: ${NETWORKS.join(', ')}`)
   process.exit(1)
 }
 
-deployNewVersion(network, isTest) 
+deployNewVersion(network, fork) 
