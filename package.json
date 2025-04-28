@@ -1,6 +1,10 @@
 {
   "name": "euler-v2",
   "license": "UNLICENSED",
+  "packageManager": "pnpm@9.12.3",
+  "engines": {
+    "pnpm": "9.12.3"
+  },
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
