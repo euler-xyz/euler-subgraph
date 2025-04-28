@@ -170,3 +170,31 @@ templates:
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
       file: ./src/euler-earn.ts
+  - kind: ethereum
+    name: EulerEarnVault
+    network: {{{ network }}}
+    source:
+      abi: EulerEarnVault
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - EulerEarnVault
+        - EulerEarnVault_ExecuteHarvest
+        - EulerEarnVault_Harvest
+        - EulerEarnVault_Rebalance
+        - EulerEarnVault_InterestUpdated
+      abis:
+        - name: EulerEarnVault
+          file: ./abis/euler-earn-abi.json
+      eventHandlers:
+        - event: ExecuteHarvest(indexed address,uint256,uint256)
+          handler: handleExecuteHarvest
+        - event: Harvest(uint256,uint256,uint256)
+          handler: handleHarvest
+        - event: Rebalance(indexed address,uint256,bool)
+          handler: handleRebalance
+        - event: InterestUpdated(uint256,uint256)
+          handler: handleInterestUpdated
+      file: ./src/euler-earn-vault.ts

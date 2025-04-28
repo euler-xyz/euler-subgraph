@@ -1,4 +1,3 @@
-
 type Account @entity(immutable: true) {
   id: Bytes!
   subAccount: Bytes!
@@ -276,4 +275,70 @@ type EulerEarnWithdraw @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+
+type EulerEarnVault @entity(immutable: false) {
+    id: Bytes!
+    owner: Bytes!
+    asset: Bytes!
+    createdAt: BigInt!
+    totalAssets: BigInt!
+    apy: BigDecimal!
+    averageInterestAccruedLast7Days: BigDecimal!
+    harvests: [EulerEarnVault_Harvest!]! @derivedFrom(field: "eulerEarnVault")
+    rebalances: [EulerEarnVault_Rebalance!]! @derivedFrom(field: "eulerEarnVault")
+    interestUpdated: [EulerEarnVault_InterestUpdated!]! @derivedFrom(field: "eulerEarnVault")
+}
+
+type EulerEarnVault_ExecuteHarvest @entity(immutable: true) {
+    id: Bytes!
+    timestamp: BigInt!
+    eulerEarnVault: EulerEarnVault!
+    harvest: EulerEarnVault_Harvest!
+    strategy: Bytes!
+    eulerEarnAssetsAmount: BigInt!
+    strategyAllocatedAmount: BigInt!
+    blockNumber: BigInt!
+    blockTimestamp: BigInt!
+    transactionHash: Bytes!
+}
+
+type EulerEarnVault_Harvest @entity(immutable: true) {
+    id: Bytes!
+    timestamp: BigInt!
+    harvester: Bytes!
+    txHash: Bytes!
+    executeHarvests: [EulerEarnVault_ExecuteHarvest!]! @derivedFrom(field: "harvest")
+    eulerEarnVault: EulerEarnVault!
+    totalAllocated: BigInt!
+    totalYield: BigInt!
+    totalLoss: BigInt!
+    blockNumber: BigInt!
+    blockTimestamp: BigInt!
+    transactionHash: Bytes!
+}
+
+type EulerEarnVault_Rebalance @entity(immutable: true) {
+    id: Bytes!
+    timestamp: BigInt!
+    rebalancer: Bytes!
+    txHash: Bytes!
+    eulerEarnVault: EulerEarnVault!
+    strategy: Bytes!
+    amountToRebalance: BigInt!
+    isDeposit: Boolean!
+    blockNumber: BigInt!
+    blockTimestamp: BigInt!
+    transactionHash: Bytes!
+}
+
+type EulerEarnVault_InterestUpdated @entity(immutable: true) {
+    id: Bytes!
+    timestamp: BigInt!
+    eulerEarnVault: EulerEarnVault!
+    interestAccrued: BigInt!
+    interestLeft: BigInt!
+    blockNumber: BigInt!
+    blockTimestamp: BigInt!
+    transactionHash: Bytes!
 }
