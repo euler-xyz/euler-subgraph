@@ -87,7 +87,6 @@ export function handleRebalance(event: RebalanceEvent): void {
 
   entity.save()
 }
-
 export function handleInterestUpdated(event: InterestUpdatedEvent): void {
   let entity = new EulerEarnVault_InterestUpdated(
     event.transaction.hash.concatI32(event.logIndex.toI32())
@@ -108,9 +107,13 @@ export function handleInterestUpdated(event: InterestUpdatedEvent): void {
   if (vault) {
     let since = event.block.timestamp.minus(BigInt.fromI32(7 * 24 * 60 * 60))
     let interestUpdatesLoaded = vault.interestUpdated.load()
-    let interestUpdates = interestUpdatesLoaded.filter(
-      (update: EulerEarnVault_InterestUpdated) => update.timestamp.ge(since)
-    )
+    let interestUpdates: EulerEarnVault_InterestUpdated[] = []
+    
+    for (let i = 0; i < interestUpdatesLoaded.length; i++) {
+      if (interestUpdatesLoaded[i].timestamp.gt(since)) {
+        interestUpdates.push(interestUpdatesLoaded[i])
+      }
+    }
 
     let totalInterest = BigDecimal.zero()
     for (let i = 0; i < interestUpdates.length; i++) {
@@ -132,4 +135,4 @@ export function handleInterestUpdated(event: InterestUpdatedEvent): void {
 
     vault.save()
   }
-} 
+}

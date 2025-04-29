@@ -36,10 +36,22 @@ pnpm run abis:sync
 
 3. Update `prepare.ts` to add the new network name and startBlock for syncing.
 
-4. Generate code:
+4. Prepare the configuration for your target network (e.g., mainnet):
+```bash
+pnpm run prepare:mainnet
+```
+
+5. Generate code:
 ```bash
 pnpm run codegen
 ```
+
+6. Build the subgraph:
+```bash
+pnpm run build:mainnet
+```
+
+Note: You can replace `mainnet` with any other supported network (base, arbitrum, swell, etc.) in the above commands.
 
 ## Available Scripts
 
