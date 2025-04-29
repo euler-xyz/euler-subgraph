@@ -60,7 +60,7 @@ export function trackActionsInEVaults(
     updateActiveAccountsInEVaults(accountEntity.owner, account, vault, evcContractAddress, blockNumber, blockTimestamp, transactionHash)
 }
 
-function updateActiveAccountsInEVaults(
+export function updateActiveAccountsInEVaults(
     mainAddress: Bytes,
     account: Bytes,
     vault: Bytes,
