@@ -26,14 +26,14 @@ dataSources:
           handler: handleCallWithContext
       file: ./src/ethereum-vault-connector.ts
   - kind: ethereum
-    name: EVaultFactory
+    name: EulerVaultFactory
     network: {{{ network }}}
     context:
       evcAddress:
         type: String
         data: "{{{ evc }}}"
     source:
-      abi: EVaultFactory
+      abi: EulerVaultFactory
       address: "{{{ eVaultFactory }}}"
       startBlock: {{{ startBlock }}}
     mapping:
@@ -43,16 +43,16 @@ dataSources:
       entities:
         - ProxyCreated
       abis:
-        - name: EVaultFactory
-          file: ./abis/EVaultFactory.json
-        - name: EVault
-          file: ./abis/EVault.json
+        - name: EulerVaultFactory
+          file: ./abis/EulerVaultFactory.json
+        - name: EulerVault
+          file: ./abis/EulerVault.json
         - name: EthereumVaultConnector
           file: ./abis/EVC.json
       eventHandlers:
         - event: ProxyCreated(indexed address,bool,address,bytes)
           handler: handleProxyCreated
-      file: ./src/factories/e-vault-factory.ts
+      file: ./src/factories/euler-vault-factory.ts
   - kind: ethereum
     name: EulerEarnFactory
     network: {{{ network }}}
@@ -114,10 +114,10 @@ dataSources:
       file: ./src/factories/euler-swap-factory.ts
 templates:
   - kind: ethereum
-    name: EVault
+    name: EulerVault
     network: {{{ network }}}
     source:
-      abi: EVault
+      abi: EulerVault
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -137,8 +137,8 @@ templates:
         - VaultStatus
         - Withdraw
       abis:
-        - name: EVault
-          file: ./abis/EVault.json
+        - name: EulerVault
+          file: ./abis/EulerVault.json
         - name: EulerEarn
           file: ./abis/EulerEarn.json
         - name: EthereumVaultConnector
@@ -169,7 +169,7 @@ templates:
           handler: handleVaultStatus
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
-      file: ./src/e-vault.ts
+      file: ./src/euler-vault.ts
   - kind: ethereum
     name: EulerEarn
     network: {{{ network }}}
@@ -189,8 +189,8 @@ templates:
         - EulerEarnRebalance
         - EulerEarnInterestUpdated
       abis:
-        - name: EVault
-          file: ./abis/EVault.json
+        - name: EulerVault
+          file: ./abis/EulerVault.json
         - name: EulerEarn
           file: ./abis/EulerEarn.json
         - name: EthereumVaultConnector
@@ -228,8 +228,8 @@ templates:
       abis:
         - name: EulerSwap
           file: ./abis/EulerSwap.json
-        - name: EVault
-          file: ./abis/EVault.json
+        - name: EulerVault
+          file: ./abis/EulerVault.json
         - name: EthereumVaultConnector
           file: ./abis/EVC.json
       eventHandlers:

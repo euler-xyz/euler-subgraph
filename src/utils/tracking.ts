@@ -1,9 +1,9 @@
 import { BigInt, Bytes, Address, dataSource } from "@graphprotocol/graph-ts"
 import { Account, TrackingActiveAccount, TrackingVaultBalance } from "../../generated/schema"
-import { EVault } from "../../generated/templates/EVault/EVault"; // Make sure this path is correct
-import { EthereumVaultConnector } from "../../generated/templates/EVault/EthereumVaultConnector";
+import { EulerVault } from "../../generated/templates/EulerVault/EulerVault"; // Make sure this path is correct
+import { EthereumVaultConnector } from "../../generated/templates/EulerVault/EthereumVaultConnector";
 import { EulerEarn } from "../../generated/templates/EulerEarn/EulerEarn";
-import { log } from '@graphprotocol/graph-ts'
+
 const zeroAddress = Bytes.fromHexString("0x0000000000000000000000000000000000000000")
 
 function loadTrackingActiveAccounts(mainAddress: Bytes): TrackingActiveAccount {
@@ -72,7 +72,7 @@ export function updateActiveAccountsInEVaults(
     // Don't track if the main address is the zero address
     if (mainAddress.equals(zeroAddress)) return
 
-    let vaultContract = EVault.bind(Address.fromBytes(vault))
+    let vaultContract = EulerVault.bind(Address.fromBytes(vault))
     let evcContract = EthereumVaultConnector.bind(Address.fromBytes(evc))
     let entity = loadTrackingActiveAccounts(mainAddress)
 

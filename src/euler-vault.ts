@@ -12,7 +12,7 @@ import {
   Transfer as TransferEvent,
   VaultStatus as VaultStatusEvent,
   Withdraw as WithdrawEvent,
-} from "../generated/templates/EVault/EVault"
+} from "../generated/templates/EulerVault/EulerVault"
 import {
   BalanceForwarderStatus,
   Borrow,
@@ -30,6 +30,7 @@ import {
 } from "../generated/schema"
 import { increaseCounter } from "./utils/counter"
 import { trackActionsInEVaults } from "./utils/tracking"
+import { loadOrCreateEulerVault } from "./utils/clasicVaut"
 
 
 //////////////////////////////////////////////////////////
@@ -54,8 +55,15 @@ export function handleEVaultCreated(event: EVaultCreatedEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
-
   entity.save()
+
+  // Create or update the vault
+  let eVault = loadOrCreateEulerVault(event.address)
+  // We update the vault
+  eVault.blockNumber = event.block.number
+  eVault.blockTimestamp = event.block.timestamp
+  eVault.transactionHash = event.transaction.hash
+  eVault.save()
 }
 export function handleBalanceForwarderStatus(
   event: BalanceForwarderStatusEvent,

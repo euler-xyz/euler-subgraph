@@ -5,7 +5,7 @@ import {
 import {
   ProxyCreated,
 } from "../../generated/schema"
-import { EVault as EVaultTemplate } from "../../generated/templates"
+import { EulerVault as EulerVaultTemplate } from "../../generated/templates"
 
 export function handleProxyCreated(event: ProxyCreatedEvent): void {
   let entity = new ProxyCreated(
@@ -23,6 +23,6 @@ export function handleProxyCreated(event: ProxyCreatedEvent): void {
   entity.save()
 
   let context = dataSource.context()
-  EVaultTemplate.createWithContext(event.params.proxy, context)
+  EulerVaultTemplate.createWithContext(event.params.proxy, context)
 }
 

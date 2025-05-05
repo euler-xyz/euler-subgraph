@@ -14,7 +14,30 @@ type ProxyCreated @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: Bytes!
 }
-  
+
+type EulerVault @entity(immutable: false) {
+  id: Bytes!
+  evc: Bytes!
+  name: String!
+  decimals: BigInt!
+  borrowCap: BigInt!
+  supplyCap: BigInt!
+  dToken: Bytes!
+  evault: Bytes!
+  permit2Address: Bytes!
+  interestRateModel: Bytes!
+  governonAdmin: Bytes!
+  feeReceiver: Bytes!
+  asset: Bytes
+  oracle: Bytes!
+  creator: Bytes!
+  symbol: String!
+  unitOfAccount: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
 type BalanceForwarderStatus @entity(immutable: true) {
   id: Bytes!
   account: Bytes! # address
