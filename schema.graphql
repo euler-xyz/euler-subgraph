@@ -285,16 +285,16 @@ type EulerEarnVault @entity(immutable: false) {
     totalAssets: BigInt!
     apy: BigDecimal!
     averageInterestAccruedLast7Days: BigDecimal!
-    harvests: [EulerEarnVault_Harvest!]! @derivedFrom(field: "eulerEarnVault")
-    rebalances: [EulerEarnVault_Rebalance!]! @derivedFrom(field: "eulerEarnVault")
-    interestUpdated: [EulerEarnVault_InterestUpdated!]! @derivedFrom(field: "eulerEarnVault")
+    harvests: [EulerEarnHarvest!]! @derivedFrom(field: "eulerEarnVault")
+    rebalances: [EulerEarnRebalance!]! @derivedFrom(field: "eulerEarnVault")
+    interestUpdated: [EulerEarnInterestUpdated!]! @derivedFrom(field: "eulerEarnVault")
 }
 
-type EulerEarnVault_ExecuteHarvest @entity(immutable: true) {
+type EulerEarnExecuteHarvest @entity(immutable: true) {
     id: Bytes!
     timestamp: BigInt!
     eulerEarnVault: EulerEarnVault!
-    harvest: EulerEarnVault_Harvest!
+    harvest: EulerEarnHarvest!
     strategy: Bytes!
     eulerEarnAssetsAmount: BigInt!
     strategyAllocatedAmount: BigInt!
@@ -303,12 +303,12 @@ type EulerEarnVault_ExecuteHarvest @entity(immutable: true) {
     transactionHash: Bytes!
 }
 
-type EulerEarnVault_Harvest @entity(immutable: true) {
+type EulerEarnHarvest @entity(immutable: true) {
     id: Bytes!
     timestamp: BigInt!
     harvester: Bytes!
     txHash: Bytes!
-    executeHarvests: [EulerEarnVault_ExecuteHarvest!]! @derivedFrom(field: "harvest")
+    executeHarvests: [EulerEarnExecuteHarvest!]! @derivedFrom(field: "harvest")
     eulerEarnVault: EulerEarnVault!
     totalAllocated: BigInt!
     totalYield: BigInt!
@@ -318,7 +318,7 @@ type EulerEarnVault_Harvest @entity(immutable: true) {
     transactionHash: Bytes!
 }
 
-type EulerEarnVault_Rebalance @entity(immutable: true) {
+type EulerEarnRebalance @entity(immutable: true) {
     id: Bytes!
     timestamp: BigInt!
     rebalancer: Bytes!
@@ -332,7 +332,7 @@ type EulerEarnVault_Rebalance @entity(immutable: true) {
     transactionHash: Bytes!
 }
 
-type EulerEarnVault_InterestUpdated @entity(immutable: true) {
+type EulerEarnInterestUpdated @entity(immutable: true) {
     id: Bytes!
     timestamp: BigInt!
     eulerEarnVault: EulerEarnVault!
@@ -341,4 +341,69 @@ type EulerEarnVault_InterestUpdated @entity(immutable: true) {
     blockNumber: BigInt!
     blockTimestamp: BigInt!
     transactionHash: Bytes!
+}
+
+########################################################
+# Euler Swap
+########################################################
+
+## FACTORY 
+
+type EulerSwapPoolDeployed @entity(immutable: true) {
+  id: Bytes!
+  asset0: Bytes! 
+  asset1: Bytes!
+  vault0: Bytes!
+  vault1: Bytes!
+  fee: BigInt!
+  eulerAccount: Bytes!
+  reserve0: BigInt!
+  reserve1: BigInt!
+  priceY: BigInt!
+  priceX: BigInt!
+  concentrationX: BigInt!
+  concentrationY: BigInt!
+  pool: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerSwapPoolUninstalled @entity(immutable: true) {
+  id: Bytes!
+  asset0: Bytes! 
+  asset1: Bytes!
+  eulerAccount: Bytes!
+  pool: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+## PoolUninstalled
+
+type EulerSwapCreated  @entity(immutable: true) {
+  id: Bytes!
+  asset0: Bytes! 
+  asset1: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerSwap  @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! 
+  amount0In: BigInt!
+  amount1In: BigInt!
+  amount0Out: BigInt!
+  amount1Out: BigInt!
+  reserve0: BigInt!
+  reserve1: BigInt!
+  from: Bytes!
+  to: Bytes!
+  pool: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }

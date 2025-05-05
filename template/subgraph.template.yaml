@@ -70,6 +70,7 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - DeployEulerEarn
+        - EulerEarnVault
       abis:
         - name: EulerEarnFactory
           file: ./abis/EulerEarnFactory.json
@@ -81,6 +82,36 @@ dataSources:
         - event: DeployEulerEarn(indexed address,address,indexed address)
           handler: handleDeployEulerEarn
       file: ./src/factories/euler-earn-factory.ts
+  - kind: ethereum
+    name: EulerSwapFactory
+    network: {{{ network }}}
+    context:
+      evcAddress:
+        type: String
+        data: "{{{ evc }}}"
+    source:
+      abi: EulerSwapFactory
+      address: "{{{ eulerSwapFactory }}}"
+      startBlock: {{{ startBlock }}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PoolDeployed
+      abis:
+        - name: EulerSwapFactory
+          file: ./abis/EulerSwapFactory.json
+        - name: EulerSwap
+          file: ./abis/EulerSwap.json
+        - name: EthereumVaultConnector
+          file: ./abis/EVC.json
+      eventHandlers:
+        - event: PoolDeployed(indexed address,indexed address,address,address,indexed uint256,address,uint256,uint256,uint256,uint256,uint256,uint256,address)
+          handler: handlePoolDeployed
+        - event: PoolUninstalled(indexed address,indexed address,indexed address,address)
+          handler: handlePoolUninstalled
+      file: ./src/factories/euler-swap-factory.ts
 templates:
   - kind: ethereum
     name: EVault
@@ -153,6 +184,10 @@ templates:
         - EulerEarnDeposit
         - EulerEarnTransfer
         - EulerEarnWithdraw
+        - EulerEarnVault
+        - EulerEarnHarvest
+        - EulerEarnRebalance
+        - EulerEarnInterestUpdated
       abis:
         - name: EVault
           file: ./abis/EVault.json
@@ -169,26 +204,6 @@ templates:
           handler: handleTransfer
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
-      file: ./src/euler-earn.ts
-  - kind: ethereum
-    name: EulerEarnVault
-    network: {{{ network }}}
-    source:
-      abi: EulerEarnVault
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - EulerEarnVault
-        - EulerEarnVault_ExecuteHarvest
-        - EulerEarnVault_Harvest
-        - EulerEarnVault_Rebalance
-        - EulerEarnVault_InterestUpdated
-      abis:
-        - name: EulerEarnVault
-          file: ./abis/EulerEarn.json
-      eventHandlers:
         - event: ExecuteHarvest(indexed address,uint256,uint256)
           handler: handleExecuteHarvest
         - event: Harvest(uint256,uint256,uint256)
@@ -197,4 +212,29 @@ templates:
           handler: handleRebalance
         - event: InterestUpdated(uint256,uint256)
           handler: handleInterestUpdated
-      file: ./src/euler-earn-vault.ts
+      file: ./src/euler-earn.ts
+  - kind: ethereum
+    name: EulerSwap
+    network: {{{ network }}}
+    source:
+      abi: EulerSwap
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - EulerSwapCreated
+        - EulerSwap
+      abis:
+        - name: EulerSwap
+          file: ./abis/EulerSwap.json
+        - name: EVault
+          file: ./abis/EVault.json
+        - name: EthereumVaultConnector
+          file: ./abis/EVC.json
+      eventHandlers:
+        - event: EulerSwapCreated(indexed address,indexed address)
+          handler: handleEulerSwapCreated
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256,uint112,uint112,indexed address)
+          handler: handleEulerSwap
+      file: ./src/euler-swap.ts 

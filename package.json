@@ -39,6 +39,7 @@
     "test": "graph test",
     "deploy:mainnet": "pnpm build:mainnet && bun scripts/deploy.ts mainnet && pnpm generate:deployments",
     "deploy:mainnet:test": "pnpm build:mainnet && bun scripts/deploy.ts mainnet test && pnpm generate:deployments",
+    "deploy:mainnet:swap": "pnpm build:mainnet && bun scripts/deploy.ts mainnet swap && pnpm generate:deployments",
     "deploy:arbitrum": "pnpm build:arbitrum && bun scripts/deploy.ts arbitrum && pnpm generate:deployments",
     "deploy:base": "pnpm build:base && bun scripts/deploy.ts base && pnpm generate:deployments",
     "deploy:base:test": "pnpm build:base && bun scripts/deploy.ts base test && pnpm generate:deployments",

@@ -1,6 +1,7 @@
 # Euler Subgraph
 
 ## Prerequisites
+
 - Node.js (v16 or higher)
 - Corepack (enabled in Node.js)
 - Bun
@@ -24,24 +25,27 @@ pnpm install
 ```
 
 ## Setup
+
 1. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 2. Run Sync Abis to add a new network:
+
 ```bash
 pnpm run abis:sync
 ```
 
-3. Update `prepare.ts` to add the new network name and startBlock for syncing.
+3. Update `prepare.ts` to include the new network name and start block for syncing. Then run prepare to generate the `subgraph.yaml`.
 
-4. Prepare the configuration for your target network (e.g., mainnet):
 ```bash
 pnpm run prepare:mainnet
 ```
 
-5. Generate code:
+4. Generate code:
+
 ```bash
 pnpm run codegen
 ```
@@ -56,6 +60,7 @@ Note: You can replace `mainnet` with any other supported network (base, arbitrum
 ## Available Scripts
 
 ### Build Scripts
+
 ```bash
 # Build for specific networks
 pnpm run build:mainnet
@@ -75,6 +80,7 @@ pnpm run build:scripts
 ```
 
 ### Deployment Scripts
+
 ```bash
 # Deploy to specific networks
 pnpm run deploy:mainnet
@@ -94,6 +100,7 @@ pnpm run deploy:mainnet:test
 ```
 
 ### Utility Scripts
+
 ```bash
 # Sync ABIs and addresses
 pnpm run abis:sync
@@ -125,6 +132,7 @@ pnpm run test
 ## Deployment Guide
 
 ### Important Notes
+
 - All deployments are handled through Goldsky
 - Test deployments are available with the `:test` suffix (e.g., `deploy:mainnet:test`)
 - Make sure you have the Goldsky CLI installed and configured with your credentials
@@ -133,6 +141,7 @@ pnpm run test
 ### Network-Specific Deployment
 
 #### Mainnet
+
 ```bash
 # Production deployment
 pnpm run deploy:mainnet
@@ -142,6 +151,7 @@ pnpm run deploy:mainnet:test
 ```
 
 #### Other Networks
+
 ```bash
 # Base
 pnpm run deploy:base
@@ -175,9 +185,11 @@ pnpm run deploy:bsc
 ```
 
 ### Deployments Information
+
 The `generate:deployments` command creates a `deployments.json` file that contains information about the latest deployed version of the subgraph for each supported network. This file is automatically updated after each deployment.
 
 #### File Structure
+
 ```json
 [
   {
@@ -195,6 +207,7 @@ The `generate:deployments` command creates a `deployments.json` file that contai
 ```
 
 #### Usage
+
 - The file is used by verification scripts to get the correct subgraph URL for each network
 - It's automatically updated after each deployment
 - It serves as a single source of truth for deployment information
@@ -202,7 +215,9 @@ The `generate:deployments` command creates a `deployments.json` file that contai
 - Versions are properly sorted (major.minor.patch)
 
 ### Verification
+
 To verify account data:
+
 ```bash
 # Verify account positions
 pnpm run verify:accountPositions
@@ -214,17 +229,21 @@ pnpm run verify:accountVaultBalances
 ## Development
 
 ### TypeScript Configuration
+
 The project uses separate TypeScript configurations:
+
 - Main configuration (`tsconfig.json`): For the core subgraph code
 - Scripts configuration (`tsconfig.scripts.json`): For development and utility scripts
 
 ### Testing
+
 ```bash
 # Run tests
 pnpm run test
 ```
 
 ## Troubleshooting
+
 - If you encounter permission issues with scripts, run:
   ```bash
   chmod +x scripts/abisAddressesSync.sh
