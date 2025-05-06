@@ -3,9 +3,26 @@
 ## Prerequisites
 
 - Node.js (v16 or higher)
-- pnpm
+- Corepack (enabled in Node.js)
 - Bun
 - Goldsky CLI (required for all deployments)
+
+### Setting up pnpm with Corepack
+This project uses pnpm 9.12.3. Corepack will automatically manage the correct pnpm version for you.
+
+```bash
+# Enable corepack if not already enabled
+corepack enable
+
+# Install pnpm 9.12.3 using corepack
+corepack prepare pnpm@9.12.3 --activate
+
+# First time setup
+pnpm install
+
+# Corepack will automatically use pnpm 9.12.3 for this project
+# while other projects can use their own versions
+```
 
 ## Setup
 
@@ -32,6 +49,13 @@ pnpm run prepare:mainnet
 ```bash
 pnpm run codegen
 ```
+
+6. Build the subgraph:
+```bash
+pnpm run build:mainnet
+```
+
+Note: You can replace `mainnet` with any other supported network (base, arbitrum, swell, etc.) in the above commands.
 
 ## Available Scripts
 

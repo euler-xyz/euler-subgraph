@@ -98,7 +98,6 @@ export function handleCallWithContext(event: CallWithContextEvent): void {
 
     entity.save()
 
-
     if (!isSelector) {
         log.debug("Invalid selector in tx {}", [event.transaction.hash.toHexString()])
         return
@@ -106,7 +105,6 @@ export function handleCallWithContext(event: CallWithContextEvent): void {
 
     updateAccount(address, event.params.targetContract)
     updateAccount(from, event.params.targetContract)
-
 
 }
 

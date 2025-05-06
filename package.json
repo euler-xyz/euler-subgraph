@@ -1,6 +1,10 @@
 {
   "name": "euler-v2",
   "license": "UNLICENSED",
+  "packageManager": "pnpm@9.12.3",
+  "engines": {
+    "pnpm": "9.12.3"
+  },
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
@@ -38,6 +42,7 @@
     "deploy:mainnet:swap": "pnpm build:mainnet && bun scripts/deploy.ts mainnet swap && pnpm generate:deployments",
     "deploy:arbitrum": "pnpm build:arbitrum && bun scripts/deploy.ts arbitrum && pnpm generate:deployments",
     "deploy:base": "pnpm build:base && bun scripts/deploy.ts base && pnpm generate:deployments",
+    "deploy:base:test": "pnpm build:base && bun scripts/deploy.ts base test && pnpm generate:deployments",
     "deploy:swell": "pnpm build:swell && bun scripts/deploy.ts swell && pnpm generate:deployments",
     "deploy:sonic": "pnpm build:sonic && bun scripts/deploy.ts sonic && pnpm generate:deployments",
     "deploy:ink": "pnpm build:ink && bun scripts/deploy.ts ink && pnpm generate:deployments",
@@ -49,7 +54,7 @@
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.87.0",
-    "@graphprotocol/graph-ts": "0.30.0",
+    "@graphprotocol/graph-ts": "0.33.0",
     "viem": "^2.22.22",
     "@types/node": "^22.13.10",
     "env-cmd": "^10.1.0",

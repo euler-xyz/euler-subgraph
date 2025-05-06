@@ -12,8 +12,8 @@ importers:
         specifier: 0.87.0
         version: 0.87.0(@types/node@22.13.10)(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(typescript@5.8.2)
       '@graphprotocol/graph-ts':
-        specifier: 0.30.0
-        version: 0.30.0
+        specifier: 0.33.0
+        version: 0.33.0
       '@types/node':
         specifier: ^22.13.10
         version: 22.13.10
@@ -110,8 +110,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@graphprotocol/graph-ts@0.30.0':
-    resolution: {integrity: sha512-h5tJqlsZXglGYM0PcBsBOqof4PT0Fr4Z3QBTYN/IjMF3VvRX2A8/bdpqaAnva+2N0uAfXXwRcwcOcW5O35yzXw==}
+  '@graphprotocol/graph-ts@0.33.0':
+    resolution: {integrity: sha512-HBUVblHUdjQZ/MEjjYPzVgmh+SiuF9VV0D8KubYfFAtzkqpVJlvdyk+RZTAJUiu8hpyYy0EVIcAnLEPtKlwMGQ==}
 
   '@ipld/dag-cbor@7.0.3':
     resolution: {integrity: sha512-1VVh2huHsuohdXC1bGJNE8WR72slZ9XE2T3wbBBq31dm7ZBatmKLLxrB+XAqafxfRFjv08RZmj/W/ZqaM13AuA==}
@@ -2110,7 +2110,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@graphprotocol/graph-ts@0.30.0':
+  '@graphprotocol/graph-ts@0.33.0':
     dependencies:
       assemblyscript: 0.19.10
 
