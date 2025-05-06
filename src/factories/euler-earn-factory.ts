@@ -9,9 +9,9 @@ export function handleDeployEulerEarn(event: DeployEulerEarnEvent): void {
   let deployEntity = new DeployEulerEarn(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
-  deployEntity._owner = event.params._owner
-  deployEntity._eulerEarnVault = event.params._eulerEarnVault
-  deployEntity._asset = event.params._asset
+  deployEntity.owner = event.params._owner
+  deployEntity.eulerEarnVault = event.params._eulerEarnVault
+  deployEntity.asset = event.params._asset
 
   deployEntity.blockNumber = event.block.number
   deployEntity.blockTimestamp = event.block.timestamp
