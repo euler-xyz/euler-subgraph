@@ -21,16 +21,12 @@ import {
   InterestUpdated as InterestUpdatedEvent,
 } from "../generated/templates/EulerEarn/EulerEarn"
 import {
-  EulerEarnVault,
   EulerEarnExecuteHarvest,
   EulerEarnHarvest,
   EulerEarnRebalance,
   EulerEarnInterestUpdated,
 } from "../generated/schema"
-import { BigInt, BigDecimal, Bytes } from "@graphprotocol/graph-ts"
-
-
-
+import { updateEulerEarnVault } from "./utils/earnVault"
 
 export function handleApproval(event: ApprovalEvent): void {
   let entity = new Approval(
@@ -152,7 +148,6 @@ export function handleWithdraw(event: WithdrawEvent): void {
 
   entity.save()
 
-
   increaseCounter(
     "EarnVaultWithdraw",
     event.block.number,
@@ -197,27 +192,9 @@ export function handleExecuteHarvest(event: ExecuteHarvestEvent): void {
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
 
-  let harvest = EulerEarnHarvest.load(
-    event.transaction.hash
-  )
-  if (!harvest) {
-    harvest = new EulerEarnHarvest(event.transaction.hash)
-    harvest.timestamp = event.block.timestamp
-    harvest.harvester = event.transaction.from
-    harvest.txHash = event.transaction.hash
-    harvest.eulerEarnVault = event.address
-    harvest.totalAllocated = BigInt.zero()
-    harvest.totalYield = BigInt.zero()
-    harvest.totalLoss = BigInt.zero()
-    harvest.blockNumber = event.block.number
-    harvest.blockTimestamp = event.block.timestamp
-    harvest.transactionHash = event.transaction.hash
-    harvest.save()
-  }
-
   entity.timestamp = event.block.timestamp
   entity.eulerEarnVault = event.address
-  entity.harvest = harvest.id
+  entity.harvester = event.transaction.from
   entity.strategy = event.params.strategy
   entity.eulerEarnAssetsAmount = event.params.eulerEarnAssetsAmount
   entity.strategyAllocatedAmount = event.params.strategyAllocatedAmount
@@ -226,17 +203,15 @@ export function handleExecuteHarvest(event: ExecuteHarvestEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateEulerEarnVault(event.address)
 }
 
 export function handleHarvest(event: HarvestEvent): void {
-  let entity = EulerEarnHarvest.load(event.transaction.hash)
-  if (!entity) {
-    entity = new EulerEarnHarvest(event.transaction.hash)
-  }
+  let entity = new EulerEarnHarvest(event.transaction.hash.concatI32(event.logIndex.toI32()))
 
   entity.timestamp = event.block.timestamp
   entity.harvester = event.transaction.from
-  entity.txHash = event.transaction.hash
   entity.eulerEarnVault = event.address
   entity.totalAllocated = event.params.totalAllocated
   entity.totalYield = event.params.totalYield
@@ -246,6 +221,8 @@ export function handleHarvest(event: HarvestEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateEulerEarnVault(event.address)
 }
 
 export function handleRebalance(event: RebalanceEvent): void {
@@ -265,6 +242,8 @@ export function handleRebalance(event: RebalanceEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
+
+  updateEulerEarnVault(event.address)
 }
 
 
@@ -283,37 +262,6 @@ export function handleInterestUpdated(event: InterestUpdatedEvent): void {
 
   entity.save()
 
-  // Update vault's average interest accrued
-  let vault = EulerEarnVault.load(event.address)
-  // if (vault) {
-  //   let since = event.block.timestamp.minus(BigInt.fromI32(7 * 24 * 60 * 60))
-  //   let interestUpdatesLoaded = vault.interestUpdated.load()
-  //   let interestUpdates: EulerEarnInterestUpdated[] = []
+  updateEulerEarnVault(event.address)
 
-  //   for (let i = 0; i < interestUpdatesLoaded.length; i++) {
-  //     if (interestUpdatesLoaded[i].timestamp.gt(since)) {
-  //       interestUpdates.push(interestUpdatesLoaded[i])
-  //     }
-  //   }
-
-  //   let totalInterest = BigDecimal.zero()
-  //   for (let i = 0; i < interestUpdates.length; i++) {
-  //     totalInterest = totalInterest.plus(
-  //       interestUpdates[i].interestAccrued.toBigDecimal()
-  //     )
-  //   }
-
-  //   vault.averageInterestAccruedLast7Days = totalInterest.div(
-  //     BigDecimal.fromString(interestUpdates.length.toString())
-  //   )
-
-  //   // Update APY
-  //   if (vault.totalAssets.gt(BigInt.zero())) {
-  //     vault.apy = vault.averageInterestAccruedLast7Days.div(
-  //       vault.totalAssets.toBigDecimal()
-  //     )
-  //   }
-
-  //   vault.save()
-  // }
 }

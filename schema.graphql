@@ -302,22 +302,30 @@ type EulerEarnWithdraw @entity(immutable: true) {
 
 type EulerEarnVault @entity(immutable: false) {
     id: Bytes!
+    evc: Bytes!
+    name: String!
+    symbol: String!
     owner: Bytes!
     asset: Bytes!
-    createdAt: BigInt!
+    hooks: Bytes!
+    permit2Address: Bytes!
+    strategyModule: Bytes!
     totalAssets: BigInt!
-    apy: BigDecimal!
-    averageInterestAccruedLast7Days: BigDecimal!
-    harvests: [EulerEarnHarvest!]! @derivedFrom(field: "eulerEarnVault")
+    totalAllocated: BigInt!
+    totalSupply: BigInt!
+    harvests: [EulerEarnExecuteHarvest!]! @derivedFrom(field: "eulerEarnVault")
     rebalances: [EulerEarnRebalance!]! @derivedFrom(field: "eulerEarnVault")
     interestUpdated: [EulerEarnInterestUpdated!]! @derivedFrom(field: "eulerEarnVault")
+    blockNumber: BigInt!
+    blockTimestamp: BigInt!
+    transactionHash: Bytes!
 }
 
 type EulerEarnExecuteHarvest @entity(immutable: true) {
     id: Bytes!
     timestamp: BigInt!
     eulerEarnVault: EulerEarnVault!
-    harvest: EulerEarnHarvest!
+    harvester: Bytes!
     strategy: Bytes!
     eulerEarnAssetsAmount: BigInt!
     strategyAllocatedAmount: BigInt!
@@ -330,8 +338,6 @@ type EulerEarnHarvest @entity(immutable: true) {
     id: Bytes!
     timestamp: BigInt!
     harvester: Bytes!
-    txHash: Bytes!
-    executeHarvests: [EulerEarnExecuteHarvest!]! @derivedFrom(field: "harvest")
     eulerEarnVault: EulerEarnVault!
     totalAllocated: BigInt!
     totalYield: BigInt!
