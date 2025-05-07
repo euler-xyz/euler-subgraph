@@ -19,7 +19,9 @@ export function handleDeployEulerEarn(event: DeployEulerEarnEvent): void {
 
   deployEntity.save()
 
-  loadOrCreateEulerEarnVault(event.params._eulerEarnVault)
+  let earnVault = loadOrCreateEulerEarnVault(event.params._eulerEarnVault)
+  earnVault.owner = event.params._owner
+  earnVault.save()
   // Create templates with context
   let context = dataSource.context()
   EulerEarnTemplate.createWithContext(event.params._eulerEarnVault, context)
