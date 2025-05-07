@@ -1,13 +1,13 @@
 [
   {
     "network": "mainnet",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-mainnet-swap/1.0.5/gn",
-    "version": "1.0.5"
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-mainnet/1.0.6/gn",
+    "version": "1.0.6"
   },
   {
     "network": "arbitrum",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-arbitrum/1.0.1/gn",
-    "version": "1.0.1"
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-arbitrum/1.0.2/gn",
+    "version": "1.0.2"
   },
   {
     "network": "base",
@@ -16,42 +16,42 @@
   },
   {
     "network": "swell",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-swell/1.0.8/gn",
-    "version": "1.0.8"
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-swell/1.0.9/gn",
+    "version": "1.0.9"
   },
   {
     "network": "sonic",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-sonic/1.0.2/gn",
-    "version": "1.0.2"
-  },
-  {
-    "network": "ink",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-ink/1.0.1/gn",
-    "version": "1.0.1"
-  },
-  {
-    "network": "unichain",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-unichain/1.0.1/gn",
-    "version": "1.0.1"
-  },
-  {
-    "network": "avalanche",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-avalanche/1.0.2/gn",
-    "version": "1.0.2"
-  },
-  {
-    "network": "berachain",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-berachain/1.0.2/gn",
-    "version": "1.0.2"
-  },
-  {
-    "network": "bob",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-bob/1.0.3/gn",
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-sonic/1.0.3/gn",
     "version": "1.0.3"
   },
   {
+    "network": "ink",
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-ink/1.0.2/gn",
+    "version": "1.0.2"
+  },
+  {
+    "network": "unichain",
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-unichain/1.0.2/gn",
+    "version": "1.0.2"
+  },
+  {
+    "network": "avalanche",
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-avalanche/1.0.3/gn",
+    "version": "1.0.3"
+  },
+  {
+    "network": "berachain",
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-berachain/1.0.3/gn",
+    "version": "1.0.3"
+  },
+  {
+    "network": "bob",
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-bob/1.0.4/gn",
+    "version": "1.0.4"
+  },
+  {
     "network": "bsc",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-bsc/1.0.1/gn",
-    "version": "1.0.1"
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-bsc/1.0.2/gn",
+    "version": "1.0.2"
   }
 ]
