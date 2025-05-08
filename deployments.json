@@ -53,5 +53,25 @@
     "network": "bsc",
     "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-bsc/1.0.2/gn",
     "version": "1.0.2"
+  },
+  {
+    "network": "worldchain",
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-worldchain/1.0.1/gn",
+    "version": "1.0.1"
+  },
+  {
+    "network": "hyperevm",
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-hyperevm/1.0.1/gn",
+    "version": "1.0.1"
+  },
+  {
+    "network": "optimism",
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-optimism/1.0.1/gn",
+    "version": "1.0.1"
+  },
+  {
+    "network": "gnosis",
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-gnosis/1.0.1/gn",
+    "version": "1.0.1"
   }
 ]

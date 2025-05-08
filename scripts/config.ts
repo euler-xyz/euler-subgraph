@@ -9,7 +9,11 @@ import {
     avalancheAddresses,
     berachainAddresses,
     bobAddresses,
-    bscAddresses
+    bscAddresses,
+    worldchainAddresses,
+    hyperevmAddresses,
+    optimismAddresses,
+    gnosisAddresses
 } from '../contracts/addresses'
 
 export type Network = typeof NETWORKS[number]
@@ -82,6 +86,30 @@ export const networks = {
         ...bscAddresses.coreAddresses,
         ...bscAddresses.swapAddresses,
         startBlock: 46370000
+    },
+    worldchain: {
+        network: 'worldchain',
+        ...worldchainAddresses.coreAddresses,
+        ...worldchainAddresses.swapAddresses,
+        startBlock: 9800000
+    },
+    hyperevm: {
+        network: 'hyperevm',
+        ...hyperevmAddresses.coreAddresses,
+        ...hyperevmAddresses.swapAddresses,
+        startBlock: 1 // TODO: Check if this is correct I didn't find the correct block number
+    },
+    optimism: {
+        network: 'optimism',
+        ...optimismAddresses.coreAddresses,
+        ...optimismAddresses.swapAddresses,
+        startBlock: 131500000
+    },
+    gnosis: {
+        network: 'xdai',
+        ...gnosisAddresses.coreAddresses,
+        ...gnosisAddresses.swapAddresses,
+        startBlock: 38380000
     }
 }
 
