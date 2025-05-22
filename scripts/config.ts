@@ -13,7 +13,8 @@ import {
     worldchainAddresses,
     hyperevmAddresses,
     optimismAddresses,
-    gnosisAddresses
+    gnosisAddresses,
+    tacTurinAddresses
 } from '../contracts/addresses'
 
 export type Network = typeof NETWORKS[number]
@@ -110,6 +111,12 @@ export const networks = {
         ...gnosisAddresses.coreAddresses,
         ...gnosisAddresses.swapAddresses,
         startBlock: 38380000
+    },
+    tacturin: {
+        network: 'tac-turin',
+        ...tacTurinAddresses.coreAddresses,
+        ...tacTurinAddresses.swapAddresses,
+        startBlock: 5066361
     }
 }
 

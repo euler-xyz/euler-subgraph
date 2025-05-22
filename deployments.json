@@ -73,5 +73,10 @@
     "network": "gnosis",
     "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-gnosis/1.0.1/gn",
     "version": "1.0.1"
+  },
+  {
+    "network": "tacturin",
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-tacturin/1.0.1/gn",
+    "version": "1.0.1"
   }
 ]
