@@ -1,20 +1,21 @@
 import {
-    mainnetAddresses,
     arbitrumAddresses,
-    baseAddresses,
-    swellAddresses,
-    sonicAddresses,
-    inkAddresses,
-    unichainAddresses,
     avalancheAddresses,
+    baseAddresses,
     berachainAddresses,
     bobAddresses,
     bscAddresses,
-    worldchainAddresses,
-    hyperevmAddresses,
-    optimismAddresses,
     gnosisAddresses,
-    tacTurinAddresses
+    hyperevmAddresses,
+    inkAddresses,
+    mainnetAddresses,
+    optimismAddresses,
+    sonicAddresses,
+    swellAddresses,
+    tacAddresses,
+    tacTurinAddresses,
+    unichainAddresses,
+    worldchainAddresses
 } from '../contracts/addresses'
 
 export type Network = typeof NETWORKS[number]
@@ -117,6 +118,12 @@ export const networks = {
         ...tacTurinAddresses.coreAddresses,
         ...tacTurinAddresses.swapAddresses,
         startBlock: 5066361
+    },
+    tac: {
+        network: 'tac',
+        ...tacAddresses.coreAddresses,
+        ...tacAddresses.swapAddresses,
+        startBlock: 860000
     }
 }
 

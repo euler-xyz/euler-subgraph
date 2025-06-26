@@ -30,6 +30,7 @@
     "prepare:optimism": "bun scripts/prepare.ts optimism",
     "prepare:gnosis": "bun scripts/prepare.ts gnosis",
     "prepare:tacturin": "bun scripts/prepare.ts tacturin",
+    "prepare:tac": "bun scripts/prepare.ts tac",
     "build:mainnet": "pnpm prepare:mainnet && graph build",
     "build:base": "pnpm prepare:base && graph build",
     "build:arbitrum": "pnpm prepare:arbitrum && graph build",
@@ -47,6 +48,7 @@
     "build:optimism": "pnpm prepare:optimism && graph build",
     "build:gnosis": "pnpm prepare:gnosis && graph build",
     "build:tacturin": "pnpm prepare:tacturin && graph build",
+    "build:tac": "pnpm prepare:tac && graph build",
     "deploy:mainnet": "pnpm build:mainnet && bun scripts/deploy.ts mainnet && pnpm generate:deployments",
     "deploy:mainnet:test": "pnpm build:mainnet && bun scripts/deploy.ts mainnet test && pnpm generate:deployments",
     "deploy:mainnet:swap": "pnpm build:mainnet && bun scripts/deploy.ts mainnet swap && pnpm generate:deployments",
@@ -65,7 +67,8 @@
     "deploy:hyperevm": "pnpm build:hyperevm && bun scripts/deploy.ts hyperevm && pnpm generate:deployments",
     "deploy:optimism": "pnpm build:optimism && bun scripts/deploy.ts optimism && pnpm generate:deployments",
     "deploy:gnosis": "pnpm build:gnosis && bun scripts/deploy.ts gnosis && pnpm generate:deployments",
-    "deploy:tacturin": "pnpm build:tacturin && bun scripts/deploy.ts tacturin && pnpm generate:deployments"
+    "deploy:tacturin": "pnpm build:tacturin && bun scripts/deploy.ts tacturin && pnpm generate:deployments",
+    "deploy:tac": "pnpm build:tac && bun scripts/deploy.ts tac && pnpm generate:deployments"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.87.0",

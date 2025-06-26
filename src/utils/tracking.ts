@@ -138,6 +138,9 @@ export function updateActiveAccountsInEVaults(
     balanceEntity.debt = debt
     balanceEntity.isControllerEnabled = isControllerEnabled
     balanceEntity.vault = vault
+    balanceEntity.blockTimestamp = blockTimestamp
+    balanceEntity.blockNumber = blockNumber
+    balanceEntity.transactionHash = transactionHash
     balanceEntity.save()
 
 }

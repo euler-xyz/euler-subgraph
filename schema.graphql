@@ -239,6 +239,9 @@ type TrackingVaultBalance @entity(immutable: false) {
   account: Bytes!
   balance: BigInt!
   debt: BigInt!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
 }
 
 
