@@ -13,7 +13,6 @@ import {
     sonicAddresses,
     swellAddresses,
     tacAddresses,
-    tacTurinAddresses,
     unichainAddresses,
     worldchainAddresses
 } from '../contracts/addresses'
@@ -112,12 +111,6 @@ export const networks = {
         ...gnosisAddresses.coreAddresses,
         ...gnosisAddresses.swapAddresses,
         startBlock: 38380000
-    },
-    tacturin: {
-        network: 'tac-turin',
-        ...tacTurinAddresses.coreAddresses,
-        ...tacTurinAddresses.swapAddresses,
-        startBlock: 5066361
     },
     tac: {
         network: 'tac',
