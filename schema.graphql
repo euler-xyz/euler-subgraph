@@ -381,7 +381,7 @@ type EulerEarnInterestUpdated @entity(immutable: true) {
 
 ## FACTORY 
 
-type EulerSwapPoolDeployed @entity(immutable: true) {
+type EulerSwapPool @entity(immutable: true) {
   id: Bytes!
   asset0: Bytes! 
   asset1: Bytes!
@@ -396,6 +396,7 @@ type EulerSwapPoolDeployed @entity(immutable: true) {
   concentrationX: BigInt!
   concentrationY: BigInt!
   pool: Bytes!
+  active: Boolean!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -414,7 +415,7 @@ type EulerSwapPoolUninstalled @entity(immutable: true) {
 
 ## PoolUninstalled
 
-type EulerSwapCreated  @entity(immutable: true) {
+type EulerSwapActivated  @entity(immutable: true) {
   id: Bytes!
   asset0: Bytes! 
   asset1: Bytes!

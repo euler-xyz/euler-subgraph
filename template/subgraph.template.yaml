@@ -233,8 +233,8 @@ templates:
         - name: EthereumVaultConnector
           file: ./abis/EVC.json
       eventHandlers:
-        - event: EulerSwapCreated(indexed address,indexed address)
-          handler: handleEulerSwapCreated
+        - event: EulerSwapActivated(indexed address,indexed address)
+          handler: handleEulerSwapActivated
         - event: Swap(indexed address,uint256,uint256,uint256,uint256,uint112,uint112,indexed address)
           handler: handleEulerSwap
       file: ./src/euler-swap.ts 

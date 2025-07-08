@@ -1,13 +1,19 @@
-import { EulerSwapCreated as EulerSwapCreatedEvent, Swap as EulerSwapEvent } from '../generated/templates/EulerSwap/EulerSwap'
-import { EulerSwap, EulerSwapCreated } from '../generated/schema'
-export function handleEulerSwapCreated(event: EulerSwapCreatedEvent): void {
-    let entity = new EulerSwapCreated(event.transaction.hash.concatI32(event.logIndex.toI32()))
+import { EulerSwapActivated as EulerSwapActivatedEvent, Swap as EulerSwapEvent } from '../generated/templates/EulerSwap/EulerSwap'
+import { EulerSwap, EulerSwapActivated, EulerSwapPool } from '../generated/schema'
+export function handleEulerSwapActivated(event: EulerSwapActivatedEvent): void {
+    let entity = new EulerSwapActivated(event.transaction.hash.concatI32(event.logIndex.toI32()))
     entity.asset0 = event.params.asset0
     entity.asset1 = event.params.asset1
     entity.blockNumber = event.block.number
     entity.blockTimestamp = event.block.timestamp
     entity.transactionHash = event.transaction.hash
     entity.save()
+
+    let poolEntity = EulerSwapPool.load(event.address)
+    if (poolEntity) {
+        poolEntity.active = true
+        poolEntity.save()
+    }
 }
 
 export function handleEulerSwap(event: EulerSwapEvent): void {

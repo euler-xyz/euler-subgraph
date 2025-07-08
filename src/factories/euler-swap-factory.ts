@@ -1,13 +1,13 @@
 
 import { PoolDeployed as PoolDeployedEvent, PoolUninstalled as PoolUninstalledEvent } from '../../generated/EulerSwapFactory/EulerSwapFactory'
-import { EulerSwapPoolDeployed, EulerSwapPoolUninstalled } from '../../generated/schema'
+import { EulerSwapPool, EulerSwapPoolUninstalled } from '../../generated/schema'
 import { dataSource } from "@graphprotocol/graph-ts"
 import { EulerSwap as EulerSwapTemplate } from '../../generated/templates'
 
 export function handlePoolDeployed(event: PoolDeployedEvent): void {
 
-    let entity = new EulerSwapPoolDeployed(
-        event.transaction.hash.concatI32(event.logIndex.toI32()),
+    let entity = new EulerSwapPool(
+        event.params.pool
     )
     entity.asset0 = event.params.asset0
     entity.asset1 = event.params.asset1
@@ -25,6 +25,7 @@ export function handlePoolDeployed(event: PoolDeployedEvent): void {
     entity.blockNumber = event.block.number
     entity.blockTimestamp = event.block.timestamp
     entity.transactionHash = event.transaction.hash
+    entity.active = false
     entity.save()
 
     let context = dataSource.context()
@@ -33,7 +34,7 @@ export function handlePoolDeployed(event: PoolDeployedEvent): void {
 
 export function handlePoolUninstalled(event: PoolUninstalledEvent): void {
     let entity = new EulerSwapPoolUninstalled(
-        event.transaction.hash.concatI32(event.logIndex.toI32()),
+        event.params.pool,
     )
     entity.asset0 = event.params.asset0
     entity.asset1 = event.params.asset1
@@ -43,4 +44,10 @@ export function handlePoolUninstalled(event: PoolUninstalledEvent): void {
     entity.blockTimestamp = event.block.timestamp
     entity.transactionHash = event.transaction.hash
     entity.save()
+
+    let poolEntity = EulerSwapPool.load(event.params.pool)
+    if (poolEntity) {
+        poolEntity.active = false
+        poolEntity.save()
+    }
 }
