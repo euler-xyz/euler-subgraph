@@ -1,13 +1,13 @@
 [
   {
     "network": "mainnet",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-mainnet/1.0.6/gn",
-    "version": "1.0.6"
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-mainnet/1.0.7/gn",
+    "version": "1.0.7"
   },
   {
     "network": "arbitrum",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-arbitrum/1.0.2/gn",
-    "version": "1.0.2"
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-arbitrum/1.0.3/gn",
+    "version": "1.0.3"
   },
   {
     "network": "base",
@@ -31,8 +31,8 @@
   },
   {
     "network": "unichain",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-unichain/1.0.4/gn",
-    "version": "1.0.4"
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-unichain/1.0.5/gn",
+    "version": "1.0.5"
   },
   {
     "network": "avalanche",

@@ -381,7 +381,7 @@ type EulerEarnInterestUpdated @entity(immutable: true) {
 
 ## FACTORY 
 
-type EulerSwapPool @entity(immutable: true) {
+type EulerSwapPool @entity(immutable: false) {
   id: Bytes!
   asset0: Bytes! 
   asset1: Bytes!

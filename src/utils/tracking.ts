@@ -220,6 +220,9 @@ function updateActiveAccountsInEarnVaults(
     balanceEntity.debt = BigInt.fromI32(0)
     balanceEntity.isControllerEnabled = false
     balanceEntity.vault = vault
+    balanceEntity.blockTimestamp = blockTimestamp
+    balanceEntity.blockNumber = blockNumber
+    balanceEntity.transactionHash = transactionHash
     balanceEntity.save()
 
 }
