@@ -13,6 +13,7 @@
     "verify:accountPositions": "bun ./verify/checkAccountPositions.ts",
     "verify:accountVaultBalances": "bun ./verify/checkAccountVaultBalances.ts",
     "test": "graph test",
+    "tag:deployments": "bun scripts/tag-deployments.ts",
     "generate:deployments": "bun scripts/generate-deployments.ts",
     "prepare:mainnet": "bun scripts/prepare.ts mainnet",
     "prepare:base": "bun scripts/prepare.ts base",
