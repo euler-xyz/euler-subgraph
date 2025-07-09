@@ -1,9 +1,21 @@
 import { execSync } from 'child_process'
 import { Network, NETWORKS, Version } from './config'
 import { compareVersions, formatVersion, parseVersion } from './utils/utils'
+import { existsSync, readFileSync } from 'fs'
 
+const DEPLOYMENTS_FILE = 'deployments.json'
 function getLatestVersion(network: Network, subgraphName: string): Version {
   try {
+    if (existsSync(DEPLOYMENTS_FILE)) {
+      const deployments = JSON.parse(readFileSync(DEPLOYMENTS_FILE, 'utf8'))
+      const deployment = deployments.find((deployment: any) => deployment.network === network)
+      if (deployment) {
+        return parseVersion(deployment.version)
+      }
+    } else {
+      console.warn('Deployments file not found, using goldsky subgraph list')
+    }
+
     const result = execSync('goldsky subgraph list').toString()
     const lines = result.split('\n')
       .filter(line => line.includes(subgraphName))
@@ -48,7 +60,7 @@ function deployNewVersion(network: Network, fork: string) {
     execSync(`goldsky subgraph deploy ${subgraphName}/${versionString}`, { stdio: 'inherit' })
     console.log(`Successfully deployed v${versionString}`)
   } catch (error) {
-    console.error('Error deploying:', error)
+    console.error('Error deploying: version: ', versionString, ' fork: ', fork, ' error: ', error)
     // @ts-ignore
     process.exit(1)
   }

@@ -385,16 +385,20 @@ type EulerSwapPool @entity(immutable: true) {
   id: Bytes!
   asset0: Bytes! 
   asset1: Bytes!
-  vault0: Bytes!
-  vault1: Bytes!
-  fee: BigInt!
+  vault0: Bytes
+  vault1: Bytes
+  fee: BigInt
+  protocolFee: BigInt
+  protocolFeeRecipient: Bytes
   eulerAccount: Bytes!
-  reserve0: BigInt!
-  reserve1: BigInt!
-  priceY: BigInt!
-  priceX: BigInt!
-  concentrationX: BigInt!
-  concentrationY: BigInt!
+  equilibriumReserve0: BigInt
+  equilibriumReserve1: BigInt
+  currReserve0: BigInt
+  currReserve1: BigInt
+  priceY: BigInt
+  priceX: BigInt
+  concentrationX: BigInt
+  concentrationY: BigInt
   pool: Bytes!
   active: Boolean!
   blockNumber: BigInt!
