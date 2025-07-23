@@ -4,2183 +4,2183 @@
     "inputs": [
       {
         "name": "owner",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "evc",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "permit2",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "initialTimelock",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "_asset",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "__name",
-        "internalType": "string",
-        "type": "string"
+        "type": "string",
+        "internalType": "string"
       },
       {
         "name": "__symbol",
-        "internalType": "string",
-        "type": "string"
+        "type": "string",
+        "internalType": "string"
       }
     ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "EVC",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
+    "name": "acceptCap",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
     ],
-    "name": "acceptCap",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "acceptGuardian",
+    "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "acceptOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "inputs": [],
-    "name": "acceptTimelock",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "acceptTimelock",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "allowance",
     "inputs": [
       {
         "name": "owner",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "spender",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "allowance",
     "outputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
+    "name": "approve",
     "inputs": [
       {
         "name": "spender",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "value",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "name": "approve",
     "outputs": [
       {
         "name": "",
-        "internalType": "bool",
-        "type": "bool"
+        "type": "bool",
+        "internalType": "bool"
       }
     ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "asset",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
+    "name": "balanceOf",
     "inputs": [
       {
         "name": "account",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "balanceOf",
     "outputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
+    "name": "config",
     "inputs": [
       {
         "name": "",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
     ],
-    "name": "config",
     "outputs": [
       {
         "name": "balance",
-        "internalType": "uint112",
-        "type": "uint112"
+        "type": "uint112",
+        "internalType": "uint112"
       },
       {
         "name": "cap",
-        "internalType": "uint136",
-        "type": "uint136"
+        "type": "uint136",
+        "internalType": "uint136"
       },
       {
         "name": "enabled",
-        "internalType": "bool",
-        "type": "bool"
+        "type": "bool",
+        "internalType": "bool"
       },
       {
         "name": "removableAt",
-        "internalType": "uint64",
-        "type": "uint64"
+        "type": "uint64",
+        "internalType": "uint64"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [
-      {
-        "name": "shares",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
     "name": "convertToAssets",
+    "inputs": [
+      {
+        "name": "shares",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "outputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [
-      {
-        "name": "assets",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
     "name": "convertToShares",
+    "inputs": [
+      {
+        "name": "assets",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
     "outputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "creator",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "curator",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "decimals",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "uint8",
-        "type": "uint8"
+        "type": "uint8",
+        "internalType": "uint8"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [
-      {
-        "name": "assets",
-        "internalType": "uint256",
-        "type": "uint256"
-      },
-      {
-        "name": "receiver",
-        "internalType": "address",
-        "type": "address"
-      }
-    ],
     "name": "deposit",
-    "outputs": [
-      {
-        "name": "shares",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "inputs": [],
-    "name": "fee",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint96",
-        "type": "uint96"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "inputs": [],
-    "name": "feeRecipient",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "address",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "inputs": [],
-    "name": "guardian",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "address",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "inputs": [
-      {
-        "name": "",
-        "internalType": "address",
-        "type": "address"
-      }
-    ],
-    "name": "isAllocator",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "bool",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "inputs": [],
-    "name": "lastTotalAssets",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "inputs": [],
-    "name": "lostAssets",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "inputs": [
-      {
-        "name": "",
-        "internalType": "address",
-        "type": "address"
-      }
-    ],
-    "name": "maxDeposit",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "inputs": [
-      {
-        "name": "",
-        "internalType": "address",
-        "type": "address"
-      }
-    ],
-    "name": "maxMint",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "inputs": [
-      {
-        "name": "owner",
-        "internalType": "address",
-        "type": "address"
-      }
-    ],
-    "name": "maxRedeem",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "inputs": [
-      {
-        "name": "owner",
-        "internalType": "address",
-        "type": "address"
-      }
-    ],
-    "name": "maxWithdraw",
-    "outputs": [
       {
         "name": "assets",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "inputs": [
-      {
-        "name": "shares",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "receiver",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "mint",
     "outputs": [
       {
-        "name": "assets",
-        "internalType": "uint256",
-        "type": "uint256"
+        "name": "shares",
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "fee",
     "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint96",
+        "internalType": "uint96"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "feeRecipient",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "guardian",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "isAllocator",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "lastTotalAssets",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "lostAssets",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "maxDeposit",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "maxMint",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "maxRedeem",
+    "inputs": [
+      {
+        "name": "owner",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "maxWithdraw",
+    "inputs": [
+      {
+        "name": "owner",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "assets",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "mint",
+    "inputs": [
+      {
+        "name": "shares",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "receiver",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "assets",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "name",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "string",
-        "type": "string"
+        "type": "string",
+        "internalType": "string"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "owner",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [
-      {
-        "name": "",
-        "internalType": "contract IERC4626",
-        "type": "address"
-      }
-    ],
     "name": "pendingCap",
+    "inputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract IERC4626"
+      }
+    ],
     "outputs": [
       {
         "name": "value",
-        "internalType": "uint136",
-        "type": "uint136"
+        "type": "uint136",
+        "internalType": "uint136"
       },
       {
         "name": "validAt",
-        "internalType": "uint64",
-        "type": "uint64"
+        "type": "uint64",
+        "internalType": "uint64"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "pendingGuardian",
+    "inputs": [],
     "outputs": [
       {
         "name": "value",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "validAt",
-        "internalType": "uint64",
-        "type": "uint64"
+        "type": "uint64",
+        "internalType": "uint64"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "pendingOwner",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "pendingTimelock",
+    "inputs": [],
     "outputs": [
       {
         "name": "value",
-        "internalType": "uint136",
-        "type": "uint136"
+        "type": "uint136",
+        "internalType": "uint136"
       },
       {
         "name": "validAt",
-        "internalType": "uint64",
-        "type": "uint64"
+        "type": "uint64",
+        "internalType": "uint64"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "permit2Address",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [
-      {
-        "name": "assets",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
     "name": "previewDeposit",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "inputs": [
-      {
-        "name": "shares",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "name": "previewMint",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "inputs": [
-      {
-        "name": "shares",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "name": "previewRedeem",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "inputs": [
       {
         "name": "assets",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "name": "previewWithdraw",
     "outputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
+    "name": "previewMint",
+    "inputs": [
+      {
+        "name": "shares",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "previewRedeem",
+    "inputs": [
+      {
+        "name": "shares",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "previewWithdraw",
+    "inputs": [
+      {
+        "name": "assets",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "reallocate",
     "inputs": [
       {
         "name": "allocations",
-        "internalType": "struct MarketAllocation[]",
         "type": "tuple[]",
+        "internalType": "struct MarketAllocation[]",
         "components": [
           {
             "name": "id",
-            "internalType": "contract IERC4626",
-            "type": "address"
+            "type": "address",
+            "internalType": "contract IERC4626"
           },
           {
             "name": "assets",
-            "internalType": "uint256",
-            "type": "uint256"
+            "type": "uint256",
+            "internalType": "uint256"
           }
         ]
       }
     ],
-    "name": "reallocate",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "redeem",
     "inputs": [
       {
         "name": "shares",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "receiver",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "owner",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "redeem",
     "outputs": [
       {
         "name": "assets",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "renounceOwnership",
+    "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
-    "inputs": [
-      {
-        "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
-      }
-    ],
     "name": "revokePendingCap",
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "inputs": [],
-    "name": "revokePendingGuardian",
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
     ],
-    "name": "revokePendingMarketRemoval",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "revokePendingGuardian",
     "inputs": [],
-    "name": "revokePendingTimelock",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "revokePendingMarketRemoval",
+    "inputs": [
+      {
+        "name": "id",
+        "type": "address",
+        "internalType": "contract IERC4626"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "revokePendingTimelock",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setCurator",
     "inputs": [
       {
         "name": "newCurator",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "setCurator",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "setFee",
     "inputs": [
       {
         "name": "newFee",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "name": "setFee",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "setFeeRecipient",
     "inputs": [
       {
         "name": "newFeeRecipient",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "setFeeRecipient",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "setIsAllocator",
     "inputs": [
       {
         "name": "newAllocator",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "newIsAllocator",
-        "internalType": "bool",
-        "type": "bool"
+        "type": "bool",
+        "internalType": "bool"
       }
     ],
-    "name": "setIsAllocator",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "setName",
     "inputs": [
       {
         "name": "newName",
-        "internalType": "string",
-        "type": "string"
+        "type": "string",
+        "internalType": "string"
       }
     ],
-    "name": "setName",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "setSupplyQueue",
     "inputs": [
       {
         "name": "newSupplyQueue",
-        "internalType": "contract IERC4626[]",
-        "type": "address[]"
+        "type": "address[]",
+        "internalType": "contract IERC4626[]"
       }
     ],
-    "name": "setSupplyQueue",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "setSymbol",
     "inputs": [
       {
         "name": "newSymbol",
-        "internalType": "string",
-        "type": "string"
+        "type": "string",
+        "internalType": "string"
       }
     ],
-    "name": "setSymbol",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "submitCap",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       },
       {
         "name": "newSupplyCap",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "name": "submitCap",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "submitGuardian",
     "inputs": [
       {
         "name": "newGuardian",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "submitGuardian",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "submitMarketRemoval",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
     ],
-    "name": "submitMarketRemoval",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "submitTimelock",
     "inputs": [
       {
         "name": "newTimelock",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "name": "submitTimelock",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "supplyQueue",
     "inputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "name": "supplyQueue",
     "outputs": [
       {
         "name": "",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "supplyQueueLength",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "symbol",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "string",
-        "type": "string"
+        "type": "string",
+        "internalType": "string"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "timelock",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "totalAssets",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
     "inputs": [],
-    "name": "totalSupply",
     "outputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
+    "name": "totalSupply",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "transfer",
     "inputs": [
       {
         "name": "to",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "value",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "name": "transfer",
     "outputs": [
       {
         "name": "",
-        "internalType": "bool",
-        "type": "bool"
+        "type": "bool",
+        "internalType": "bool"
       }
     ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "transferFrom",
     "inputs": [
       {
         "name": "from",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "to",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "value",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "name": "transferFrom",
     "outputs": [
       {
         "name": "",
-        "internalType": "bool",
-        "type": "bool"
+        "type": "bool",
+        "internalType": "bool"
       }
     ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "transferOwnership",
     "inputs": [
       {
         "name": "newOwner",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "updateWithdrawQueue",
     "inputs": [
       {
         "name": "indexes",
-        "internalType": "uint256[]",
-        "type": "uint256[]"
+        "type": "uint256[]",
+        "internalType": "uint256[]"
       }
     ],
-    "name": "updateWithdrawQueue",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "withdraw",
     "inputs": [
       {
         "name": "assets",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "receiver",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "owner",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "withdraw",
     "outputs": [
       {
         "name": "shares",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "withdrawQueue",
     "inputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "name": "withdrawQueue",
     "outputs": [
       {
         "name": "",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "withdrawQueueLength",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "AccrueInterest",
     "inputs": [
       {
         "name": "newTotalAssets",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       },
       {
         "name": "feeShares",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "AccrueInterest"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "Approval",
     "inputs": [
       {
         "name": "owner",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "spender",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "value",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "Approval"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "Deposit",
     "inputs": [
       {
         "name": "sender",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "owner",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "assets",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       },
       {
         "name": "shares",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "Deposit"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "OwnershipTransferStarted",
     "inputs": [
       {
         "name": "previousOwner",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "newOwner",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       }
     ],
-    "name": "OwnershipTransferStarted"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "OwnershipTransferred",
     "inputs": [
       {
         "name": "previousOwner",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "newOwner",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       }
     ],
-    "name": "OwnershipTransferred"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "ReallocateSupply",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "id",
-        "internalType": "contract IERC4626",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "contract IERC4626"
       },
       {
         "name": "suppliedAssets",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       },
       {
         "name": "suppliedShares",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "ReallocateSupply"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "ReallocateWithdraw",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "id",
-        "internalType": "contract IERC4626",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "contract IERC4626"
       },
       {
         "name": "withdrawnAssets",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       },
       {
         "name": "withdrawnShares",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "ReallocateWithdraw"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "RevokePendingCap",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "id",
-        "internalType": "contract IERC4626",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "contract IERC4626"
       }
     ],
-    "name": "RevokePendingCap"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "RevokePendingGuardian",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       }
     ],
-    "name": "RevokePendingGuardian"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "RevokePendingMarketRemoval",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "id",
-        "internalType": "contract IERC4626",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "contract IERC4626"
       }
     ],
-    "name": "RevokePendingMarketRemoval"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "RevokePendingTimelock",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       }
     ],
-    "name": "RevokePendingTimelock"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SetCap",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "id",
-        "internalType": "contract IERC4626",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "contract IERC4626"
       },
       {
         "name": "cap",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "SetCap"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SetCurator",
     "inputs": [
       {
         "name": "newCurator",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       }
     ],
-    "name": "SetCurator"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SetFee",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "newFee",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "SetFee"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SetFeeRecipient",
     "inputs": [
       {
         "name": "newFeeRecipient",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       }
     ],
-    "name": "SetFeeRecipient"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SetGuardian",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "guardian",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       }
     ],
-    "name": "SetGuardian"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SetIsAllocator",
     "inputs": [
       {
         "name": "allocator",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "isAllocator",
-        "internalType": "bool",
         "type": "bool",
-        "indexed": false
+        "indexed": false,
+        "internalType": "bool"
       }
     ],
-    "name": "SetIsAllocator"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SetName",
     "inputs": [
       {
         "name": "name",
-        "internalType": "string",
         "type": "string",
-        "indexed": false
+        "indexed": false,
+        "internalType": "string"
       }
     ],
-    "name": "SetName"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SetSupplyQueue",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "newSupplyQueue",
-        "internalType": "contract IERC4626[]",
         "type": "address[]",
-        "indexed": false
+        "indexed": false,
+        "internalType": "contract IERC4626[]"
       }
     ],
-    "name": "SetSupplyQueue"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SetSymbol",
     "inputs": [
       {
         "name": "symbol",
-        "internalType": "string",
         "type": "string",
-        "indexed": false
+        "indexed": false,
+        "internalType": "string"
       }
     ],
-    "name": "SetSymbol"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SetTimelock",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "newTimelock",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "SetTimelock"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SetWithdrawQueue",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "newWithdrawQueue",
-        "internalType": "contract IERC4626[]",
         "type": "address[]",
-        "indexed": false
+        "indexed": false,
+        "internalType": "contract IERC4626[]"
       }
     ],
-    "name": "SetWithdrawQueue"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SubmitCap",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "id",
-        "internalType": "contract IERC4626",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "contract IERC4626"
       },
       {
         "name": "cap",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "SubmitCap"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SubmitGuardian",
     "inputs": [
       {
         "name": "newGuardian",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       }
     ],
-    "name": "SubmitGuardian"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SubmitMarketRemoval",
     "inputs": [
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "id",
-        "internalType": "contract IERC4626",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "contract IERC4626"
       }
     ],
-    "name": "SubmitMarketRemoval"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SubmitTimelock",
     "inputs": [
       {
         "name": "newTimelock",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "SubmitTimelock"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "Transfer",
     "inputs": [
       {
         "name": "from",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "to",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "value",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "Transfer"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "UpdateLastTotalAssets",
     "inputs": [
       {
         "name": "updatedTotalAssets",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "UpdateLastTotalAssets"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "UpdateLostAssets",
     "inputs": [
       {
         "name": "newLostAssets",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "UpdateLostAssets"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "Withdraw",
     "inputs": [
       {
         "name": "sender",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "receiver",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "owner",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "assets",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       },
       {
         "name": "shares",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       }
     ],
-    "name": "Withdraw"
+    "anonymous": false
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "AboveMaxTimelock"
+    "name": "AboveMaxTimelock",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "AllCapsReached"
+    "name": "AllCapsReached",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "AlreadyPending"
+    "name": "AlreadyPending",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "AlreadySet"
+    "name": "AlreadySet",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "BadAssetReceiver"
+    "name": "BadAssetReceiver",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "BelowMinTimelock"
+    "name": "BelowMinTimelock",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "ControllerDisabled"
+    "name": "ControllerDisabled",
+    "inputs": []
   },
   {
     "type": "error",
+    "name": "DuplicateMarket",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
-    ],
-    "name": "DuplicateMarket"
+    ]
   },
   {
     "type": "error",
+    "name": "ERC20InsufficientAllowance",
     "inputs": [
       {
         "name": "spender",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "allowance",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "needed",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
-    ],
-    "name": "ERC20InsufficientAllowance"
+    ]
   },
   {
     "type": "error",
+    "name": "ERC20InsufficientBalance",
     "inputs": [
       {
         "name": "sender",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "balance",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "needed",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
-    ],
-    "name": "ERC20InsufficientBalance"
+    ]
   },
   {
     "type": "error",
+    "name": "ERC20InvalidApprover",
     "inputs": [
       {
         "name": "approver",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
-    ],
-    "name": "ERC20InvalidApprover"
+    ]
   },
   {
     "type": "error",
+    "name": "ERC20InvalidReceiver",
     "inputs": [
       {
         "name": "receiver",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
-    ],
-    "name": "ERC20InvalidReceiver"
+    ]
   },
   {
     "type": "error",
+    "name": "ERC20InvalidSender",
     "inputs": [
       {
         "name": "sender",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
-    ],
-    "name": "ERC20InvalidSender"
+    ]
   },
   {
     "type": "error",
+    "name": "ERC20InvalidSpender",
     "inputs": [
       {
         "name": "spender",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
-    ],
-    "name": "ERC20InvalidSpender"
+    ]
   },
   {
     "type": "error",
+    "name": "ERC4626ExceededMaxDeposit",
     "inputs": [
       {
         "name": "receiver",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "assets",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "max",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
-    ],
-    "name": "ERC4626ExceededMaxDeposit"
+    ]
   },
   {
     "type": "error",
+    "name": "ERC4626ExceededMaxMint",
     "inputs": [
       {
         "name": "receiver",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "shares",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "max",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
-    ],
-    "name": "ERC4626ExceededMaxMint"
+    ]
   },
   {
     "type": "error",
+    "name": "ERC4626ExceededMaxRedeem",
     "inputs": [
       {
         "name": "owner",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "shares",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "max",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
-    ],
-    "name": "ERC4626ExceededMaxRedeem"
+    ]
   },
   {
     "type": "error",
+    "name": "ERC4626ExceededMaxWithdraw",
     "inputs": [
       {
         "name": "owner",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "assets",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "max",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
-    ],
-    "name": "ERC4626ExceededMaxWithdraw"
+    ]
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "EVC_InvalidAddress"
+    "name": "EVC_InvalidAddress",
+    "inputs": []
   },
   {
     "type": "error",
+    "name": "InconsistentAsset",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
-    ],
-    "name": "InconsistentAsset"
+    ]
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "InconsistentReallocation"
+    "name": "InconsistentReallocation",
+    "inputs": []
   },
   {
     "type": "error",
+    "name": "InvalidMarketRemovalNonZeroCap",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
-    ],
-    "name": "InvalidMarketRemovalNonZeroCap"
+    ]
   },
   {
     "type": "error",
+    "name": "InvalidMarketRemovalNonZeroSupply",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
-    ],
-    "name": "InvalidMarketRemovalNonZeroSupply"
+    ]
   },
   {
     "type": "error",
+    "name": "InvalidMarketRemovalTimelockNotElapsed",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
-    ],
-    "name": "InvalidMarketRemovalTimelockNotElapsed"
+    ]
   },
   {
     "type": "error",
+    "name": "MarketNotEnabled",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
-    ],
-    "name": "MarketNotEnabled"
+    ]
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "MaxFeeExceeded"
+    "name": "MaxFeeExceeded",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "MaxQueueLengthExceeded"
+    "name": "MaxQueueLengthExceeded",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "NoPendingValue"
+    "name": "NoPendingValue",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "NonZeroCap"
+    "name": "NonZeroCap",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "NotAllocatorRole"
+    "name": "NotAllocatorRole",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "NotAuthorized"
+    "name": "NotAuthorized",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "NotCuratorNorGuardianRole"
+    "name": "NotCuratorNorGuardianRole",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "NotCuratorRole"
+    "name": "NotCuratorRole",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "NotEnoughLiquidity"
+    "name": "NotEnoughLiquidity",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "NotGuardianRole"
+    "name": "NotGuardianRole",
+    "inputs": []
   },
   {
     "type": "error",
+    "name": "OwnableInvalidOwner",
     "inputs": [
       {
         "name": "owner",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
-    ],
-    "name": "OwnableInvalidOwner"
+    ]
   },
   {
     "type": "error",
+    "name": "OwnableUnauthorizedAccount",
     "inputs": [
       {
         "name": "account",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
-    ],
-    "name": "OwnableUnauthorizedAccount"
+    ]
   },
   {
     "type": "error",
+    "name": "PendingCap",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
-    ],
-    "name": "PendingCap"
+    ]
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "PendingRemoval"
+    "name": "PendingRemoval",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "ReentrancyGuardReentrantCall"
+    "name": "ReentrancyGuardReentrantCall",
+    "inputs": []
   },
   {
     "type": "error",
+    "name": "SafeCastOverflowedUintDowncast",
     "inputs": [
       {
         "name": "bits",
-        "internalType": "uint8",
-        "type": "uint8"
+        "type": "uint8",
+        "internalType": "uint8"
       },
       {
         "name": "value",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
-    ],
-    "name": "SafeCastOverflowedUintDowncast"
+    ]
   },
   {
     "type": "error",
+    "name": "SafeERC20FailedOperation",
     "inputs": [
       {
         "name": "token",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
-    ],
-    "name": "SafeERC20FailedOperation"
+    ]
   },
   {
     "type": "error",
+    "name": "SupplyCapExceeded",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
-    ],
-    "name": "SupplyCapExceeded"
+    ]
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "TimelockNotElapsed"
+    "name": "TimelockNotElapsed",
+    "inputs": []
   },
   {
     "type": "error",
+    "name": "UnauthorizedMarket",
     "inputs": [
       {
         "name": "id",
-        "internalType": "contract IERC4626",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IERC4626"
       }
-    ],
-    "name": "UnauthorizedMarket"
+    ]
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "ZeroAssets"
+    "name": "ZeroAssets",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "ZeroFeeRecipient"
+    "name": "ZeroFeeRecipient",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "ZeroShares"
+    "name": "ZeroShares",
+    "inputs": []
   }
 ]
