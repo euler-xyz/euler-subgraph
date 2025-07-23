@@ -1,107 +1,385 @@
 [
   {
+    "type": "constructor",
     "inputs": [
-      { "internalType": "address", "name": "_eulerEarnImpl", "type": "address" }
+      {
+        "name": "_owner",
+        "internalType": "address",
+        "type": "address"
+      },
+      {
+        "name": "_evc",
+        "internalType": "address",
+        "type": "address"
+      },
+      {
+        "name": "_permit2",
+        "internalType": "address",
+        "type": "address"
+      },
+      {
+        "name": "_perspective",
+        "internalType": "address",
+        "type": "address"
+      }
     ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "stateMutability": "nonpayable"
   },
-  { "inputs": [], "name": "FailedDeployment", "type": "error" },
   {
+    "type": "function",
+    "inputs": [],
+    "name": "EVC",
+    "outputs": [
+      {
+        "name": "",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "inputs": [
-      { "internalType": "uint256", "name": "balance", "type": "uint256" },
-      { "internalType": "uint256", "name": "needed", "type": "uint256" }
+      {
+        "name": "initialOwner",
+        "internalType": "address",
+        "type": "address"
+      },
+      {
+        "name": "initialTimelock",
+        "internalType": "uint256",
+        "type": "uint256"
+      },
+      {
+        "name": "asset",
+        "internalType": "address",
+        "type": "address"
+      },
+      {
+        "name": "name",
+        "internalType": "string",
+        "type": "string"
+      },
+      {
+        "name": "symbol",
+        "internalType": "string",
+        "type": "string"
+      },
+      {
+        "name": "salt",
+        "internalType": "bytes32",
+        "type": "bytes32"
+      }
     ],
-    "name": "InsufficientBalance",
-    "type": "error"
+    "name": "createEulerEarn",
+    "outputs": [
+      {
+        "name": "eulerEarn",
+        "internalType": "contract IEulerEarn",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable"
   },
-  { "inputs": [], "name": "InvalidQuery", "type": "error" },
   {
+    "type": "function",
+    "inputs": [],
+    "name": "getVaultListLength",
+    "outputs": [
+      {
+        "name": "",
+        "internalType": "uint256",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "start",
+        "internalType": "uint256",
+        "type": "uint256"
+      },
+      {
+        "name": "end",
+        "internalType": "uint256",
+        "type": "uint256"
+      }
+    ],
+    "name": "getVaultListSlice",
+    "outputs": [
+      {
+        "name": "list",
+        "internalType": "address[]",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "id",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "name": "isStrategyAllowed",
+    "outputs": [
+      {
+        "name": "",
+        "internalType": "bool",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "name": "isVault",
+    "outputs": [
+      {
+        "name": "",
+        "internalType": "bool",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "inputs": [],
+    "name": "owner",
+    "outputs": [
+      {
+        "name": "",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "inputs": [],
+    "name": "permit2Address",
+    "outputs": [
+      {
+        "name": "",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "inputs": [],
+    "name": "renounceOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "_perspective",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "name": "setPerspective",
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "inputs": [],
+    "name": "supportedPerspective",
+    "outputs": [
+      {
+        "name": "",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "newOwner",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "name": "transferOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "inputs": [
+      {
+        "name": "",
+        "internalType": "uint256",
+        "type": "uint256"
+      }
+    ],
+    "name": "vaultList",
+    "outputs": [
+      {
+        "name": "",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "event",
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
+        "name": "eulerEarn",
         "internalType": "address",
-        "name": "_owner",
-        "type": "address"
+        "type": "address",
+        "indexed": true
       },
       {
-        "indexed": false,
+        "name": "caller",
         "internalType": "address",
-        "name": "_eulerEarnVault",
-        "type": "address"
+        "type": "address",
+        "indexed": true
       },
       {
-        "indexed": true,
+        "name": "initialOwner",
         "internalType": "address",
-        "name": "_asset",
-        "type": "address"
-      }
-    ],
-    "name": "DeployEulerEarn",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "_asset", "type": "address" },
-      { "internalType": "string", "name": "_name", "type": "string" },
-      { "internalType": "string", "name": "_symbol", "type": "string" },
+        "type": "address",
+        "indexed": false
+      },
       {
+        "name": "initialTimelock",
         "internalType": "uint256",
-        "name": "_initialCashAllocationPoints",
-        "type": "uint256"
+        "type": "uint256",
+        "indexed": false
       },
-      { "internalType": "uint24", "name": "_smearingPeriod", "type": "uint24" }
+      {
+        "name": "asset",
+        "internalType": "address",
+        "type": "address",
+        "indexed": true
+      },
+      {
+        "name": "name",
+        "internalType": "string",
+        "type": "string",
+        "indexed": false
+      },
+      {
+        "name": "symbol",
+        "internalType": "string",
+        "type": "string",
+        "indexed": false
+      },
+      {
+        "name": "salt",
+        "internalType": "bytes32",
+        "type": "bytes32",
+        "indexed": false
+      }
     ],
-    "name": "deployEulerEarn",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    "name": "CreateEulerEarn"
   },
   {
-    "inputs": [],
-    "name": "eulerEarnImpl",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "name": "eulerEarnVaults",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getEulerEarnVaultsListLength",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "_start", "type": "uint256" },
-      { "internalType": "uint256", "name": "_end", "type": "uint256" }
-    ],
-    "name": "getEulerEarnVaultsListSlice",
-    "outputs": [
-      { "internalType": "address[]", "name": "", "type": "address[]" }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
+    "type": "event",
+    "anonymous": false,
     "inputs": [
       {
+        "name": "previousOwner",
         "internalType": "address",
-        "name": "_earnVaultAddress",
+        "type": "address",
+        "indexed": true
+      },
+      {
+        "name": "newOwner",
+        "internalType": "address",
+        "type": "address",
+        "indexed": true
+      }
+    ],
+    "name": "OwnershipTransferred"
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "inputs": [
+      {
+        "name": "",
+        "internalType": "address",
+        "type": "address",
+        "indexed": false
+      }
+    ],
+    "name": "SetPerspective"
+  },
+  {
+    "type": "error",
+    "inputs": [],
+    "name": "BadQuery"
+  },
+  {
+    "type": "error",
+    "inputs": [],
+    "name": "ControllerDisabled"
+  },
+  {
+    "type": "error",
+    "inputs": [],
+    "name": "EVC_InvalidAddress"
+  },
+  {
+    "type": "error",
+    "inputs": [],
+    "name": "NotAuthorized"
+  },
+  {
+    "type": "error",
+    "inputs": [
+      {
+        "name": "owner",
+        "internalType": "address",
         "type": "address"
       }
     ],
-    "name": "isValidDeployment",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
-    "stateMutability": "view",
-    "type": "function"
+    "name": "OwnableInvalidOwner"
+  },
+  {
+    "type": "error",
+    "inputs": [
+      {
+        "name": "account",
+        "internalType": "address",
+        "type": "address"
+      }
+    ],
+    "name": "OwnableUnauthorizedAccount"
+  },
+  {
+    "type": "error",
+    "inputs": [],
+    "name": "ZeroAddress"
   }
 ]
