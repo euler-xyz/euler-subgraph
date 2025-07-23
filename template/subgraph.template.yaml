@@ -79,8 +79,8 @@ dataSources:
         - name: EthereumVaultConnector
           file: ./abis/EVC.json
       eventHandlers:
-        - event: DeployEulerEarn(indexed address,address,indexed address)
-          handler: handleDeployEulerEarn
+        - event: CreateEulerEarn(indexed address,indexed address,address,uint256,indexed address,string,string,bytes32)
+          handler: handleCreateEulerEarn
       file: ./src/factories/euler-earn-factory.ts
   - kind: ethereum
     name: EulerSwapFactory
@@ -187,9 +187,32 @@ templates:
         - EulerEarnTransfer
         - EulerEarnWithdraw
         - EulerEarnVault
-        - EulerEarnHarvest
-        - EulerEarnRebalance
-        - EulerEarnInterestUpdated
+        - EulerEarnAccrueInterest
+        - EulerEarnOwnershipTransferStarted
+        - EulerEarnOwnershipTransferred
+        - EulerEarnRevokePendingCap
+        - EulerEarnRevokePendingGuardian
+        - EulerEarnRevokePendingMarketRemoval
+        - EulerEarnRevokePendingTimelock
+        - EulerEarnSetCap
+        - EulerEarnSetCurator
+        - EulerEarnSetFee
+        - EulerEarnSetFeeRecipient
+        - EulerEarnSetGuardian
+        - EulerEarnSetIsAllocator
+        - EulerEarnSetName
+        - EulerEarnSetSupplyQueue
+        - EulerEarnSetSymbol
+        - EulerEarnSetTimelock
+        - EulerEarnSetWithdrawQueue
+        - EulerEarnSubmitCap
+        - EulerEarnSubmitGuardian
+        - EulerEarnSubmitMarketRemoval
+        - EulerEarnSubmitTimelock
+        - EulerEarnReallocateSupply
+        - EulerEarnReallocateWithdraw
+        - EulerEarnUpdateLastTotalAssets
+        - EulerEarnUpdateLostAssets
       abis:
         - name: EulerVault
           file: ./abis/EulerVault.json
@@ -206,14 +229,58 @@ templates:
           handler: handleTransfer
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
-        - event: ExecuteHarvest(indexed address,uint256,uint256)
-          handler: handleExecuteHarvest
-        - event: Harvest(uint256,uint256,uint256)
-          handler: handleHarvest
-        - event: Rebalance(indexed address,uint256,bool)
-          handler: handleRebalance
-        - event: InterestUpdated(uint256,uint256)
-          handler: handleInterestUpdated
+        - event: ReallocateSupply(indexed address,indexed address,uint256,uint256)
+          handler: handleReallocateSupply
+        - event: ReallocateWithdraw(indexed address,indexed address,uint256,uint256)
+          handler: handleReallocateWithdraw
+        - event: UpdateLastTotalAssets(uint256)
+          handler: handleUpdateLastTotalAssets
+        - event: UpdateLostAssets(uint256)
+          handler: handleUpdateLostAssets
+        - event: AccrueInterest(uint256,uint256)
+          handler: handleAccrueInterest
+        - event: OwnershipTransferStarted(indexed address,indexed address)
+          handler: handleOwnershipTransferStarted
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: RevokePendingCap(indexed address,indexed address)
+          handler: handleRevokePendingCap
+        - event: RevokePendingGuardian(indexed address)
+          handler: handleRevokePendingGuardian
+        - event: RevokePendingMarketRemoval(indexed address,indexed address)
+          handler: handleRevokePendingMarketRemoval
+        - event: RevokePendingTimelock(indexed address)
+          handler: handleRevokePendingTimelock
+        - event: SetCap(indexed address,indexed address,uint256)
+          handler: handleSetCap
+        - event: SetCurator(indexed address)
+          handler: handleSetCurator
+        - event: SetFee(indexed address,uint256)
+          handler: handleSetFee
+        - event: SetFeeRecipient(indexed address)
+          handler: handleSetFeeRecipient
+        - event: SetGuardian(indexed address,indexed address)
+          handler: handleSetGuardian
+        - event: SetIsAllocator(indexed address,bool)
+          handler: handleSetIsAllocator
+        - event: SetName(string)
+          handler: handleSetName
+        - event: SetSupplyQueue(indexed address,address[])
+          handler: handleSetSupplyQueue
+        - event: SetSymbol(string)
+          handler: handleSetSymbol
+        - event: SetTimelock(indexed address,uint256)
+          handler: handleSetTimelock
+        - event: SetWithdrawQueue(indexed address,address[])
+          handler: handleSetWithdrawQueue
+        - event: SubmitCap(indexed address,indexed address,uint256)
+          handler: handleSubmitCap
+        - event: SubmitGuardian(indexed address)
+          handler: handleSubmitGuardian
+        - event: SubmitMarketRemoval(indexed address,indexed address)
+          handler: handleSubmitMarketRemoval
+        - event: SubmitTimelock(uint256)
+          handler: handleSubmitTimelock
       file: ./src/euler-earn.ts
   - kind: ethereum
     name: EulerSwap

@@ -1,17 +1,17 @@
 import { dataSource } from "@graphprotocol/graph-ts"
-import { DeployEulerEarn as DeployEulerEarnEvent } from "../../generated/EulerEarnFactory/EulerEarnFactory"
+import { CreateEulerEarn as CreateEulerEarnEvent } from "../../generated/EulerEarnFactory/EulerEarnFactory"
 import { DeployEulerEarn, EulerEarnVault } from "../../generated/schema"
 import { EulerEarn as EulerEarnTemplate } from "../../generated/templates"
 
 import { loadOrCreateEulerEarnVault } from "../utils/earnVault"
-export function handleDeployEulerEarn(event: DeployEulerEarnEvent): void {
+export function handleCreateEulerEarn(event: CreateEulerEarnEvent): void {
   // Create DeployEulerEarn entity
   let deployEntity = new DeployEulerEarn(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
-  deployEntity.owner = event.params._owner
-  deployEntity.eulerEarnVault = event.params._eulerEarnVault
-  deployEntity.asset = event.params._asset
+  deployEntity.owner = event.params.caller
+  deployEntity.eulerEarnVault = event.params.eulerEarn
+  deployEntity.asset = event.params.asset
 
   deployEntity.blockNumber = event.block.number
   deployEntity.blockTimestamp = event.block.timestamp
@@ -19,10 +19,10 @@ export function handleDeployEulerEarn(event: DeployEulerEarnEvent): void {
 
   deployEntity.save()
 
-  let earnVault = loadOrCreateEulerEarnVault(event.params._eulerEarnVault)
-  earnVault.owner = event.params._owner
+  let earnVault = loadOrCreateEulerEarnVault(event.params.eulerEarn)
+  earnVault.owner = event.params.caller
   earnVault.save()
   // Create templates with context
   let context = dataSource.context()
-  EulerEarnTemplate.createWithContext(event.params._eulerEarnVault, context)
+  EulerEarnTemplate.createWithContext(event.params.eulerEarn, context)
 }
