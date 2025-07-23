@@ -4,382 +4,382 @@
     "inputs": [
       {
         "name": "_owner",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "_evc",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "_permit2",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "_perspective",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "EVC",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
+    "name": "createEulerEarn",
     "inputs": [
       {
         "name": "initialOwner",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "initialTimelock",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "asset",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       },
       {
         "name": "name",
-        "internalType": "string",
-        "type": "string"
+        "type": "string",
+        "internalType": "string"
       },
       {
         "name": "symbol",
-        "internalType": "string",
-        "type": "string"
+        "type": "string",
+        "internalType": "string"
       },
       {
         "name": "salt",
-        "internalType": "bytes32",
-        "type": "bytes32"
+        "type": "bytes32",
+        "internalType": "bytes32"
       }
     ],
-    "name": "createEulerEarn",
     "outputs": [
       {
         "name": "eulerEarn",
-        "internalType": "contract IEulerEarn",
-        "type": "address"
+        "type": "address",
+        "internalType": "contract IEulerEarn"
       }
     ],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "getVaultListLength",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
+    "name": "getVaultListSlice",
     "inputs": [
       {
         "name": "start",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       },
       {
         "name": "end",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "name": "getVaultListSlice",
     "outputs": [
       {
         "name": "list",
-        "internalType": "address[]",
-        "type": "address[]"
+        "type": "address[]",
+        "internalType": "address[]"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
+    "name": "isStrategyAllowed",
     "inputs": [
       {
         "name": "id",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "isStrategyAllowed",
     "outputs": [
       {
         "name": "",
-        "internalType": "bool",
-        "type": "bool"
+        "type": "bool",
+        "internalType": "bool"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
+    "name": "isVault",
     "inputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "isVault",
     "outputs": [
       {
         "name": "",
-        "internalType": "bool",
-        "type": "bool"
+        "type": "bool",
+        "internalType": "bool"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "owner",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "permit2Address",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "renounceOwnership",
+    "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "setPerspective",
     "inputs": [
       {
         "name": "_perspective",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "setPerspective",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
-    "inputs": [],
     "name": "supportedPerspective",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "function",
+    "name": "transferOwnership",
     "inputs": [
       {
         "name": "newOwner",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
-    "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable"
   },
   {
     "type": "function",
+    "name": "vaultList",
     "inputs": [
       {
         "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
+        "type": "uint256",
+        "internalType": "uint256"
       }
     ],
-    "name": "vaultList",
     "outputs": [
       {
         "name": "",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
     ],
     "stateMutability": "view"
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "CreateEulerEarn",
     "inputs": [
       {
         "name": "eulerEarn",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "caller",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "initialOwner",
-        "internalType": "address",
         "type": "address",
-        "indexed": false
+        "indexed": false,
+        "internalType": "address"
       },
       {
         "name": "initialTimelock",
-        "internalType": "uint256",
         "type": "uint256",
-        "indexed": false
+        "indexed": false,
+        "internalType": "uint256"
       },
       {
         "name": "asset",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "name",
-        "internalType": "string",
         "type": "string",
-        "indexed": false
+        "indexed": false,
+        "internalType": "string"
       },
       {
         "name": "symbol",
-        "internalType": "string",
         "type": "string",
-        "indexed": false
+        "indexed": false,
+        "internalType": "string"
       },
       {
         "name": "salt",
-        "internalType": "bytes32",
         "type": "bytes32",
-        "indexed": false
+        "indexed": false,
+        "internalType": "bytes32"
       }
     ],
-    "name": "CreateEulerEarn"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "OwnershipTransferred",
     "inputs": [
       {
         "name": "previousOwner",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       },
       {
         "name": "newOwner",
-        "internalType": "address",
         "type": "address",
-        "indexed": true
+        "indexed": true,
+        "internalType": "address"
       }
     ],
-    "name": "OwnershipTransferred"
+    "anonymous": false
   },
   {
     "type": "event",
-    "anonymous": false,
+    "name": "SetPerspective",
     "inputs": [
       {
         "name": "",
-        "internalType": "address",
         "type": "address",
-        "indexed": false
+        "indexed": false,
+        "internalType": "address"
       }
     ],
-    "name": "SetPerspective"
+    "anonymous": false
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "BadQuery"
+    "name": "BadQuery",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "ControllerDisabled"
+    "name": "ControllerDisabled",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "EVC_InvalidAddress"
+    "name": "EVC_InvalidAddress",
+    "inputs": []
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "NotAuthorized"
+    "name": "NotAuthorized",
+    "inputs": []
   },
   {
     "type": "error",
+    "name": "OwnableInvalidOwner",
     "inputs": [
       {
         "name": "owner",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
-    ],
-    "name": "OwnableInvalidOwner"
+    ]
   },
   {
     "type": "error",
+    "name": "OwnableUnauthorizedAccount",
     "inputs": [
       {
         "name": "account",
-        "internalType": "address",
-        "type": "address"
+        "type": "address",
+        "internalType": "address"
       }
-    ],
-    "name": "OwnableUnauthorizedAccount"
+    ]
   },
   {
     "type": "error",
-    "inputs": [],
-    "name": "ZeroAddress"
+    "name": "ZeroAddress",
+    "inputs": []
   }
 ]
