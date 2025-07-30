@@ -83,5 +83,10 @@
     "network": "tac",
     "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-tac/1.0.2/gn",
     "version": "1.0.2"
+  },
+  {
+    "network": "linea",
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-linea/1.0.1/gn",
+    "version": "1.0.1"
   }
 ]

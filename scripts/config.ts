@@ -15,7 +15,8 @@ import {
     tacAddresses,
     tacTurinAddresses,
     unichainAddresses,
-    worldchainAddresses
+    worldchainAddresses,
+    lineaAddresses
 } from '../contracts/addresses'
 
 export type Network = typeof NETWORKS[number]
@@ -124,6 +125,12 @@ export const networks = {
         ...tacAddresses.coreAddresses,
         ...tacAddresses.swapAddresses,
         startBlock: 860000
+    },
+    linea: {
+        network: 'linea',
+        ...lineaAddresses.coreAddresses,
+        ...lineaAddresses.swapAddresses,
+        startBlock: 17900000
     }
 }
 
