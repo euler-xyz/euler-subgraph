@@ -303,6 +303,236 @@ type EulerEarnWithdraw @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
+type EulerEarnAccrueInterest @entity(immutable: true) {
+  id: Bytes!
+  newTotalAssets: BigInt! # uint256
+  feeShares: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnOwnershipTransferStarted @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnOwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnRevokePendingCap @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  market: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnRevokePendingGuardian @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnRevokePendingMarketRemoval @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  market: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnRevokePendingTimelock @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSetCap @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  market: Bytes! # address
+  cap: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSetCurator @entity(immutable: true) {
+  id: Bytes!
+  newCurator: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSetFee @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  fee: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSetFeeRecipient @entity(immutable: true) {
+  id: Bytes!
+  newFeeRecipient: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSetGuardian @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  guardian: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSetIsAllocator @entity(immutable: true) {
+  id: Bytes!
+  allocator: Bytes! # address
+  isAllocator: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSetName @entity(immutable: true) {
+  id: Bytes!
+  name: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSetSupplyQueue @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  supplyQueue: [Bytes!]! # address[]
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSetSymbol @entity(immutable: true) {
+  id: Bytes!
+  symbol: String! # string
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSetTimelock @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  timelock: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSetWithdrawQueue @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  withdrawQueue: [Bytes!]! # address[]
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSubmitCap @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  market: Bytes! # address
+  cap: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSubmitGuardian @entity(immutable: true) {
+  id: Bytes!
+  newGuardian: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSubmitMarketRemoval @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address
+  market: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnSubmitTimelock @entity(immutable: true) {
+  id: Bytes!
+  timelock: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnReallocateSupply @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address - the caller parameter
+  market: Bytes! # address - the id parameter (mapping id to market for semantics)
+  suppliedAssets: BigInt! # uint256
+  suppliedShares: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnReallocateWithdraw @entity(immutable: true) {
+  id: Bytes!
+  caller: Bytes! # address - the caller parameter
+  market: Bytes! # address - the id parameter (mapping id to market for semantics)
+  withdrawnAssets: BigInt! # uint256
+  withdrawnShares: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnUpdateLastTotalAssets @entity(immutable: true) {
+  id: Bytes!
+  updatedTotalAssets: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type EulerEarnUpdateLostAssets @entity(immutable: true) {
+  id: Bytes!
+  newLostAssets: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
 type EulerEarnVault @entity(immutable: false) {
     id: Bytes!
     evc: Bytes!
@@ -316,64 +546,12 @@ type EulerEarnVault @entity(immutable: false) {
     totalAssets: BigInt!
     totalAllocated: BigInt!
     totalSupply: BigInt!
-    harvests: [EulerEarnExecuteHarvest!]! @derivedFrom(field: "eulerEarnVault")
-    rebalances: [EulerEarnRebalance!]! @derivedFrom(field: "eulerEarnVault")
-    interestUpdated: [EulerEarnInterestUpdated!]! @derivedFrom(field: "eulerEarnVault")
     blockNumber: BigInt!
     blockTimestamp: BigInt!
     transactionHash: Bytes!
 }
 
-type EulerEarnExecuteHarvest @entity(immutable: true) {
-    id: Bytes!
-    timestamp: BigInt!
-    eulerEarnVault: EulerEarnVault!
-    harvester: Bytes!
-    strategy: Bytes!
-    eulerEarnAssetsAmount: BigInt!
-    strategyAllocatedAmount: BigInt!
-    blockNumber: BigInt!
-    blockTimestamp: BigInt!
-    transactionHash: Bytes!
-}
 
-type EulerEarnHarvest @entity(immutable: true) {
-    id: Bytes!
-    timestamp: BigInt!
-    harvester: Bytes!
-    eulerEarnVault: EulerEarnVault!
-    totalAllocated: BigInt!
-    totalYield: BigInt!
-    totalLoss: BigInt!
-    blockNumber: BigInt!
-    blockTimestamp: BigInt!
-    transactionHash: Bytes!
-}
-
-type EulerEarnRebalance @entity(immutable: true) {
-    id: Bytes!
-    timestamp: BigInt!
-    rebalancer: Bytes!
-    txHash: Bytes!
-    eulerEarnVault: EulerEarnVault!
-    strategy: Bytes!
-    amountToRebalance: BigInt!
-    isDeposit: Boolean!
-    blockNumber: BigInt!
-    blockTimestamp: BigInt!
-    transactionHash: Bytes!
-}
-
-type EulerEarnInterestUpdated @entity(immutable: true) {
-    id: Bytes!
-    timestamp: BigInt!
-    eulerEarnVault: EulerEarnVault!
-    interestAccrued: BigInt!
-    interestLeft: BigInt!
-    blockNumber: BigInt!
-    blockTimestamp: BigInt!
-    transactionHash: Bytes!
-}
 
 ########################################################
 # Euler Swap

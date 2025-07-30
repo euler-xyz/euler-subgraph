@@ -11,8 +11,8 @@
   },
   {
     "network": "base",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-base/1.0.9/gn",
-    "version": "1.0.9"
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-base/1.0.10/gn",
+    "version": "1.0.10"
   },
   {
     "network": "swell",
