@@ -1,8 +1,8 @@
 [
   {
     "network": "mainnet",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-mainnet/1.0.8/gn",
-    "version": "1.0.8"
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-mainnet/1.0.26/gn",
+    "version": "1.0.26"
   },
   {
     "network": "arbitrum",
@@ -11,8 +11,8 @@
   },
   {
     "network": "base",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-base/1.0.10/gn",
-    "version": "1.0.10"
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-base/1.0.11/gn",
+    "version": "1.0.11"
   },
   {
     "network": "swell",
@@ -51,8 +51,8 @@
   },
   {
     "network": "bsc",
-    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-bsc/1.0.4/gn",
-    "version": "1.0.4"
+    "url": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-v2-bsc/1.0.5/gn",
+    "version": "1.0.5"
   },
   {
     "network": "worldchain",

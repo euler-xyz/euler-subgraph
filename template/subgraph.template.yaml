@@ -32,6 +32,30 @@ dataSources:
       evcAddress:
         type: String
         data: "{{{ evc }}}"
+      edgeFactoryPerspective:
+        type: String
+        data: "{{{ edgeFactoryPerspective }}}"
+      escrowedCollateralPerspective:
+        type: String
+        data: "{{{ escrowedCollateralPerspective }}}"
+      eulerEarnFactoryPerspective:
+        type: String
+        data: "{{{ eulerEarnFactoryPerspective }}}"
+      eulerEarnGovernedPerspective:
+        type: String
+        data: "{{{ eulerEarnGovernedPerspective }}}"
+      eulerUngoverned0xPerspective:
+        type: String
+        data: "{{{ eulerUngoverned0xPerspective }}}"
+      eulerUngovernedNzxPerspective:
+        type: String
+        data: "{{{ eulerUngovernedNzxPerspective }}}"
+      evkFactoryPerspective:
+        type: String
+        data: "{{{ evkFactoryPerspective }}}"
+      governedPerspective:
+        type: String
+        data: "{{{ governedPerspective }}}"
     source:
       abi: EulerVaultFactory
       address: "{{{ eVaultFactory }}}"
@@ -49,6 +73,8 @@ dataSources:
           file: ./abis/EulerVault.json
         - name: EthereumVaultConnector
           file: ./abis/EVC.json
+        - name: Perspective
+          file: ./abis/Perspective.json
       eventHandlers:
         - event: ProxyCreated(indexed address,bool,address,bytes)
           handler: handleProxyCreated
@@ -155,6 +181,8 @@ templates:
           handler: handleConvertFees
         - event: DebtSocialized(indexed address,uint256)
           handler: handleDebtSocialized
+        - event: PullDebt(indexed address,indexed address,uint256)
+          handler: handlePullDebt
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
         - event: EVaultCreated(indexed address,indexed address,address)
@@ -171,6 +199,26 @@ templates:
           handler: handleVaultStatus
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
+        - event: GovSetCaps(uint16,uint16)
+          handler: handleUpdateVaultData
+        - event: GovSetConfigFlags(uint32)
+          handler: handleUpdateVaultData
+        - event: GovSetFeeReceiver(indexed address)
+          handler: handleUpdateVaultData
+        - event: GovSetGovernorAdmin(indexed address)
+          handler: handleUpdateVaultData
+        - event: GovSetHookConfig(indexed address,uint32)
+          handler: handleUpdateVaultData
+        - event: GovSetInterestFee(uint16)
+          handler: handleUpdateVaultData
+        - event: GovSetInterestRateModel(address)
+          handler: handleUpdateVaultData
+        - event: GovSetLTV(indexed address,uint16,uint16,uint16,uint48,uint32)
+          handler: handleUpdateVaultData
+        - event: GovSetLiquidationCoolOffTime(uint16)
+          handler: handleUpdateVaultData
+        - event: GovSetMaxLiquidationDiscount(uint16)
+          handler: handleUpdateVaultData
       file: ./src/euler-vault.ts
   - kind: ethereum
     name: EulerEarn

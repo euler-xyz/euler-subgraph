@@ -12,6 +12,7 @@ import {
   Transfer as TransferEvent,
   VaultStatus as VaultStatusEvent,
   Withdraw as WithdrawEvent,
+  PullDebt as PullDebtEvent,
 } from "../generated/templates/EulerVault/EulerVault"
 import {
   BalanceForwarderStatus,
@@ -27,10 +28,14 @@ import {
   Transfer,
   VaultStatus,
   Withdraw,
+  PullDebt,
 } from "../generated/schema"
 import { increaseCounter } from "./utils/counter"
 import { trackActionsInEVaults } from "./utils/tracking"
-import { loadOrCreateEulerVault } from "./utils/clasicVaut"
+import { loadOrCreateEulerVault, updateEulerVault } from "./utils/clasicVaut"
+import { ethereum } from "@graphprotocol/graph-ts"
+import { computeAPYs } from "./utils/math"
+import { checkPerspectives } from "./utils/perspectives"
 
 
 //////////////////////////////////////////////////////////
@@ -64,6 +69,9 @@ export function handleEVaultCreated(event: EVaultCreatedEvent): void {
   eVault.blockTimestamp = event.block.timestamp
   eVault.transactionHash = event.transaction.hash
   eVault.save()
+
+
+
 }
 export function handleBalanceForwarderStatus(
   event: BalanceForwarderStatusEvent,
@@ -71,6 +79,7 @@ export function handleBalanceForwarderStatus(
   let entity = new BalanceForwarderStatus(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
+  entity.vault = event.address
   entity.account = event.params.account
   entity.status = event.params.status
 
@@ -100,6 +109,7 @@ export function handleDebtSocialized(event: DebtSocializedEvent): void {
   let entity = new DebtSocialized(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
+  entity.vault = event.address
   entity.account = event.params.account
   entity.assets = event.params.assets
 
@@ -128,6 +138,7 @@ export function handleInterestAccrued(event: InterestAccruedEvent): void {
   let entity = new InterestAccrued(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
+  entity.vault = event.address
   entity.account = event.params.account
   entity.assets = event.params.assets
 
@@ -144,11 +155,14 @@ export function handleInterestAccrued(event: InterestAccruedEvent): void {
 
   entity.save()
 
+
+
 }
 export function handleConvertFees(event: ConvertFeesEvent): void {
   let entity = new ConvertFee(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
+  entity.vault = event.address
   entity.sender = event.params.sender
   entity.protocolReceiver = event.params.protocolReceiver
   entity.governorReceiver = event.params.governorReceiver
@@ -167,12 +181,30 @@ export function handleConvertFees(event: ConvertFeesEvent): void {
   )
 
   entity.save()
-}
 
+}
+export function handlePullDebt(event: PullDebtEvent): void {
+  let entity = new PullDebt(
+    event.transaction.hash.concatI32(event.logIndex.toI32()),
+  )
+  entity.vault = event.address
+  entity.from = event.params.from
+  entity.to = event.params.to
+  entity.assets = event.params.assets
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+
+
+}
 export function handleVaultStatus(event: VaultStatusEvent): void {
   let entity = new VaultStatus(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
+  entity.vault = event.address
   entity.totalShares = event.params.totalShares
   entity.totalBorrows = event.params.totalBorrows
   entity.accumulatedFees = event.params.accumulatedFees
@@ -185,8 +217,20 @@ export function handleVaultStatus(event: VaultStatusEvent): void {
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
 
-  entity.save()
+  // Update state of the vault
+  let vault = loadOrCreateEulerVault(event.address)
+  // Update the APYs
+  let apys = computeAPYs(event.params.interestRate, event.params.cash, event.params.totalBorrows, vault.interestFee)
+  entity.borrowApy = apys[0]
+  entity.supplyApy = apys[1]
 
+  // Update vault to the latest state
+  vault.state = entity.id
+  vault.perspectives = checkPerspectives(event.address)
+  // save the entity
+
+  entity.save()
+  vault.save()
 
   let callWithContext = CallWithContext.load(event.transaction.hash.concat(event.address))
 
@@ -282,12 +326,14 @@ export function handleDeposit(event: DepositEvent): void {
       event.transaction.hash,
     )
   }
+
 }
 
 export function handleLiquidate(event: LiquidateEvent): void {
   let entity = new Liquidate(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
+  entity.vault = event.address
   entity.liquidator = event.params.liquidator
   entity.violator = event.params.violator
   entity.collateral = event.params.collateral
@@ -322,15 +368,17 @@ export function handleLiquidate(event: LiquidateEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+
 }
 
 export function handleRepay(event: RepayEvent): void {
   let entity = new Repay(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
   )
+
+  entity.vault = event.address
   entity.account = event.params.account
   entity.assets = event.params.assets
-  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -350,6 +398,7 @@ export function handleRepay(event: RepayEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+
 }
 
 export function handleTransfer(event: TransferEvent): void {
@@ -389,6 +438,7 @@ export function handleTransfer(event: TransferEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+
 }
 
 export function handleWithdraw(event: WithdrawEvent): void {
@@ -444,3 +494,10 @@ export function handleWithdraw(event: WithdrawEvent): void {
 
 }
 
+//////////////////////////////////////////////////////////
+// GOVERNANCE EVENTS
+//////////////////////////////////////////////////////////
+
+export function handleUpdateVaultData(event: ethereum.Event): void {
+  updateEulerVault(event.address)
+}

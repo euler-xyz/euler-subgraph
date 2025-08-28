@@ -25,7 +25,9 @@ type EulerVault @entity(immutable: false) {
   dToken: Bytes!
   evault: Bytes!
   permit2Address: Bytes!
+  perspectives:[String!]
   interestRateModel: Bytes!
+  collaterals: [Bytes!]
   governonAdmin: Bytes!
   feeReceiver: Bytes!
   asset: Bytes
@@ -33,13 +35,17 @@ type EulerVault @entity(immutable: false) {
   creator: Bytes!
   symbol: String!
   unitOfAccount: Bytes!
+  state: VaultStatus 
+  interestFee: BigInt!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+
 }
 
 type BalanceForwarderStatus @entity(immutable: true) {
   id: Bytes!
+  vault: Bytes! # address
   account: Bytes! # address
   status: Boolean! # bool
   blockNumber: BigInt!
@@ -59,6 +65,7 @@ type Borrow @entity(immutable: true) {
 
 type ConvertFee @entity(immutable: true) {
   id: Bytes!
+  vault: Bytes! # address  
   sender: Bytes! # address
   protocolReceiver: Bytes! # address
   governorReceiver: Bytes! # address
@@ -71,6 +78,7 @@ type ConvertFee @entity(immutable: true) {
 
 type DebtSocialized @entity(immutable: true) {
   id: Bytes!
+  vault: Bytes! # address
   account: Bytes! # address
   assets: BigInt! # uint256
   blockNumber: BigInt!
@@ -103,6 +111,7 @@ type EVaultCreated @entity(immutable: true) {
 
 type InterestAccrued @entity(immutable: true) {
   id: Bytes!
+  vault: Bytes! # address
   account: Bytes! # address
   assets: BigInt! # uint256
   blockNumber: BigInt!
@@ -112,6 +121,7 @@ type InterestAccrued @entity(immutable: true) {
 
 type Liquidate @entity(immutable: true) {
   id: Bytes!
+  vault: Bytes! # address
   liquidator: Bytes! # address
   violator: Bytes! # address
   collateral: Bytes! # address
@@ -124,6 +134,7 @@ type Liquidate @entity(immutable: true) {
 
 type PullDebt @entity(immutable: true) {
   id: Bytes!
+  vault: Bytes! # address
   from: Bytes! # address
   to: Bytes! # address
   assets: BigInt! # uint256
@@ -155,12 +166,15 @@ type Transfer @entity(immutable: true) {
 
 type VaultStatus @entity(immutable: true) {
   id: Bytes!
+  vault: Bytes! #address
   totalShares: BigInt! # uint256
   totalBorrows: BigInt! # uint256
   accumulatedFees: BigInt! # uint256
   cash: BigInt! # uint256
   interestAccumulator: BigInt! # uint256
   interestRate: BigInt! # uint256
+  supplyApy: BigInt!
+  borrowApy: BigInt!
   timestamp: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -180,7 +194,7 @@ type Withdraw @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-
+ 
 type Counter @entity(immutable: false) {
   id: Bytes! # bytes32
   type: String! # string
@@ -202,6 +216,7 @@ type VaultByAccount @entity(immutable: true) {
   account: AccountAggrVault!
   vault: Bytes!
 }
+
 
 ########################################################
 # Tracking
@@ -541,6 +556,7 @@ type EulerEarnVault @entity(immutable: false) {
     owner: Bytes!
     asset: Bytes!
     hooks: Bytes!
+    perspectives: [String!]
     permit2Address: Bytes!
     strategyModule: Bytes!
     totalAssets: BigInt!
@@ -618,6 +634,17 @@ type EulerSwap  @entity(immutable: true) {
   from: Bytes!
   to: Bytes!
   pool: Bytes!
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Perspective @entity(immutable: false){
+  id: String!
+  name: String!
+  address: Bytes!
+  perspectiveType: String!
+  verifiedVaults: [Bytes!]
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!

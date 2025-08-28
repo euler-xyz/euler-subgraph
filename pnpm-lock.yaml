@@ -8,12 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@graphprotocol/graph-cli':
-        specifier: 0.87.0
-        version: 0.87.0(@types/node@22.13.10)(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(typescript@5.8.2)
-      '@graphprotocol/graph-ts':
-        specifier: 0.33.0
-        version: 0.33.0
       '@types/node':
         specifier: ^22.13.10
         version: 22.13.10
@@ -29,6 +23,16 @@ importers:
       viem:
         specifier: ^2.22.22
         version: 2.23.11(typescript@5.8.2)
+    devDependencies:
+      '@graphprotocol/graph-cli':
+        specifier: 0.87.0
+        version: 0.87.0(@types/node@22.13.10)(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(typescript@5.8.2)
+      '@graphprotocol/graph-ts':
+        specifier: 0.33.0
+        version: 0.33.0
+      assemblyscript:
+        specifier: ^0.19.10
+        version: 0.19.10
 
 packages:
 
