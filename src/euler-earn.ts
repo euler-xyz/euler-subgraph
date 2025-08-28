@@ -65,6 +65,7 @@ import {
 } from "../generated/schema"
 import { trackActionsInEarnVaults } from "./utils/tracking"
 import { increaseCounter } from "./utils/counter"
+import { updateEulerEarnVault, updateEulerEarnVaultStats } from "./utils/earnVault"
 
 export function handleApproval(event: ApprovalEvent): void {
   let entity = new Approval(
@@ -288,6 +289,7 @@ export function handleUpdateLastTotalAssets(event: UpdateLastTotalAssetsEvent): 
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVaultStats(event.address)
 }
 
 export function handleUpdateLostAssets(event: UpdateLostAssetsEvent): void {
@@ -308,6 +310,7 @@ export function handleUpdateLostAssets(event: UpdateLostAssetsEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVaultStats(event.address)
 }
 
 export function handleAccrueInterest(event: AccrueInterestEvent): void {
@@ -316,7 +319,7 @@ export function handleAccrueInterest(event: AccrueInterestEvent): void {
   )
   entity.newTotalAssets = event.params.newTotalAssets
   entity.feeShares = event.params.feeShares
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -337,7 +340,7 @@ export function handleOwnershipTransferStarted(event: OwnershipTransferStartedEv
   )
   entity.previousOwner = event.params.previousOwner
   entity.newOwner = event.params.newOwner
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -350,6 +353,7 @@ export function handleOwnershipTransferStarted(event: OwnershipTransferStartedEv
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
 }
 
 export function handleOwnershipTransferred(event: OwnershipTransferredEvent): void {
@@ -358,7 +362,7 @@ export function handleOwnershipTransferred(event: OwnershipTransferredEvent): vo
   )
   entity.previousOwner = event.params.previousOwner
   entity.newOwner = event.params.newOwner
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -371,6 +375,7 @@ export function handleOwnershipTransferred(event: OwnershipTransferredEvent): vo
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
 }
 
 export function handleRevokePendingCap(event: RevokePendingCapEvent): void {
@@ -379,7 +384,7 @@ export function handleRevokePendingCap(event: RevokePendingCapEvent): void {
   )
   entity.caller = event.params.caller
   entity.market = event.params.id
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -399,7 +404,7 @@ export function handleRevokePendingGuardian(event: RevokePendingGuardianEvent): 
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.caller = event.params.caller
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -420,7 +425,7 @@ export function handleRevokePendingMarketRemoval(event: RevokePendingMarketRemov
   )
   entity.caller = event.params.caller
   entity.market = event.params.id
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -440,7 +445,7 @@ export function handleRevokePendingTimelock(event: RevokePendingTimelockEvent): 
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.caller = event.params.caller
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -462,7 +467,7 @@ export function handleSetCap(event: SetCapEvent): void {
   entity.caller = event.params.caller
   entity.market = event.params.id
   entity.cap = event.params.cap
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -475,6 +480,7 @@ export function handleSetCap(event: SetCapEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
 }
 
 export function handleSetCurator(event: SetCuratorEvent): void {
@@ -482,7 +488,7 @@ export function handleSetCurator(event: SetCuratorEvent): void {
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.newCurator = event.params.newCurator
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -495,6 +501,7 @@ export function handleSetCurator(event: SetCuratorEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
 }
 
 export function handleSetFee(event: SetFeeEvent): void {
@@ -503,7 +510,7 @@ export function handleSetFee(event: SetFeeEvent): void {
   )
   entity.caller = event.params.caller
   entity.fee = event.params.newFee
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -516,6 +523,7 @@ export function handleSetFee(event: SetFeeEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
 }
 
 export function handleSetFeeRecipient(event: SetFeeRecipientEvent): void {
@@ -523,7 +531,7 @@ export function handleSetFeeRecipient(event: SetFeeRecipientEvent): void {
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.newFeeRecipient = event.params.newFeeRecipient
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -536,6 +544,8 @@ export function handleSetFeeRecipient(event: SetFeeRecipientEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
+
 }
 
 export function handleSetGuardian(event: SetGuardianEvent): void {
@@ -544,6 +554,7 @@ export function handleSetGuardian(event: SetGuardianEvent): void {
   )
   entity.caller = event.params.caller
   entity.guardian = event.params.guardian
+  entity.vault = event.address
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -557,6 +568,7 @@ export function handleSetGuardian(event: SetGuardianEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
 }
 
 export function handleSetIsAllocator(event: SetIsAllocatorEvent): void {
@@ -565,7 +577,7 @@ export function handleSetIsAllocator(event: SetIsAllocatorEvent): void {
   )
   entity.allocator = event.params.allocator
   entity.isAllocator = event.params.isAllocator
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -585,7 +597,7 @@ export function handleSetName(event: SetNameEvent): void {
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.name = event.params.name
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -598,6 +610,7 @@ export function handleSetName(event: SetNameEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
 }
 
 export function handleSetSupplyQueue(event: SetSupplyQueueEvent): void {
@@ -611,7 +624,7 @@ export function handleSetSupplyQueue(event: SetSupplyQueueEvent): void {
     supplyQueueBytes.push(event.params.newSupplyQueue[i])
   }
   entity.supplyQueue = supplyQueueBytes
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -624,6 +637,8 @@ export function handleSetSupplyQueue(event: SetSupplyQueueEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
+  updateEulerEarnVaultStats(event.address)
 }
 
 export function handleSetSymbol(event: SetSymbolEvent): void {
@@ -631,7 +646,7 @@ export function handleSetSymbol(event: SetSymbolEvent): void {
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.symbol = event.params.symbol
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -652,7 +667,7 @@ export function handleSetTimelock(event: SetTimelockEvent): void {
   )
   entity.caller = event.params.caller
   entity.timelock = event.params.newTimelock
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -665,6 +680,7 @@ export function handleSetTimelock(event: SetTimelockEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
 }
 
 export function handleSetWithdrawQueue(event: SetWithdrawQueueEvent): void {
@@ -691,6 +707,8 @@ export function handleSetWithdrawQueue(event: SetWithdrawQueueEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
+  updateEulerEarnVaultStats(event.address)
 }
 
 export function handleSubmitCap(event: SubmitCapEvent): void {
@@ -700,7 +718,7 @@ export function handleSubmitCap(event: SubmitCapEvent): void {
   entity.caller = event.params.caller
   entity.market = event.params.id
   entity.cap = event.params.cap
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -720,7 +738,7 @@ export function handleSubmitGuardian(event: SubmitGuardianEvent): void {
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.newGuardian = event.params.newGuardian
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -741,7 +759,7 @@ export function handleSubmitMarketRemoval(event: SubmitMarketRemovalEvent): void
   )
   entity.caller = event.params.caller
   entity.market = event.params.id
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -754,6 +772,7 @@ export function handleSubmitMarketRemoval(event: SubmitMarketRemovalEvent): void
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
 }
 
 export function handleSubmitTimelock(event: SubmitTimelockEvent): void {
@@ -761,7 +780,7 @@ export function handleSubmitTimelock(event: SubmitTimelockEvent): void {
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.timelock = event.params.newTimelock
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -774,5 +793,6 @@ export function handleSubmitTimelock(event: SubmitTimelockEvent): void {
     event.block.timestamp,
     event.transaction.hash,
   )
+  updateEulerEarnVault(event.address)
 }
 

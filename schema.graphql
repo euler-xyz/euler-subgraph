@@ -40,7 +40,6 @@ type EulerVault @entity(immutable: false) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
-
 }
 
 type BalanceForwarderStatus @entity(immutable: true) {
@@ -291,6 +290,7 @@ type EulerEarnDeposit @entity(immutable: true) {
   owner: Bytes! # address
   assets: BigInt! # uint256
   shares: BigInt! # uint256
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -313,6 +313,7 @@ type EulerEarnWithdraw @entity(immutable: true) {
   owner: Bytes! # address
   assets: BigInt! # uint256
   shares: BigInt! # uint256
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -322,6 +323,7 @@ type EulerEarnAccrueInterest @entity(immutable: true) {
   id: Bytes!
   newTotalAssets: BigInt! # uint256
   feeShares: BigInt! # uint256
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -331,6 +333,7 @@ type EulerEarnOwnershipTransferStarted @entity(immutable: true) {
   id: Bytes!
   previousOwner: Bytes! # address
   newOwner: Bytes! # address
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -340,6 +343,7 @@ type EulerEarnOwnershipTransferred @entity(immutable: true) {
   id: Bytes!
   previousOwner: Bytes! # address
   newOwner: Bytes! # address
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -349,6 +353,7 @@ type EulerEarnRevokePendingCap @entity(immutable: true) {
   id: Bytes!
   caller: Bytes! # address
   market: Bytes! # address
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -357,6 +362,7 @@ type EulerEarnRevokePendingCap @entity(immutable: true) {
 type EulerEarnRevokePendingGuardian @entity(immutable: true) {
   id: Bytes!
   caller: Bytes! # address
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -366,6 +372,7 @@ type EulerEarnRevokePendingMarketRemoval @entity(immutable: true) {
   id: Bytes!
   caller: Bytes! # address
   market: Bytes! # address
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -374,6 +381,7 @@ type EulerEarnRevokePendingMarketRemoval @entity(immutable: true) {
 type EulerEarnRevokePendingTimelock @entity(immutable: true) {
   id: Bytes!
   caller: Bytes! # address
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -384,6 +392,7 @@ type EulerEarnSetCap @entity(immutable: true) {
   caller: Bytes! # address
   market: Bytes! # address
   cap: BigInt! # uint256
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -392,6 +401,7 @@ type EulerEarnSetCap @entity(immutable: true) {
 type EulerEarnSetCurator @entity(immutable: true) {
   id: Bytes!
   newCurator: Bytes! # address
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -401,6 +411,7 @@ type EulerEarnSetFee @entity(immutable: true) {
   id: Bytes!
   caller: Bytes! # address
   fee: BigInt! # uint256
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -409,6 +420,7 @@ type EulerEarnSetFee @entity(immutable: true) {
 type EulerEarnSetFeeRecipient @entity(immutable: true) {
   id: Bytes!
   newFeeRecipient: Bytes! # address
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -418,6 +430,7 @@ type EulerEarnSetGuardian @entity(immutable: true) {
   id: Bytes!
   caller: Bytes! # address
   guardian: Bytes! # address
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -427,6 +440,7 @@ type EulerEarnSetIsAllocator @entity(immutable: true) {
   id: Bytes!
   allocator: Bytes! # address
   isAllocator: Boolean! # bool
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -435,6 +449,7 @@ type EulerEarnSetIsAllocator @entity(immutable: true) {
 type EulerEarnSetName @entity(immutable: true) {
   id: Bytes!
   name: String! # string
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -444,6 +459,7 @@ type EulerEarnSetSupplyQueue @entity(immutable: true) {
   id: Bytes!
   caller: Bytes! # address
   supplyQueue: [Bytes!]! # address[]
+  vault: Bytes!  
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -452,6 +468,7 @@ type EulerEarnSetSupplyQueue @entity(immutable: true) {
 type EulerEarnSetSymbol @entity(immutable: true) {
   id: Bytes!
   symbol: String! # string
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -460,6 +477,7 @@ type EulerEarnSetSymbol @entity(immutable: true) {
 type EulerEarnSetTimelock @entity(immutable: true) {
   id: Bytes!
   caller: Bytes! # address
+  vault: Bytes!
   timelock: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
@@ -470,6 +488,7 @@ type EulerEarnSetWithdrawQueue @entity(immutable: true) {
   id: Bytes!
   caller: Bytes! # address
   withdrawQueue: [Bytes!]! # address[]
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -480,6 +499,7 @@ type EulerEarnSubmitCap @entity(immutable: true) {
   caller: Bytes! # address
   market: Bytes! # address
   cap: BigInt! # uint256
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -488,6 +508,7 @@ type EulerEarnSubmitCap @entity(immutable: true) {
 type EulerEarnSubmitGuardian @entity(immutable: true) {
   id: Bytes!
   newGuardian: Bytes! # address
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -497,6 +518,7 @@ type EulerEarnSubmitMarketRemoval @entity(immutable: true) {
   id: Bytes!
   caller: Bytes! # address
   market: Bytes! # address
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -505,6 +527,7 @@ type EulerEarnSubmitMarketRemoval @entity(immutable: true) {
 type EulerEarnSubmitTimelock @entity(immutable: true) {
   id: Bytes!
   timelock: BigInt! # uint256
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -516,6 +539,7 @@ type EulerEarnReallocateSupply @entity(immutable: true) {
   market: Bytes! # address - the id parameter (mapping id to market for semantics)
   suppliedAssets: BigInt! # uint256
   suppliedShares: BigInt! # uint256
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -527,6 +551,7 @@ type EulerEarnReallocateWithdraw @entity(immutable: true) {
   market: Bytes! # address - the id parameter (mapping id to market for semantics)
   withdrawnAssets: BigInt! # uint256
   withdrawnShares: BigInt! # uint256
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -535,6 +560,7 @@ type EulerEarnReallocateWithdraw @entity(immutable: true) {
 type EulerEarnUpdateLastTotalAssets @entity(immutable: true) {
   id: Bytes!
   updatedTotalAssets: BigInt! # uint256
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -543,9 +569,22 @@ type EulerEarnUpdateLastTotalAssets @entity(immutable: true) {
 type EulerEarnUpdateLostAssets @entity(immutable: true) {
   id: Bytes!
   newLostAssets: BigInt! # uint256
+  vault: Bytes!
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+}
+ 
+type Strategy @entity(immutable: false){
+  id: Bytes!
+  strategy: Bytes!
+  allocatedAssets: BigInt!
+  availableAssets: BigInt!
+  currentAllocationCap: BigInt!
+  pendingAllocationCap: BigInt!
+  pendingAllocationCapValidAt: BigInt!
+  removableAt: BigInt!
+  eulerVault: EulerVault!
 }
 
 type EulerEarnVault @entity(immutable: false) {
@@ -553,13 +592,31 @@ type EulerEarnVault @entity(immutable: false) {
     evc: Bytes!
     name: String!
     symbol: String!
+    performanceFee: BigInt!
+    asset: Bytes! 
+    
+    # USERS
     owner: Bytes!
-    asset: Bytes!
-    hooks: Bytes!
+    creator: Bytes!
+    curator: Bytes!
+    guardian: Bytes!
+    feeReceiver: Bytes!
+    # Timelocks
+    timelock: BigInt!
+    pendingTimelock: BigInt!
+    pendingTimelockValidAt: BigInt!
+    pendingGuardian: Bytes!
+    pendingGuardianValidAt: BigInt!
+    # LISTS
+    supplyQueue: [Bytes!]
+    strategies: [Strategy!]
+    
     perspectives: [String!]
-    permit2Address: Bytes!
-    strategyModule: Bytes!
+     
+    # totals
+    totalShares: BigInt!
     totalAssets: BigInt!
+    totalLostAssets: BigInt!
     totalAllocated: BigInt!
     totalSupply: BigInt!
     blockNumber: BigInt!
