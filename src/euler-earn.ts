@@ -98,7 +98,7 @@ export function handleDeposit(event: DepositEvent): void {
   entity.owner = event.params.owner
   entity.assets = event.params.assets
   entity.shares = event.params.shares
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -180,7 +180,7 @@ export function handleWithdraw(event: WithdrawEvent): void {
   entity.owner = event.params.owner
   entity.assets = event.params.assets
   entity.shares = event.params.shares
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -233,7 +233,7 @@ export function handleReallocateSupply(event: ReallocateSupplyEvent): void {
   entity.market = event.params.id
   entity.suppliedAssets = event.params.suppliedAssets
   entity.suppliedShares = event.params.suppliedShares
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -254,9 +254,10 @@ export function handleReallocateWithdraw(event: ReallocateWithdrawEvent): void {
   )
   entity.caller = event.params.caller
   entity.market = event.params.id
+  entity.vault = event.address
   entity.withdrawnAssets = event.params.withdrawnAssets
   entity.withdrawnShares = event.params.withdrawnShares
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -276,7 +277,7 @@ export function handleUpdateLastTotalAssets(event: UpdateLastTotalAssetsEvent): 
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.updatedTotalAssets = event.params.updatedTotalAssets
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -297,7 +298,7 @@ export function handleUpdateLostAssets(event: UpdateLostAssetsEvent): void {
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
   entity.newLostAssets = event.params.newLostAssets
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -555,7 +556,6 @@ export function handleSetGuardian(event: SetGuardianEvent): void {
   entity.caller = event.params.caller
   entity.guardian = event.params.guardian
   entity.vault = event.address
-
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
@@ -694,7 +694,7 @@ export function handleSetWithdrawQueue(event: SetWithdrawQueueEvent): void {
     withdrawQueueBytes.push(event.params.newWithdrawQueue[i])
   }
   entity.withdrawQueue = withdrawQueueBytes
-
+  entity.vault = event.address
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
   entity.transactionHash = event.transaction.hash
