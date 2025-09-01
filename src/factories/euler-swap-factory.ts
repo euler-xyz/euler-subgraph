@@ -1,5 +1,5 @@
 import { PoolDeployed as PoolDeployedEvent, PoolUninstalled as PoolUninstalledEvent, PoolConfig as PoolConfigEvent } from '../../generated/EulerSwapFactory/EulerSwapFactory'
-import { EulerSwapPool, EulerSwapPoolUninstalled } from '../../generated/schema'
+import { EulerSwapPoolUninstalled } from '../../generated/schema'
 import { dataSource } from "@graphprotocol/graph-ts"
 import { EulerSwap as EulerSwapTemplate } from '../../generated/templates'
 import { loadOrCreateEulerSwapPool } from '../utils/eulerSwap'

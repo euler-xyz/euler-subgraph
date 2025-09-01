@@ -55,6 +55,9 @@ function loadPerspective(perspectiveType: string): PerspectiveEntity | null {
 
 export function updatePerspective(address: Bytes, perspectiveType: string, blockNumber: BigInt, blockTimestamp: BigInt, transactionHash: Bytes): void {
     let perspective = loadOrCreatePerspective(address, perspectiveType)
+    if (address == Address.zero()) {
+        return
+    }
     let perspectiveContract = Perspective.bind(Address.fromBytes(address))
     // we update the list
     let verifiedArray = perspectiveContract.try_verifiedArray()
