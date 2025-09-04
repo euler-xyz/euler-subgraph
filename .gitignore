@@ -37,3 +37,4 @@ data
 ./tests/.bin
 
 subgraph.yaml
+.goldsky.json

@@ -19,6 +19,7 @@ export function handleEulerSwapActivated(event: EulerSwapActivatedEvent): void {
 
 export function handleEulerSwap(event: EulerSwapEvent): void {
     let entity = new EulerSwap(event.transaction.hash.concatI32(event.logIndex.toI32()))
+    let poolEntity = loadOrCreateEulerSwapPool(event.address)
     entity.amount0In = event.params.amount0In
     entity.amount1In = event.params.amount1In
     entity.amount0Out = event.params.amount0Out
@@ -29,6 +30,8 @@ export function handleEulerSwap(event: EulerSwapEvent): void {
     entity.to = event.params.to
     entity.pool = event.address
     entity.sender = event.transaction.from
+    entity.fee = poolEntity.fee
+    entity.protocolFee = poolEntity.protocolFee
     entity.blockNumber = event.block.number
     entity.blockTimestamp = event.block.timestamp
     entity.transactionHash = event.transaction.hash

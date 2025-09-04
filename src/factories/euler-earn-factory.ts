@@ -22,6 +22,7 @@ export function handleCreateEulerEarn(event: CreateEulerEarnEvent): void {
   let earnVault = loadOrCreateEulerEarnVault(event.params.eulerEarn)
   earnVault.owner = event.params.caller
   earnVault.save()
+
   // Create templates with context
   let context = dataSource.context()
   EulerEarnTemplate.createWithContext(event.params.eulerEarn, context)

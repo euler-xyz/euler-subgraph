@@ -19,6 +19,7 @@ export function handlePoolDeployed(event: PoolDeployedEvent): void {
 
     let context = dataSource.context()
     EulerSwapTemplate.createWithContext(event.params.pool, context)
+
 }
 
 
@@ -41,11 +42,11 @@ export function handlePoolConfig(event: PoolConfigEvent): void {
     poolEntity.protocolFeeRecipient = event.params.params.protocolFeeRecipient
     poolEntity.save()
 
-
 }
 
 
 export function handlePoolUninstalled(event: PoolUninstalledEvent): void {
+
     let entity = new EulerSwapPoolUninstalled(
         event.params.pool,
     )

@@ -11,8 +11,6 @@ function updateAccount(id: Bytes, contractAddress: Bytes): void {
         account.accountPrefix = id
         account.save()
     }
-
-
     let vault = VaultByAccount.load(id.concat(contractAddress))
     if (!vault) {
         vault = new VaultByAccount(id.concat(contractAddress))
@@ -105,6 +103,5 @@ export function handleCallWithContext(event: CallWithContextEvent): void {
 
     updateAccount(address, event.params.targetContract)
     updateAccount(from, event.params.targetContract)
-
 }
 

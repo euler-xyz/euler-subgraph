@@ -14,7 +14,7 @@
     "verify:accountVaultBalances": "bun ./verify/checkAccountVaultBalances.ts",
     "test": "graph test",
     "tag:deployments": "bun scripts/tag-deployments.ts",
-    "generate:deployments": "bun scripts/generate-deployments.ts'",
+    "generate:deployments": "bun scripts/generate-deployments.ts",
     "prepare:mainnet": "bun scripts/prepare.ts mainnet",
     "prepare:base": "bun scripts/prepare.ts base",
     "prepare:arbitrum": "bun scripts/prepare.ts arbitrum",

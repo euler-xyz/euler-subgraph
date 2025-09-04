@@ -69,10 +69,8 @@ export function handleEVaultCreated(event: EVaultCreatedEvent): void {
   eVault.blockTimestamp = event.block.timestamp
   eVault.transactionHash = event.transaction.hash
   eVault.save()
-
-
-
 }
+
 export function handleBalanceForwarderStatus(
   event: BalanceForwarderStatusEvent,
 ): void {
@@ -105,6 +103,7 @@ export function handleBalanceForwarderStatus(
     event.transaction.hash,
   )
 }
+
 export function handleDebtSocialized(event: DebtSocializedEvent): void {
   let entity = new DebtSocialized(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
@@ -134,6 +133,7 @@ export function handleDebtSocialized(event: DebtSocializedEvent): void {
     event.transaction.hash,
   )
 }
+
 export function handleInterestAccrued(event: InterestAccruedEvent): void {
   let entity = new InterestAccrued(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
@@ -154,10 +154,8 @@ export function handleInterestAccrued(event: InterestAccruedEvent): void {
   )
 
   entity.save()
-
-
-
 }
+
 export function handleConvertFees(event: ConvertFeesEvent): void {
   let entity = new ConvertFee(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
@@ -183,6 +181,7 @@ export function handleConvertFees(event: ConvertFeesEvent): void {
   entity.save()
 
 }
+
 export function handlePullDebt(event: PullDebtEvent): void {
   let entity = new PullDebt(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
@@ -197,9 +196,8 @@ export function handlePullDebt(event: PullDebtEvent): void {
   entity.transactionHash = event.transaction.hash
 
   entity.save()
-
-
 }
+
 export function handleVaultStatus(event: VaultStatusEvent): void {
   let entity = new VaultStatus(
     event.transaction.hash.concatI32(event.logIndex.toI32()),
@@ -245,8 +243,6 @@ export function handleVaultStatus(event: VaultStatusEvent): void {
       )
     }
   }
-
-
 }
 
 //////////////////////////////////////////////////////////
@@ -326,7 +322,6 @@ export function handleDeposit(event: DepositEvent): void {
       event.transaction.hash,
     )
   }
-
 }
 
 export function handleLiquidate(event: LiquidateEvent): void {
