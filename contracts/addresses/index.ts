@@ -16,6 +16,7 @@ export * as inkAddresses from "./57073"
 export * as bobAddresses from "./60808"
 export * as berachainAddresses from "./80094"
 export * as lineaAddresses from "./59144"
-
+export * as plasmaAddresses from "./9745"
+export * as mantleAddresses from "./5000"
 // TESTNETS
 export * as tacTurinAddresses from "./2390"

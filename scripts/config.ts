@@ -16,7 +16,9 @@ import {
     tacTurinAddresses,
     unichainAddresses,
     worldchainAddresses,
-    lineaAddresses
+    lineaAddresses,
+    plasmaAddresses,
+    mantleAddresses
 } from '../contracts/addresses'
 
 export type Network = typeof NETWORKS[number]
@@ -149,6 +151,20 @@ export const networks = {
         ...lineaAddresses.swapAddresses,
         ...lineaAddresses.peripheryAddresses,
         startBlock: 17900000
+    },
+    plasma: {
+        network: 'plasma-mainnet',
+        ...plasmaAddresses.coreAddresses,
+        ...plasmaAddresses.swapAddresses,
+        ...plasmaAddresses.peripheryAddresses,
+        startBlock: 1
+    },
+    mantle: {
+        network: 'mantle',
+        ...mantleAddresses.coreAddresses,
+        ...mantleAddresses.swapAddresses,
+        ...mantleAddresses.peripheryAddresses,
+        startBlock: 84500000
     }
 }
 
