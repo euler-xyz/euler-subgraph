@@ -14,13 +14,29 @@ export function loadOrCreateEulerEarnVault(address: Bytes): EulerEarnVault {
         vault.performanceFee = vaultContract.fee()
         vault.asset = vaultContract.asset()
         // TIMELOCKS
-        vault.timelock = vaultContract.timelock()
-        let pendingTimelock = vaultContract.pendingTimelock()
-        let pendingGuardian = vaultContract.pendingGuardian()
-        vault.pendingTimelock = pendingTimelock.getValue()
-        vault.pendingTimelockValidAt = pendingTimelock.getValidAt()
-        vault.pendingGuardian = pendingGuardian.getValue()
-        vault.pendingGuardianValidAt = pendingGuardian.getValidAt()
+        let timelock = vaultContract.try_timelock()
+        if (timelock.reverted) {
+            vault.timelock = BigInt.fromI32(0)
+        } else {
+            vault.timelock = timelock.value
+        }
+        let pendingTimelock = vaultContract.try_pendingTimelock()
+        let pendingGuardian = vaultContract.try_pendingGuardian()
+        if (pendingTimelock.reverted) {
+            vault.pendingTimelock = BigInt.fromI32(0)
+            vault.pendingTimelockValidAt = BigInt.fromI32(0)
+        } else {
+            vault.pendingTimelock = pendingTimelock.value.getValue()
+            vault.pendingTimelockValidAt = pendingTimelock.value.getValidAt()
+        }
+        if (pendingGuardian.reverted) {
+            vault.pendingGuardian = Bytes.fromHexString("0x")
+            vault.pendingGuardianValidAt = BigInt.fromI32(0)
+        } else {
+            vault.pendingGuardian = pendingGuardian.value.getValue()
+            vault.pendingGuardianValidAt = pendingGuardian.value.getValidAt()
+        }
+
         // LISTS
 
         let totalSupplyQueue = vaultContract.supplyQueueLength().toI32()
@@ -82,13 +98,31 @@ export function updateEulerEarnVault(address: Bytes): void {
     vault.totalSupply = vaultContract.totalSupply()
     vault.totalAssets = vaultContract.totalAssets()
     vault.performanceFee = vaultContract.fee()
-    vault.timelock = vaultContract.timelock()
-    let pendingTimelock = vaultContract.pendingTimelock()
-    let pendingGuardian = vaultContract.pendingGuardian()
-    vault.pendingTimelock = pendingTimelock.getValue()
-    vault.pendingTimelockValidAt = pendingTimelock.getValidAt()
-    vault.pendingGuardian = pendingGuardian.getValue()
-    vault.pendingGuardianValidAt = pendingGuardian.getValidAt()
+    // TIMELOCKS
+    let timelock = vaultContract.try_timelock()
+    if (timelock.reverted) {
+        vault.timelock = BigInt.fromI32(0)
+    } else {
+        vault.timelock = timelock.value
+    }
+    let pendingTimelock = vaultContract.try_pendingTimelock()
+    let pendingGuardian = vaultContract.try_pendingGuardian()
+    if (pendingTimelock.reverted) {
+        vault.pendingTimelock = BigInt.fromI32(0)
+        vault.pendingTimelockValidAt = BigInt.fromI32(0)
+    } else {
+        vault.pendingTimelock = pendingTimelock.value.getValue()
+        vault.pendingTimelockValidAt = pendingTimelock.value.getValidAt()
+    }
+    if (pendingGuardian.reverted) {
+        vault.pendingGuardian = Bytes.fromHexString("0x")
+        vault.pendingGuardianValidAt = BigInt.fromI32(0)
+    } else {
+        vault.pendingGuardian = pendingGuardian.value.getValue()
+        vault.pendingGuardianValidAt = pendingGuardian.value.getValidAt()
+    }
+
+
     vault.save()
 }
 export function updateStrategyStats(eulerVault: Bytes, address: Bytes): Strategy {
@@ -120,16 +154,31 @@ export function updateEulerEarnVaultStats(address: Bytes): void {
     vault.totalShares = vaultContract.totalSupply()
     vault.totalSupply = vaultContract.totalSupply()
     vault.totalAssets = vaultContract.totalAssets()
-    vault.timelock = vaultContract.timelock()
-    vault.performanceFee = vaultContract.fee()
-    vault.timelock = vaultContract.timelock()
-    let pendingTimelock = vaultContract.pendingTimelock()
-    let pendingGuardian = vaultContract.pendingGuardian()
-    vault.pendingTimelock = pendingTimelock.getValue()
-    vault.pendingTimelockValidAt = pendingTimelock.getValidAt()
-    vault.pendingGuardian = pendingGuardian.getValue()
-    vault.pendingGuardianValidAt = pendingGuardian.getValidAt()
 
+    vault.performanceFee = vaultContract.fee()
+    // TIMELOCKS
+    let timelock = vaultContract.try_timelock()
+    if (timelock.reverted) {
+        vault.timelock = BigInt.fromI32(0)
+    } else {
+        vault.timelock = timelock.value
+    }
+    let pendingTimelock = vaultContract.try_pendingTimelock()
+    let pendingGuardian = vaultContract.try_pendingGuardian()
+    if (pendingTimelock.reverted) {
+        vault.pendingTimelock = BigInt.fromI32(0)
+        vault.pendingTimelockValidAt = BigInt.fromI32(0)
+    } else {
+        vault.pendingTimelock = pendingTimelock.value.getValue()
+        vault.pendingTimelockValidAt = pendingTimelock.value.getValidAt()
+    }
+    if (pendingGuardian.reverted) {
+        vault.pendingGuardian = Bytes.fromHexString("0x")
+        vault.pendingGuardianValidAt = BigInt.fromI32(0)
+    } else {
+        vault.pendingGuardian = pendingGuardian.value.getValue()
+        vault.pendingGuardianValidAt = pendingGuardian.value.getValidAt()
+    }
     // LISTS
 
     let totalSupplyQueue = vaultContract.supplyQueueLength().toI32()
