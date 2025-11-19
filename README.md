@@ -127,6 +127,9 @@ pnpm run verify:accountVaultBalances
 
 # Run tests
 pnpm run test
+
+# Deploy hotfix (see hotfix/README.md for details)
+pnpm run deploy:hotfix <hotfix-config.json>
 ```
 
 ## Deployment Guide
@@ -137,6 +140,7 @@ pnpm run test
 - Test deployments are available with the `:test` suffix (e.g., `deploy:mainnet:test`)
 - Make sure you have the Goldsky CLI installed and configured with your credentials
 - You can generate a JSON file with all deployment URLs using `pnpm run generate:deployments`
+- For deploying hotfixes using grafting, see [Hotfix Deployment Guide](./hotfix/README.md)
 
 ### Network-Specific Deployment
 
