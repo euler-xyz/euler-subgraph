@@ -134,8 +134,18 @@ export function updateStrategyStats(eulerVault: Bytes, address: Bytes): Strategy
         strategy = new Strategy(eulerVault.concat(address))
     }
     strategy.strategy = address
-    strategy.allocatedAssets = vaultContract.expectedSupplyAssets(Address.fromBytes(address))
-    strategy.availableAssets = vaultContract.maxWithdrawFromStrategy(Address.fromBytes(address))
+    let expectedSupplyAssets = vaultContract.try_expectedSupplyAssets(Address.fromBytes(address))
+    if (expectedSupplyAssets.reverted) {
+        strategy.allocatedAssets = BigInt.fromI32(0)
+    } else {
+        strategy.allocatedAssets = expectedSupplyAssets.value
+    }
+    let maxWithdrawFromStrategy = vaultContract.try_maxWithdrawFromStrategy(Address.fromBytes(address))
+    if (maxWithdrawFromStrategy.reverted) {
+        strategy.availableAssets = BigInt.fromI32(0)
+    } else {
+        strategy.availableAssets = maxWithdrawFromStrategy.value
+    }
     strategy.currentAllocationCap = config.getCap()
     strategy.pendingAllocationCap = pendingConfig.getValue()
     strategy.pendingAllocationCapValidAt = pendingConfig.getValidAt()
