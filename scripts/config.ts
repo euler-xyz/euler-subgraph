@@ -23,7 +23,7 @@ import {
 
 export type Network = typeof NETWORKS[number]
 
-export type Version = { major: number; minor: number; patch: number }
+export type Version = { major: number; minor: number; patch: number; hotfix?: number }
 
 export const networks = {
     mainnet: {

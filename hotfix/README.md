@@ -14,7 +14,7 @@ Create a JSON file in this folder with the following structure:
 {
   "chain": "mainnet",
   "baseVersion": "1.0.12",
-  "graftBlock": 23834361,
+  "graftBlock": 23834361, // Always on block less
   "deploymentId": "",
   "fork": "",
   "description": "Description of the hotfix"
@@ -27,8 +27,10 @@ Create a JSON file in this folder with the following structure:
 - **baseVersion** (required): The version of the subgraph that failed (e.g., "1.0.12")
 - **graftBlock** (required): The block number where the previous subgraph stopped indexing
 - **deploymentId** (optional): The deployment ID of the base subgraph. If not provided, the script will attempt to fetch it automatically
-- **fork** (optional): If deploying a fork, specify the fork name (e.g., "test", "swap")
+- **fork** (optional): Not used for subgraph naming, but can be kept for reference/notes
 - **description** (optional): A description of what this hotfix addresses
+
+**Note**: Hotfix versions use a 4-number format (e.g., `1.0.12.1`, `1.0.12.2`). The script automatically finds the latest hotfix for the base version and increments it. The subgraph name remains `euler-v2-<network>` without any fork suffix.
 
 ## Getting the Deployment ID
 
@@ -55,9 +57,10 @@ bun scripts/deploy-hotfix.ts hotfix/mainnet-1.0.12.json
 The script will:
 - Load the hotfix configuration
 - Attempt to fetch the deployment ID if not provided
+- Find the latest hotfix version for the base version (e.g., if 1.0.12.1 exists, next will be 1.0.12.2)
 - Generate a new `subgraph.yaml` with grafting configuration
 - Build the subgraph
-- Deploy the new version (patch version incremented)
+- Deploy the new hotfix version (e.g., `1.0.12.1`, `1.0.12.2`, etc.)
 
 ## Important Notes
 
@@ -73,7 +76,8 @@ The script will:
 2. Create `hotfix/mainnet-1.0.12.json` with the configuration
 3. Fix the issue in the subgraph code
 4. Run `bun scripts/deploy-hotfix.ts hotfix/mainnet-1.0.12.json`
-5. The script deploys `euler-v2-mainnet/1.0.13` with grafting from block 23834361
-6. Monitor the new deployment to ensure it's working correctly
-7. Once stable, deploy a fresh version without grafting for long-term maintenance
+5. The script deploys `euler-v2-mainnet/1.0.12.1` (first hotfix) with grafting from block 23834361
+6. If another hotfix is needed, run again and it will deploy `1.0.12.2`, etc.
+7. Monitor the new deployment to ensure it's working correctly
+8. Once stable, deploy a fresh version without grafting (e.g., `1.0.13`) for long-term maintenance
 

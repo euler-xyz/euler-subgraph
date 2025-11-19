@@ -19,7 +19,8 @@ function getLatestDeployment(network: Network): DeploymentInfo | null {
             .map(line => {
                 console.log(">>", line)
                 const urlMatch = line.match(/https:\/\/[^\s]+/)
-                const versionMatch = line.match(/(?:v|\/)((\d+)\.(\d+)\.(\d+))/)
+                // Match both regular versions (1.0.12) and hotfix versions (1.0.12.1)
+                const versionMatch = line.match(/(?:v|\/)((\d+)\.(\d+)\.(\d+)(?:\.(\d+))?)/)
 
                 return {
                     url: urlMatch ? urlMatch[0] : null,

@@ -21,7 +21,8 @@ function getLatestVersion(network: Network, subgraphName: string): Version {
       .filter(line => line.includes(subgraphName))
       .map(line => {
         console.log(">>", line)
-        const versionMatch = line.match(/(?:v|\/)((\d+)\.(\d+)\.(\d+))/)
+        // Match both regular versions (1.0.12) and hotfix versions (1.0.12.1)
+        const versionMatch = line.match(/(?:v|\/)((\d+)\.(\d+)\.(\d+)(?:\.(\d+))?)/)
         return versionMatch ? parseVersion(versionMatch[1]) : null
       })
       .filter((version): version is Version => version !== null)
@@ -38,10 +39,12 @@ function getLatestVersion(network: Network, subgraphName: string): Version {
 }
 
 function incrementVersion(version: Version): Version {
+  // For regular deployments, increment patch and remove hotfix
   return {
     major: version.major,
     minor: version.minor,
-    patch: version.patch + 1  // Increment patch, keeping major and minor the same
+    patch: version.patch + 1,
+    hotfix: undefined  // Remove hotfix for regular deployments
   }
 }
 

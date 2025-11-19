@@ -1,0 +1,8 @@
+{
+    "chain": "plasma",
+    "baseVersion": "1.0.1",
+    "graftBlock": 6640486,
+    "deploymentId": "QmUueQFD45jQQb48wSkMELyK7EaiTFVyLjGQXgTd6h4Eqp",
+    "fork": "",
+    "description": "Hotfix for plasma subgraph that stopped at block 6640486"
+}
