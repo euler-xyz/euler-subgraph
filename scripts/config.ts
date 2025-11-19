@@ -157,7 +157,7 @@ export const networks = {
         ...plasmaAddresses.coreAddresses,
         ...plasmaAddresses.swapAddresses,
         ...plasmaAddresses.peripheryAddresses,
-        startBlock: 1
+        startBlock: 4241642
     },
     mantle: {
         network: 'mantle',
