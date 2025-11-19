@@ -3,6 +3,5 @@
     "baseVersion": "1.0.12",
     "graftBlock": 23834360,
     "deploymentId": "QmWptDCiBLrA5zjoi4y3LhGhr9xbE4y6KWDVD2GNhdX5F7",
-    "fork": "",
     "description": "Hotfix for mainnet subgraph that stopped at block 23834360"
 }

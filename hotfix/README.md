@@ -15,8 +15,7 @@ Create a JSON file in this folder with the following structure:
   "chain": "mainnet",
   "baseVersion": "1.0.12",
   "graftBlock": 23834361, // Always on block less
-  "deploymentId": "",
-  "fork": "",
+  "deploymentId": "", // You can find the id on the detail page of the failed subgraph
   "description": "Description of the hotfix"
 }
 ```
@@ -27,7 +26,6 @@ Create a JSON file in this folder with the following structure:
 - **baseVersion** (required): The version of the subgraph that failed (e.g., "1.0.12")
 - **graftBlock** (required): The block number where the previous subgraph stopped indexing
 - **deploymentId** (optional): The deployment ID of the base subgraph. If not provided, the script will attempt to fetch it automatically
-- **fork** (optional): Not used for subgraph naming, but can be kept for reference/notes
 - **description** (optional): A description of what this hotfix addresses
 
 **Note**: Hotfix versions use a 4-number format (e.g., `1.0.12.1`, `1.0.12.2`). The script automatically finds the latest hotfix for the base version and increments it. The subgraph name remains `euler-v2-<network>` without any fork suffix.
