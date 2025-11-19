@@ -78,7 +78,8 @@
     "deploy:tac": "pnpm build:tac && bun scripts/deploy.ts tac",
     "deploy:linea": "pnpm build:linea && bun scripts/deploy.ts linea",
     "deploy:plasma": "pnpm build:plasma && bun scripts/deploy.ts plasma",
-    "deploy:mantle": "pnpm build:mantle && bun scripts/deploy.ts mantle"
+    "deploy:mantle": "pnpm build:mantle && bun scripts/deploy.ts mantle",
+    "deploy:hotfix": "bun scripts/deploy-hotfix.ts"
   },
   "dependencies": {
     "@types/node": "^22.13.10",

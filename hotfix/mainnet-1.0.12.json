@@ -1,0 +1,8 @@
+{
+    "chain": "mainnet",
+    "baseVersion": "1.0.12",
+    "graftBlock": 23834361,
+    "deploymentId": "1.0.12",
+    "fork": "",
+    "description": "Hotfix for mainnet subgraph that stopped at block 23834361"
+}
