@@ -35,6 +35,7 @@
     "prepare:linea": "bun scripts/prepare.ts linea",
     "prepare:plasma": "bun scripts/prepare.ts plasma",
     "prepare:mantle": "bun scripts/prepare.ts mantle",
+    "prepare:monad": "bun scripts/prepare.ts monad",
     "build:mainnet": "pnpm prepare:mainnet && graph build",
     "build:base": "pnpm prepare:base && graph build",
     "build:arbitrum": "pnpm prepare:arbitrum && graph build",
@@ -56,6 +57,7 @@
     "build:linea": "pnpm prepare:linea && graph build",
     "build:plasma": "pnpm prepare:plasma && graph build",
     "build:mantle": "pnpm prepare:mantle && graph build",
+    "build:monad": "pnpm prepare:monad && graph build",
     "deploy:mainnet": "pnpm build:mainnet && bun scripts/deploy.ts mainnet",
     "deploy:mainnet:test": "pnpm build:mainnet && bun scripts/deploy.ts mainnet test",
     "deploy:mainnet:swap": "pnpm build:mainnet && bun scripts/deploy.ts mainnet swap",
@@ -79,6 +81,7 @@
     "deploy:linea": "pnpm build:linea && bun scripts/deploy.ts linea",
     "deploy:plasma": "pnpm build:plasma && bun scripts/deploy.ts plasma",
     "deploy:mantle": "pnpm build:mantle && bun scripts/deploy.ts mantle",
+    "deploy:monad": "pnpm build:monad && bun scripts/deploy.ts monad",
     "deploy:hotfix": "bun scripts/deploy-hotfix.ts"
   },
   "dependencies": {

@@ -18,7 +18,8 @@ import {
     worldchainAddresses,
     lineaAddresses,
     plasmaAddresses,
-    mantleAddresses
+    mantleAddresses,
+    monadAddresses
 } from '../contracts/addresses'
 
 export type Network = typeof NETWORKS[number]
@@ -157,7 +158,7 @@ export const networks = {
         ...plasmaAddresses.coreAddresses,
         ...plasmaAddresses.swapAddresses,
         ...plasmaAddresses.peripheryAddresses,
-        startBlock: 4241642
+        startBlock: 510000
     },
     mantle: {
         network: 'mantle',
@@ -165,6 +166,13 @@ export const networks = {
         ...mantleAddresses.swapAddresses,
         ...mantleAddresses.peripheryAddresses,
         startBlock: 84500000
+    },
+    monad: {
+        network: 'monad',
+        ...monadAddresses.coreAddresses,
+        ...monadAddresses.swapAddresses,
+        ...monadAddresses.peripheryAddresses,
+        startBlock: 30858000
     }
 }
 
