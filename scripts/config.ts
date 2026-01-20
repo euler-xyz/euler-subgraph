@@ -24,18 +24,18 @@ export type Network = keyof typeof NETWORKS
 
 export type Version = { major: number; minor: number; patch: number; hotfix?: number }
 
-interface CoreAddresses {
-  eVaultFactory: string
-  eulerEarnFactory: string
-  [key: string]: string
-}
+type Addresses = Record<string, string | undefined>
 
-function loadCoreAddresses(chainId: number): CoreAddresses {
+function loadAddresses(chainId: number, file: string): Addresses | null {
   const addressPath = path.join(
     __dirname,
-    `../lib/euler-interfaces/addresses/${chainId}/CoreAddresses.json`
+    `../lib/euler-interfaces/addresses/${chainId}/${file}.json`
   )
-  return JSON.parse(fs.readFileSync(addressPath, 'utf8'))
+  try {
+    return JSON.parse(fs.readFileSync(addressPath, 'utf8'))
+  } catch {
+    return null
+  }
 }
 
 export function getNetworkConfig(network: Network) {
@@ -44,13 +44,15 @@ export function getNetworkConfig(network: Network) {
     throw new Error(`Network "${network}" not supported. Available: ${Object.keys(NETWORKS).join(', ')}`)
   }
 
-  const coreAddresses = loadCoreAddresses(config.chainId)
+  const core = loadAddresses(config.chainId, 'CoreAddresses')
+  const periphery = loadAddresses(config.chainId, 'PeripheryAddresses')
 
   return {
     network: config.graphNetwork,
     startBlock: config.startBlock,
-    eVaultFactory: coreAddresses.eVaultFactory,
-    eulerEarnFactory: coreAddresses.eulerEarnFactory,
+    eVaultFactory: core?.eVaultFactory,
+    eulerEarnFactory: core?.eulerEarnFactory,
+    securitizeFactory: periphery?.securitizeFactory || null,
   }
 }
 
@@ -59,13 +61,5 @@ export const NETWORK_NAMES = Object.keys(NETWORKS) as Network[]
 
 // For backwards compatibility - expose networks object
 export const networks = Object.fromEntries(
-  Object.entries(NETWORKS).map(([name, config]) => {
-    const coreAddresses = loadCoreAddresses(config.chainId)
-    return [name, {
-      network: config.graphNetwork,
-      startBlock: config.startBlock,
-      eVaultFactory: coreAddresses.eVaultFactory,
-      eulerEarnFactory: coreAddresses.eulerEarnFactory,
-    }]
-  })
+  Object.keys(NETWORKS).map(name => [name, getNetworkConfig(name as Network)])
 ) as Record<Network, ReturnType<typeof getNetworkConfig>>
