@@ -1,7 +1,7 @@
 import { execSync } from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
-import { Network, NETWORKS } from './config'
+import { Network, NETWORK_NAMES } from './config'
 import { parseVersion } from './utils/utils'
 
 
@@ -54,7 +54,7 @@ function getLatestDeployment(network: Network): DeploymentInfo | null {
 function generateDeploymentsJson() {
     const deployments: DeploymentInfo[] = []
 
-    for (const network of NETWORKS) {
+    for (const network of NETWORK_NAMES) {
         const deployment = getLatestDeployment(network)
         if (deployment) {
             deployments.push(deployment)

@@ -1,0 +1,3 @@
+[submodule "lib/euler-interfaces"]
+	path = lib/euler-interfaces
+	url = https://github.com/euler-xyz/euler-interfaces.git

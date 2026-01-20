@@ -5,59 +5,10 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: EthereumVaultConnector
-    network: {{{ network }}}
-    source:
-      abi: EthereumVaultConnector
-      address: "{{{ evc }}}"
-      startBlock: {{{ startBlock }}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - VaultAccount
-      abis:
-        - name: EthereumVaultConnector
-          file: ./abis/EVC.json
-      eventHandlers:
-        - event: CallWithContext(indexed address,indexed bytes19,address,indexed
-            address,bytes4)
-          handler: handleCallWithContext
-      file: ./src/ethereum-vault-connector.ts
-  - kind: ethereum
     name: EulerVaultFactory
     network: {{{ network }}}
-    context:
-      evcAddress:
-        type: String
-        data: "{{{ evc }}}"
-      edgeFactoryPerspective:
-        type: String
-        data: "{{{ edgeFactoryPerspective }}}"
-      escrowedCollateralPerspective:
-        type: String
-        data: "{{{ escrowedCollateralPerspective }}}"
-      eulerEarnFactoryPerspective:
-        type: String
-        data: "{{{ eulerEarnFactoryPerspective }}}"
-      eulerEarnGovernedPerspective:
-        type: String
-        data: "{{{ eulerEarnGovernedPerspective }}}"
-      eulerUngoverned0xPerspective:
-        type: String
-        data: "{{{ eulerUngoverned0xPerspective }}}"
-      eulerUngovernedNzxPerspective:
-        type: String
-        data: "{{{ eulerUngovernedNzxPerspective }}}"
-      evkFactoryPerspective:
-        type: String
-        data: "{{{ evkFactoryPerspective }}}"
-      governedPerspective:
-        type: String
-        data: "{{{ governedPerspective }}}"
     source:
-      abi: EulerVaultFactory
+      abi: EVaultFactory
       address: "{{{ eVaultFactory }}}"
       startBlock: {{{ startBlock }}}
     mapping:
@@ -65,16 +16,14 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - ProxyCreated
+        - Vault
+        - TrackingActiveAccount
+        - TrackingVaultBalance
       abis:
-        - name: EulerVaultFactory
-          file: ./abis/EulerVaultFactory.json
+        - name: EVaultFactory
+          file: ./lib/euler-interfaces/abis/GenericFactory.json
         - name: EulerVault
-          file: ./abis/EulerVault.json
-        - name: EthereumVaultConnector
-          file: ./abis/EVC.json
-        - name: Perspective
-          file: ./abis/Perspective.json
+          file: ./lib/euler-interfaces/abis/EVault.json
       eventHandlers:
         - event: ProxyCreated(indexed address,bool,address,bytes)
           handler: handleProxyCreated
@@ -82,10 +31,6 @@ dataSources:
   - kind: ethereum
     name: EulerEarnFactory
     network: {{{ network }}}
-    context:
-      evcAddress:
-        type: String
-        data: "{{{ evc }}}"
     source:
       abi: EulerEarnFactory
       address: "{{{ eulerEarnFactory }}}"
@@ -95,51 +40,16 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - DeployEulerEarn
-        - EulerEarnVault
+        - Vault
+        - TrackingActiveAccount
+        - TrackingVaultBalance
       abis:
         - name: EulerEarnFactory
-          file: ./abis/EulerEarnFactory.json
-        - name: EulerEarn
-          file: ./abis/EulerEarn.json
-        - name: EthereumVaultConnector
-          file: ./abis/EVC.json
+          file: ./lib/euler-interfaces/abis/EulerEarnFactory.json
       eventHandlers:
         - event: CreateEulerEarn(indexed address,indexed address,address,uint256,indexed address,string,string,bytes32)
           handler: handleCreateEulerEarn
       file: ./src/factories/euler-earn-factory.ts
-  - kind: ethereum
-    name: EulerSwapFactory
-    network: {{{ network }}}
-    context:
-      evcAddress:
-        type: String
-        data: "{{{ evc }}}"
-    source:
-      abi: EulerSwapFactory
-      address: "{{{ eulerSwapFactory }}}"
-      startBlock: {{{ startBlock }}}
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - PoolDeployed
-      abis:
-        - name: EulerSwapFactory
-          file: ./abis/EulerSwapFactory.json
-        - name: EulerSwap
-          file: ./abis/EulerSwap.json
-        - name: EthereumVaultConnector
-          file: ./abis/EVC.json
-      eventHandlers:
-        - event: PoolDeployed(indexed address,indexed address,indexed address,address)
-          handler: handlePoolDeployed
-        - event: PoolConfig(indexed address,(address,address,address,uint112,uint112,uint256,uint256,uint256,uint256,uint256,uint256,address),(uint112,uint112))
-          handler: handlePoolConfig
-        - event: PoolUninstalled(indexed address,indexed address,indexed address,address)
-          handler: handlePoolUninstalled
-      file: ./src/factories/euler-swap-factory.ts
 templates:
   - kind: ethereum
     name: EulerVault
@@ -151,77 +61,31 @@ templates:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - BalanceForwarderStatus
-        - Borrow
-        - ConvertFees
-        - DebtSocialized
-        - Deposit
-        - EVaultCreated
-        - InterestAccrued
-        - Liquidate
-        - PullDebt
-        - Repay
-        - Transfer
-        - VaultStatus
-        - Withdraw
+        - TrackingActiveAccount
+        - TrackingVaultBalance
       abis:
         - name: EulerVault
-          file: ./abis/EulerVault.json
-        - name: EulerEarn
-          file: ./abis/EulerEarn.json
-        - name: EthereumVaultConnector
-          file: ./abis/EVC.json
+          file: ./lib/euler-interfaces/abis/EVault.json
       eventHandlers:
-        - event: BalanceForwarderStatus(indexed address,bool)
-          handler: handleBalanceForwarderStatus
-        - event: Borrow(indexed address,uint256)
-          handler: handleBorrow
-        - event: ConvertFees(indexed address,indexed address,indexed
-            address,uint256,uint256)
-          handler: handleConvertFees
-        - event: DebtSocialized(indexed address,uint256)
-          handler: handleDebtSocialized
-        - event: PullDebt(indexed address,indexed address,uint256)
-          handler: handlePullDebt
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
-        - event: EVaultCreated(indexed address,indexed address,address)
-          handler: handleEVaultCreated
-        - event: InterestAccrued(indexed address,uint256)
-          handler: handleInterestAccrued
-        - event: Liquidate(indexed address,indexed address,address,uint256,uint256)
-          handler: handleLiquidate
-        - event: Repay(indexed address,uint256)
-          handler: handleRepay
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-        - event: VaultStatus(uint256,uint256,uint256,uint256,uint256,uint256,uint256)
-          handler: handleVaultStatus
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
-        - event: GovSetCaps(uint16,uint16)
-          handler: handleUpdateVaultData
-        - event: GovSetConfigFlags(uint32)
-          handler: handleUpdateVaultData
-        - event: GovSetFeeReceiver(indexed address)
-          handler: handleUpdateVaultData
-        - event: GovSetGovernorAdmin(indexed address)
-          handler: handleUpdateVaultData
-        - event: GovSetHookConfig(indexed address,uint32)
-          handler: handleUpdateVaultData
-        - event: GovSetInterestFee(uint16)
-          handler: handleUpdateVaultData
-        - event: GovSetInterestRateModel(address)
-          handler: handleUpdateVaultData
-        - event: GovSetLTV(indexed address,uint16,uint16,uint16,uint48,uint32)
-          handler: handleUpdateVaultData
-        - event: GovSetLiquidationCoolOffTime(uint16)
-          handler: handleUpdateVaultData
-        - event: GovSetMaxLiquidationDiscount(uint16)
-          handler: handleUpdateVaultData
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Borrow(indexed address,uint256)
+          handler: handleBorrow
+        - event: Repay(indexed address,uint256)
+          handler: handleRepay
+        - event: PullDebt(indexed address,indexed address,uint256)
+          handler: handlePullDebt
+        - event: Liquidate(indexed address,indexed address,address,uint256,uint256)
+          handler: handleLiquidate
+        - event: ConvertFees(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleConvertFees
       file: ./src/euler-vault.ts
   - kind: ethereum
-    name: EulerEarn
+    name: ERC4626Vault
     network: {{{ network }}}
     source:
       abi: EulerEarn
@@ -230,128 +94,18 @@ templates:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
-        - EulerEarnApproval
-        - EulerEarnDeposit
-        - EulerEarnTransfer
-        - EulerEarnWithdraw
-        - EulerEarnVault
-        - EulerEarnAccrueInterest
-        - EulerEarnOwnershipTransferStarted
-        - EulerEarnOwnershipTransferred
-        - EulerEarnRevokePendingCap
-        - EulerEarnRevokePendingGuardian
-        - EulerEarnRevokePendingMarketRemoval
-        - EulerEarnRevokePendingTimelock
-        - EulerEarnSetCap
-        - EulerEarnSetCurator
-        - EulerEarnSetFee
-        - EulerEarnSetFeeRecipient
-        - EulerEarnSetGuardian
-        - EulerEarnSetIsAllocator
-        - EulerEarnSetName
-        - EulerEarnSetSupplyQueue
-        - EulerEarnSetSymbol
-        - EulerEarnSetTimelock
-        - EulerEarnSetWithdrawQueue
-        - EulerEarnSubmitCap
-        - EulerEarnSubmitGuardian
-        - EulerEarnSubmitMarketRemoval
-        - EulerEarnSubmitTimelock
-        - EulerEarnReallocateSupply
-        - EulerEarnReallocateWithdraw
-        - EulerEarnUpdateLastTotalAssets
-        - EulerEarnUpdateLostAssets
+        - TrackingActiveAccount
+        - TrackingVaultBalance
       abis:
-        - name: EulerVault
-          file: ./abis/EulerVault.json
         - name: EulerEarn
-          file: ./abis/EulerEarn.json
-        - name: EthereumVaultConnector
-          file: ./abis/EVC.json
+          file: ./lib/euler-interfaces/abis/EulerEarn.json
+        - name: EulerVault
+          file: ./lib/euler-interfaces/abis/EVault.json
       eventHandlers:
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
         - event: Deposit(indexed address,indexed address,uint256,uint256)
           handler: handleDeposit
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
         - event: Withdraw(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleWithdraw
-        - event: ReallocateSupply(indexed address,indexed address,uint256,uint256)
-          handler: handleReallocateSupply
-        - event: ReallocateWithdraw(indexed address,indexed address,uint256,uint256)
-          handler: handleReallocateWithdraw
-        - event: UpdateLastTotalAssets(uint256)
-          handler: handleUpdateLastTotalAssets
-        - event: UpdateLostAssets(uint256)
-          handler: handleUpdateLostAssets
-        - event: AccrueInterest(uint256,uint256)
-          handler: handleAccrueInterest
-        - event: OwnershipTransferStarted(indexed address,indexed address)
-          handler: handleOwnershipTransferStarted
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: RevokePendingCap(indexed address,indexed address)
-          handler: handleRevokePendingCap
-        - event: RevokePendingGuardian(indexed address)
-          handler: handleRevokePendingGuardian
-        - event: RevokePendingMarketRemoval(indexed address,indexed address)
-          handler: handleRevokePendingMarketRemoval
-        - event: RevokePendingTimelock(indexed address)
-          handler: handleRevokePendingTimelock
-        - event: SetCap(indexed address,indexed address,uint256)
-          handler: handleSetCap
-        - event: SetCurator(indexed address)
-          handler: handleSetCurator
-        - event: SetFee(indexed address,uint256)
-          handler: handleSetFee
-        - event: SetFeeRecipient(indexed address)
-          handler: handleSetFeeRecipient
-        - event: SetGuardian(indexed address,indexed address)
-          handler: handleSetGuardian
-        - event: SetIsAllocator(indexed address,bool)
-          handler: handleSetIsAllocator
-        - event: SetName(string)
-          handler: handleSetName
-        - event: SetSupplyQueue(indexed address,address[])
-          handler: handleSetSupplyQueue
-        - event: SetSymbol(string)
-          handler: handleSetSymbol
-        - event: SetTimelock(indexed address,uint256)
-          handler: handleSetTimelock
-        - event: SetWithdrawQueue(indexed address,address[])
-          handler: handleSetWithdrawQueue
-        - event: SubmitCap(indexed address,indexed address,uint256)
-          handler: handleSubmitCap
-        - event: SubmitGuardian(indexed address)
-          handler: handleSubmitGuardian
-        - event: SubmitMarketRemoval(indexed address,indexed address)
-          handler: handleSubmitMarketRemoval
-        - event: SubmitTimelock(uint256)
-          handler: handleSubmitTimelock
-      file: ./src/euler-earn.ts
-  - kind: ethereum
-    name: EulerSwap
-    network: {{{ network }}}
-    source:
-      abi: EulerSwap
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - EulerSwapCreated
-        - EulerSwap
-      abis:
-        - name: EulerSwap
-          file: ./abis/EulerSwap.json
-        - name: EulerVault
-          file: ./abis/EulerVault.json
-        - name: EthereumVaultConnector
-          file: ./abis/EVC.json
-      eventHandlers:
-        - event: EulerSwapActivated(indexed address,indexed address)
-          handler: handleEulerSwapActivated
-        - event: Swap(indexed address,uint256,uint256,uint256,uint256,uint112,uint112,indexed address)
-          handler: handleEulerSwap
-      file: ./src/euler-swap.ts 
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+      file: ./src/erc4626-vault.ts

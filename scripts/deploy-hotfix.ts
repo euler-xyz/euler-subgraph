@@ -1,7 +1,7 @@
 import { execSync } from 'child_process'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
-import { Network, NETWORKS, networks, Version } from './config'
+import { Network, NETWORK_NAMES, networks, Version } from './config'
 import { formatVersion, parseVersion } from './utils/utils'
 import Mustache from 'mustache'
 
@@ -252,8 +252,8 @@ const configPath = join(process.cwd(), configFile)
 const hotfixConfig = loadHotfixConfig(configPath)
 
 const network = hotfixConfig.chain as Network
-if (!NETWORKS.includes(network)) {
-  console.error(`Invalid network: ${network}. Must be one of: ${NETWORKS.join(', ')}`)
+if (!NETWORK_NAMES.includes(network)) {
+  console.error(`Invalid network: ${network}. Must be one of: ${NETWORK_NAMES.join(', ')}`)
   process.exit(1)
 }
 

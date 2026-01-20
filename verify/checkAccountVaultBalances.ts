@@ -1,14 +1,15 @@
-console.log('============ CHECKING POSITIONS [Account tracking] ============')
-import { getSubgraphUrl, getValidChains, toSubAccountId } from './utils/utils'
+console.log('============ CHECKING VAULT BALANCES [Account tracking] ============')
+import { getSubgraphUrl, getValidChains, toSubAccountId, getAddressPrefix } from './utils/utils'
 
 interface TrackingVaultBalance {
     account: string;
     balance: string;
     debt: string;
-    mainAddress: string;
+    addressPrefix: string;
     vault: string;
 }
-const printTable = (mainAddress: string, data: TrackingVaultBalance[], showCols?: string[]) => {
+
+const printTable = (addressPrefix: string, data: TrackingVaultBalance[]) => {
     const parsedData = data.reduce((acc: {
         [key: string]: {
             vaults: string[],
@@ -40,7 +41,7 @@ const printTable = (mainAddress: string, data: TrackingVaultBalance[], showCols?
     }, {});
 
     const tableData = Object.entries(parsedData).map(([subAccount, data]) => ({
-        'subAccountId': toSubAccountId(mainAddress, subAccount),
+        'subAccountId': toSubAccountId(addressPrefix, subAccount),
         subAccount,
         'number_of_vaults': data.vaults.filter(v => BigInt(data.balances[v]) > 0n).length,
         'total_debt': data.totalDebt.toString(),
@@ -68,10 +69,13 @@ const printTable = (mainAddress: string, data: TrackingVaultBalance[], showCols?
 }
 
 async function checkPositions(subgraphUrl: string, address: string) {
+    // Convert address to addressPrefix (first 19 bytes)
+    const addressPrefix = getAddressPrefix(address)
+    
     const balanceQuery = `
-    query GetPositionsWithBalance($address: String!) {
-        trackingVaultBalances(where: { mainAddress: $address, balance_gt: "0" }) {
-            mainAddress
+    query GetPositionsWithBalance($addressPrefix: Bytes!) {
+        trackingVaultBalances(where: { addressPrefix: $addressPrefix, balance_gt: "0" }) {
+            addressPrefix
             account
             vault
             debt
@@ -81,9 +85,9 @@ async function checkPositions(subgraphUrl: string, address: string) {
     `
 
     const debtQuery = `
-    query GetPositionsWithDebt($address: String!) {
-        trackingVaultBalances(where: { mainAddress: $address, debt_gt: "0" }) {
-            mainAddress
+    query GetPositionsWithDebt($addressPrefix: Bytes!) {
+        trackingVaultBalances(where: { addressPrefix: $addressPrefix, debt_gt: "0" }) {
+            addressPrefix
             account
             vault
             debt
@@ -101,7 +105,7 @@ async function checkPositions(subgraphUrl: string, address: string) {
                 },
                 body: JSON.stringify({
                     query: balanceQuery,
-                    variables: { address },
+                    variables: { addressPrefix },
                 }),
             }),
             fetch(subgraphUrl, {
@@ -111,7 +115,7 @@ async function checkPositions(subgraphUrl: string, address: string) {
                 },
                 body: JSON.stringify({
                     query: debtQuery,
-                    variables: { address },
+                    variables: { addressPrefix },
                 }),
             })
         ]);
@@ -132,9 +136,10 @@ async function checkPositions(subgraphUrl: string, address: string) {
         );
 
         if (combinedBalances.length > 0) {
-            printTable(address, combinedBalances);
+            console.log(`Balances for address: ${address} (prefix: ${addressPrefix})`)
+            printTable(addressPrefix, combinedBalances);
         } else {
-            console.log(`No tracking account found for address: ${address}`);
+            console.log(`No tracking account found for address: ${address} (prefix: ${addressPrefix})`);
         }
     } catch (error) {
         console.error('Error fetching tracking account:', error);
@@ -147,7 +152,7 @@ const address = process.argv[3]
 
 if (!chainName || !address) {
     console.error('Please provide both chain name and address as arguments')
-    console.error('Usage: pnpm run verify:positions <chainName> <address>')
+    console.error('Usage: pnpm verify:accountVaultBalances <chainName> <address>')
     process.exit(1)
 }
 

@@ -1,5 +1,5 @@
 import { execSync } from 'child_process'
-import { Network, NETWORKS, Version } from './config'
+import { Network, NETWORK_NAMES, Version } from './config'
 import { compareVersions, formatVersion, parseVersion } from './utils/utils'
 import { existsSync, readFileSync } from 'fs'
 
@@ -73,8 +73,8 @@ function deployNewVersion(network: Network, fork: string) {
 const network = process.argv[2] as Network
 const fork = process.argv[3]
 
-if (!NETWORKS.includes(network)) {
-  console.error(`Invalid network. Must be one of: ${NETWORKS.join(', ')}`)
+if (!NETWORK_NAMES.includes(network)) {
+  console.error(`Invalid network. Must be one of: ${NETWORK_NAMES.join(', ')}`)
   process.exit(1)
 }
 

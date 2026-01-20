@@ -1,5 +1,0 @@
-export * from "./coreAddresses"
-export * from "./lensAddresses"
-export * from "./peripheryAddresses"
-export * from "./swapAddresses"
-export * from "./tokenAddresses"

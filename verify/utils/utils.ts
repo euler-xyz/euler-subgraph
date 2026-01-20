@@ -2,9 +2,21 @@ import { getAddress } from "viem"
 import * as fs from 'fs'
 import * as path from 'path'
 
-export function toSubAccountId(address: string, subAccount: string) {
+// Address prefix is the first 19 bytes, shared by main address and all sub-accounts
+const ADDRESS_PREFIX_LENGTH = 19
+
+export function getAddressPrefix(address: string): string {
+    const checksummed = getAddress(address)
+    // Return first 19 bytes (2 chars for '0x' + 38 hex chars = 40 total for 19 bytes... wait)
+    // Actually: 0x + 19 bytes * 2 hex chars = 0x + 38 = 40 chars total
+    return checksummed.slice(0, 2 + ADDRESS_PREFIX_LENGTH * 2).toLowerCase()
+}
+
+export function toSubAccountId(addressPrefix: string, subAccount: string) {
+    // Pad addressPrefix to full address length for XOR comparison
+    const paddedPrefix = addressPrefix.padEnd(42, '0')
     return Number(
-        BigInt(getAddress(address)) ^ BigInt(getAddress(subAccount)),
+        BigInt(paddedPrefix) ^ BigInt(getAddress(subAccount)),
     )
 }
 

@@ -34,7 +34,10 @@ typechain-types
 cache
 
 data
-./tests/.bin
+
+# Matchstick test artifacts
+tests/.bin/
+tests/.latest.json
 
 subgraph.yaml
 .goldsky.json
