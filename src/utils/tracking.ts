@@ -26,7 +26,7 @@ function loadTrackingActiveAccount(addressPrefix: Bytes): TrackingActiveAccount 
 
 /**
  * Tracks account activity in any Euler vault.
- * Uses try_debtOf() to handle Earn vaults which don't have debt.
+ * Uses try_debtOf() to handle vaults which don't have debt.
  */
 export function trackActions(
     account: Bytes,
