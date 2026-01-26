@@ -1,5 +1,5 @@
 import { execSync } from 'child_process'
-import { Network, NETWORK_NAMES, Version } from './config'
+import { Network, NETWORKS, PROTOCOL_VERSION, Version } from './config'
 import { compareVersions, formatVersion, parseVersion } from './utils/utils'
 import { existsSync, readFileSync } from 'fs'
 
@@ -49,7 +49,7 @@ function incrementVersion(version: Version): Version {
 }
 
 function deployNewVersion(network: Network, fork: string) {
-  const subgraphName = fork ? `euler-v2-${network}-${fork}` : `euler-v2-${network}`
+  const subgraphName = fork ? `euler-${PROTOCOL_VERSION}-${network}-${fork}` : `euler-${PROTOCOL_VERSION}-${network}`
   const currentVersion = getLatestVersion(network, subgraphName)
   const newVersion = incrementVersion(currentVersion)
   const versionString = formatVersion(newVersion)
@@ -73,8 +73,8 @@ function deployNewVersion(network: Network, fork: string) {
 const network = process.argv[2] as Network
 const fork = process.argv[3]
 
-if (!NETWORK_NAMES.includes(network)) {
-  console.error(`Invalid network. Must be one of: ${NETWORK_NAMES.join(', ')}`)
+if (!NETWORKS.includes(network)) {
+  console.error(`Invalid network. Must be one of: ${NETWORKS.join(', ')}`)
   process.exit(1)
 }
 

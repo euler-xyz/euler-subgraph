@@ -1,7 +1,7 @@
 import { execSync } from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
-import { Network, NETWORK_NAMES } from './config'
+import { Network, NETWORKS, PROTOCOL_VERSION } from './config'
 import { parseVersion } from './utils/utils'
 
 
@@ -15,7 +15,7 @@ function getLatestDeployment(network: Network): DeploymentInfo | null {
     try {
         const result = execSync('goldsky subgraph list').toString()
         const lines = result.split('\n')
-            .filter(line => line.includes(`euler-v2-${network}`))
+            .filter(line => line.includes(`euler-${PROTOCOL_VERSION}-${network}`))
             .map(line => {
                 console.log(">>", line)
                 const urlMatch = line.match(/https:\/\/[^\s]+/)
@@ -54,7 +54,7 @@ function getLatestDeployment(network: Network): DeploymentInfo | null {
 function generateDeploymentsJson() {
     const deployments: DeploymentInfo[] = []
 
-    for (const network of NETWORK_NAMES) {
+    for (const network of NETWORKS) {
         const deployment = getLatestDeployment(network)
         if (deployment) {
             deployments.push(deployment)

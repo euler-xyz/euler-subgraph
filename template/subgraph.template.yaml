@@ -21,9 +21,9 @@ dataSources:
         - TrackingVaultBalance
       abis:
         - name: EVaultFactory
-          file: ./lib/euler-interfaces/abis/GenericFactory.json
+          file: ./abis/GenericFactory.json
         - name: EulerVault
-          file: ./lib/euler-interfaces/abis/EVault.json
+          file: ./abis/EulerVault.json
       eventHandlers:
         - event: ProxyCreated(indexed address,bool,address,bytes)
           handler: handleProxyCreated
@@ -45,7 +45,7 @@ dataSources:
         - TrackingVaultBalance
       abis:
         - name: EulerEarnFactory
-          file: ./lib/euler-interfaces/abis/EulerEarnFactory.json
+          file: ./abis/EulerEarnFactory.json
       eventHandlers:
         - event: CreateEulerEarn(indexed address,indexed address,address,uint256,indexed address,string,string,bytes32)
           handler: handleCreateEulerEarn
@@ -68,7 +68,7 @@ dataSources:
         - TrackingVaultBalance
       abis:
         - name: ERC4626EVCCollateralSecuritizeFactory
-          file: ./lib/euler-interfaces/abis/ERC4626EVCCollateralSecuritizeFactory.json
+          file: ./abis/ERC4626EVCCollateralSecuritizeFactory.json
       eventHandlers:
         - event: ContractDeployed(indexed address,indexed address,uint256)
           handler: handleContractDeployed
@@ -89,7 +89,7 @@ templates:
         - TrackingVaultBalance
       abis:
         - name: EulerVault
-          file: ./lib/euler-interfaces/abis/EVault.json
+          file: ./abis/EulerVault.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
@@ -112,9 +112,9 @@ templates:
         - TrackingVaultBalance
       abis:
         - name: EulerEarn
-          file: ./lib/euler-interfaces/abis/EulerEarn.json
+          file: ./abis/EulerEarn.json
         - name: EulerVault
-          file: ./lib/euler-interfaces/abis/EVault.json
+          file: ./abis/EulerVault.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer

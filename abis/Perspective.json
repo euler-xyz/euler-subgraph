@@ -1,0 +1,160 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "vaultFactory_",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "perspective",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "vault",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "codes",
+                "type": "uint256"
+            }
+        ],
+        "name": "PerspectiveError",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "PerspectivePanic",
+        "type": "error"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "vault",
+                "type": "address"
+            }
+        ],
+        "name": "PerspectiveVerified",
+        "type": "event"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "vault",
+                "type": "address"
+            }
+        ],
+        "name": "isVerified",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "name",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "pure",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "vault",
+                "type": "address"
+            },
+            {
+                "internalType": "bool",
+                "name": "failEarly",
+                "type": "bool"
+            }
+        ],
+        "name": "perspectiveVerify",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "name": "singletonLookup",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "vaultFactory",
+        "outputs": [
+            {
+                "internalType": "contract GenericFactory",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "verifiedArray",
+        "outputs": [
+            {
+                "internalType": "address[]",
+                "name": "",
+                "type": "address[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "verifiedLength",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

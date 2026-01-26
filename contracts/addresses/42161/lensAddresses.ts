@@ -1,0 +1,8 @@
+export const lensAddresses = {
+  accountLens: "0x48263ed0339Bd229578785FaD52627080D09ddBc",
+  eulerEarnVaultLens: "0xB8C3a7D701DbcC2A6E4911d384AD5Cc870aa7eb5",
+  irmLens: "0x9ac753B76B56039e4164858f90c288AC1346EC3c",
+  oracleLens: "0x5D613b4eC0efAee328f6cA47C667EA49a2eB7884",
+  utilsLens: "0x2a99a89d820D50b4Ec947679A2d55Dc39600FdB5",
+  vaultLens: "0x59d28aF1fC4A52EE402C9099BeCEf333366184Df",
+} as const

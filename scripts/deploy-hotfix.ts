@@ -1,7 +1,7 @@
 import { execSync } from 'child_process'
 import { existsSync, readFileSync, writeFileSync } from 'fs'
 import { join } from 'path'
-import { Network, NETWORK_NAMES, networks, Version } from './config'
+import { Network, NETWORKS, networks, PROTOCOL_VERSION, Version } from './config'
 import { formatVersion, parseVersion } from './utils/utils'
 import Mustache from 'mustache'
 
@@ -15,7 +15,7 @@ interface HotfixConfig {
 
 function getDeploymentIdFromVersion(network: Network, version: string): string | null {
   try {
-    const subgraphName = `euler-v2-${network}`
+    const subgraphName = `euler-${PROTOCOL_VERSION}-${network}`
 
     // Try multiple approaches to get deployment ID
     // Approach 1: Try goldsky subgraph list with specific subgraph
@@ -155,7 +155,7 @@ graft:
 
 function getLatestHotfixVersion(network: Network, baseVersion: Version): number {
   try {
-    const subgraphName = `euler-v2-${network}`
+    const subgraphName = `euler-${PROTOCOL_VERSION}-${network}`
     const result = execSync('goldsky subgraph list', { encoding: 'utf8' }).toString()
     const lines = result.split('\n')
       .filter(line => line.includes(subgraphName))
@@ -183,7 +183,7 @@ function getLatestHotfixVersion(network: Network, baseVersion: Version): number 
 }
 
 function deployHotfix(network: Network, hotfixConfig: HotfixConfig) {
-  const subgraphName = `euler-v2-${network}`
+  const subgraphName = `euler-${PROTOCOL_VERSION}-${network}`
 
   // Parse base version
   const baseVersion = parseVersion(hotfixConfig.baseVersion)
@@ -252,8 +252,8 @@ const configPath = join(process.cwd(), configFile)
 const hotfixConfig = loadHotfixConfig(configPath)
 
 const network = hotfixConfig.chain as Network
-if (!NETWORK_NAMES.includes(network)) {
-  console.error(`Invalid network: ${network}. Must be one of: ${NETWORK_NAMES.join(', ')}`)
+if (!NETWORKS.includes(network)) {
+  console.error(`Invalid network: ${network}. Must be one of: ${NETWORKS.join(', ')}`)
   process.exit(1)
 }
 
