@@ -19,5 +19,7 @@ export * as lineaAddresses from "./59144"
 export * as plasmaAddresses from "./9745"
 export * as mantleAddresses from "./5000"
 export * as monadAddresses from "./143"
+export * as morphAddresses from "./2818"
 // TESTNETS
 export * as tacTurinAddresses from "./2390"
+export * as sepoliaAddresses from "./11155111"

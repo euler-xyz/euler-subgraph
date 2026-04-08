@@ -1,4 +1,4 @@
-specVersion: 1.0.0
+specVersion: 1.2.0
 indexerHints:
   prune: auto
 schema:
@@ -93,10 +93,21 @@ templates:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
+          calls:
+            balanceOfFrom: EulerVault[event.address].balanceOf(event.params.from)
+            balanceOfTo: EulerVault[event.address].balanceOf(event.params.to)
+            debtOfFrom: EulerVault[event.address].debtOf(event.params.from)
+            debtOfTo: EulerVault[event.address].debtOf(event.params.to)
         - event: Borrow(indexed address,uint256)
           handler: handleBorrow
+          calls:
+            balanceOf: EulerVault[event.address].balanceOf(event.params.account)
+            debtOf: EulerVault[event.address].debtOf(event.params.account)
         - event: Repay(indexed address,uint256)
           handler: handleRepay
+          calls:
+            balanceOf: EulerVault[event.address].balanceOf(event.params.account)
+            debtOf: EulerVault[event.address].debtOf(event.params.account)
       file: ./src/euler-vault.ts
   - kind: ethereum
     name: ERC4626Vault
@@ -118,4 +129,7 @@ templates:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
+          calls:
+            balanceOfFrom: EulerVault[event.address].balanceOf(event.params.from)
+            balanceOfTo: EulerVault[event.address].balanceOf(event.params.to)
       file: ./src/erc4626-vault.ts

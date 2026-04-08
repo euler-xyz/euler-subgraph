@@ -67,16 +67,38 @@ function create_index_ts() {
 
 if [ -z "$1" ]; then
   echo "Usage: $0 <network_id> [euler-interfaces-branch]"
+  echo "       $0 test <network_id> [euler-interfaces-branch]"
+  echo "       $0 chain-test <network_id> [euler-interfaces-branch]"
+  echo ""
+  echo "  Normal:     Download addresses from repo addresses/<network_id>/ to contracts/addresses/<network_id>/"
+  echo "  test:       Download from repo addresses/test/ to contracts/addresses/<network_id>/ (e.g. 11155111 for Sepolia)"
+  echo "  chain-test: Download from repo addresses/chain-test/ to contracts/addresses/<network_id>/"
   exit 1
 fi
 
 set -e
 trap 'rm -rf "$temp_dir"' EXIT
 
-network_id=$1
 euler_interfaces_repo_name="euler-interfaces"
 euler_interfaces_repo_url="https://github.com/euler-xyz/${euler_interfaces_repo_name}"
-euler_interfaces_branch=${2:-"master"}
+
+if [ "$1" = "test" ] || [ "$1" = "chain-test" ]; then
+  addresses_source=$1
+  if [ -z "$2" ]; then
+    echo "Error: $1 requires a network_id (e.g. 11155111 for Sepolia)"
+    exit 1
+  fi
+  network_id=$2
+  euler_interfaces_branch=${3:-"master"}
+  # Repo has addresses/test/<network_id>/ and addresses/chain-test/<network_id>/
+  addresses_repo_path="${addresses_source}/${network_id}"
+else
+  addresses_source=$1
+  network_id=$1
+  euler_interfaces_branch=${2:-"master"}
+  addresses_repo_path="${network_id}"
+fi
+
 abi_path=contracts/abi
 lens_abi_path=contracts/abi/lens/${network_id}
 addresses_path=contracts/addresses/${network_id}
@@ -98,4 +120,4 @@ process_abis "$temp_dir" "$lens_abi_path" "${lens_contracts[@]}" "${lens_abis[@]
 
 jsons=("CoreAddresses" "PeripheryAddresses" "LensAddresses" "TokenAddresses")
 addresses=("coreAddresses" "peripheryAddresses" "lensAddresses" "tokenAddresses")
-process_addresses "$temp_dir" "$addresses_path" "$network_id" "${jsons[@]}" "${addresses[@]}"
+process_addresses "$temp_dir" "$addresses_path" "$addresses_repo_path" "${jsons[@]}" "${addresses[@]}"

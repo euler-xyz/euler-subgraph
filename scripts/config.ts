@@ -19,7 +19,9 @@ import {
     lineaAddresses,
     plasmaAddresses,
     mantleAddresses,
-    monadAddresses
+    monadAddresses,
+    morphAddresses,
+    sepoliaAddresses
 } from '../contracts/addresses'
 
 export const PROTOCOL_VERSION = "simple"
@@ -176,6 +178,20 @@ export const networks = {
         ...monadAddresses.swapAddresses,
         ...monadAddresses.peripheryAddresses,
         startBlock: 30858000
+    },
+    morph: {
+        network: 'morph',
+        ...morphAddresses.coreAddresses,
+        ...morphAddresses.swapAddresses,
+        ...morphAddresses.peripheryAddresses,
+        startBlock: 5080000
+    },
+    sepolia: {
+        network: 'sepolia',
+        ...sepoliaAddresses.coreAddresses,
+        ...sepoliaAddresses.swapAddresses,
+        ...sepoliaAddresses.peripheryAddresses,
+        startBlock: 9000000
     }
 }
 
