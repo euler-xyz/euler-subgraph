@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  protobufjs: ^7.5.5
+
 importers:
 
   .:
@@ -251,9 +254,6 @@ packages:
 
   '@types/form-data@0.0.33':
     resolution: {integrity: sha512-8BSvG1kGm83cyJITQMZSulnl6QV8jqAGreJsc5tPu1Jq0vTSOiY/k24Wx82JRpWwZSqrala6sd5rWi6aNXvqcw==}
-
-  '@types/long@4.0.2':
-    resolution: {integrity: sha512-MqTGEo5bj5t157U6fA/BiDynNkn0YknVdh48CMPkTSpFTVmvao5UQmm7uEF6xBEo7qIMAlY/JSleYaE6VOdpaA==}
 
   '@types/minimatch@3.0.5':
     resolution: {integrity: sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==}
@@ -1508,9 +1508,9 @@ packages:
   promise@8.3.0:
     resolution: {integrity: sha512-rZPNPKTOYVNEEKFaq1HqTgOwZD+4/YHS5ukLzQCypkj+OkYx7iv0mA91lJlpPPZ8vMau3IIGj5Qlwrx+8iiSmg==}
 
-  protobufjs@6.11.4:
-    resolution: {integrity: sha512-5kQWPaJHi1WoCpjTGszzQ32PG2F4+wRY6BmAT4Vfw56Q2FZ4YZzK20xUYQH4YkfehY1e6QSICrJquM6xXZNcrw==}
-    hasBin: true
+  protobufjs@7.5.5:
+    resolution: {integrity: sha512-3wY1AxV+VBNW8Yypfd1yQY9pXnqTAN+KwQxL8iYm3/BjKYMNg4i0owhEe26PWDOMaIrzeeF98Lqd5NGz4omiIg==}
+    engines: {node: '>=12.0.0'}
 
   pump@1.0.3:
     resolution: {integrity: sha512-8k0JupWme55+9tCVE+FS5ULT3K6AbgqrGa58lTT49RpyfwwcGedHqaC5LlQNdEAumn/wFsu6aPwkuPMioy8kqw==}
@@ -2338,8 +2338,6 @@ snapshots:
   '@types/form-data@0.0.33':
     dependencies:
       '@types/node': 22.13.10
-
-  '@types/long@4.0.2': {}
 
   '@types/minimatch@3.0.5': {}
 
@@ -3260,7 +3258,7 @@ snapshots:
   ipfs-unixfs@6.0.9:
     dependencies:
       err-code: 3.0.1
-      protobufjs: 6.11.4
+      protobufjs: 7.5.5
 
   ipfs-utils@9.0.14(encoding@0.1.13):
     dependencies:
@@ -3701,7 +3699,7 @@ snapshots:
     dependencies:
       asap: 2.0.6
 
-  protobufjs@6.11.4:
+  protobufjs@7.5.5:
     dependencies:
       '@protobufjs/aspromise': 1.1.2
       '@protobufjs/base64': 1.1.2
@@ -3713,9 +3711,8 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/long': 4.0.2
       '@types/node': 22.13.10
-      long: 4.0.0
+      long: 5.3.1
 
   pump@1.0.3:
     dependencies:
