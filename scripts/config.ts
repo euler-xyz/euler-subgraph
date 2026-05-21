@@ -10,6 +10,7 @@ import {
     inkAddresses,
     mainnetAddresses,
     optimismAddresses,
+    polygonAddresses,
     sonicAddresses,
     swellAddresses,
     tacAddresses,
@@ -185,6 +186,13 @@ export const networks = {
         ...morphAddresses.swapAddresses,
         ...morphAddresses.peripheryAddresses,
         startBlock: 5080000
+    },
+    polygon: {
+        network: 'matic',
+        ...polygonAddresses.coreAddresses,
+        ...polygonAddresses.swapAddresses,
+        ...polygonAddresses.peripheryAddresses,
+        startBlock: 86932985
     },
     sepolia: {
         network: 'sepolia',
