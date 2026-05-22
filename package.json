@@ -38,6 +38,7 @@
     "prepare:mantle": "bun scripts/prepare.ts mantle",
     "prepare:monad": "bun scripts/prepare.ts monad",
     "prepare:morph": "bun scripts/prepare.ts morph",
+    "prepare:polygon": "bun scripts/prepare.ts polygon",
     "prepare:sepolia": "bun scripts/prepare.ts sepolia",
     "build:mainnet": "pnpm prepare:mainnet && graph build",
     "build:base": "pnpm prepare:base && graph build",
@@ -62,6 +63,7 @@
     "build:mantle": "pnpm prepare:mantle && graph build",
     "build:monad": "pnpm prepare:monad && graph build",
     "build:morph": "pnpm prepare:morph && graph build",
+    "build:polygon": "pnpm prepare:polygon && graph build",
     "build:sepolia": "pnpm prepare:sepolia && graph build",
     "deploy:mainnet": "pnpm build:mainnet && bun scripts/deploy.ts mainnet",
     "deploy:mainnet:test": "pnpm build:mainnet && bun scripts/deploy.ts mainnet test",
@@ -88,6 +90,7 @@
     "deploy:mantle": "pnpm build:mantle && bun scripts/deploy.ts mantle",
     "deploy:monad": "pnpm build:monad && bun scripts/deploy.ts monad",
     "deploy:morph": "pnpm build:morph && bun scripts/deploy.ts morph",
+    "deploy:polygon": "pnpm build:polygon && bun scripts/deploy.ts polygon",
     "deploy:sepolia": "pnpm build:sepolia && bun scripts/deploy.ts sepolia",
     "deploy:hotfix": "bun scripts/deploy-hotfix.ts"
   },
