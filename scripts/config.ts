@@ -122,7 +122,7 @@ export const networks = {
         ...hyperevmAddresses.coreAddresses,
         ...hyperevmAddresses.swapAddresses,
         ...hyperevmAddresses.peripheryAddresses,
-        startBlock: 13475680
+        startBlock: 1980586
     },
     optimism: {
         network: 'optimism',
