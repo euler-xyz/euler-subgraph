@@ -65,7 +65,7 @@
     "build:monad": "pnpm prepare:monad && graph build",
     "build:morph": "pnpm prepare:morph && graph build",
     "build:polygon": "pnpm prepare:polygon && graph build",
-    "build:hashkey": "graph build",
+    "build:hashkey": "pnpm prepare:hashkey && graph build",
     "build:sepolia": "pnpm prepare:sepolia && graph build",
     "deploy:mainnet": "pnpm build:mainnet && bun scripts/deploy.ts mainnet",
     "deploy:mainnet:test": "pnpm build:mainnet && bun scripts/deploy.ts mainnet test",
