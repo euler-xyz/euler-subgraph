@@ -6,6 +6,7 @@ import {
     bobAddresses,
     bscAddresses,
     gnosisAddresses,
+    hashkeyAddresses,
     hyperevmAddresses,
     inkAddresses,
     mainnetAddresses,
@@ -193,6 +194,14 @@ export const networks = {
         ...polygonAddresses.swapAddresses,
         ...polygonAddresses.peripheryAddresses,
         startBlock: 86932985
+    },
+    hashkey: {
+        network: 'hashkeychain',
+        ...hashkeyAddresses.coreAddresses,
+        ...hashkeyAddresses.swapAddresses,
+        ...hashkeyAddresses.peripheryAddresses,
+        securitizeFactory: undefined,
+        startBlock: 22811589
     },
     sepolia: {
         network: 'sepolia',

@@ -1,0 +1,111 @@
+specVersion: 1.2.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: EulerVaultFactory
+    network: hashkeychain
+    source:
+      abi: EVaultFactory
+      address: "0x2fE70206e06Df548C7Ac638f3Df05b09acC329b7"
+      startBlock: 22811589
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Vault
+        - TrackingActiveAccount
+        - TrackingVaultBalance
+      abis:
+        - name: EVaultFactory
+          file: ./abis/GenericFactory.json
+        - name: EulerVault
+          file: ./abis/EulerVault.json
+      eventHandlers:
+        - event: ProxyCreated(indexed address,bool,address,bytes)
+          handler: handleProxyCreated
+      file: ./src/factories/euler-vault-factory.ts
+  - kind: ethereum
+    name: EulerEarnFactory
+    network: hashkeychain
+    source:
+      abi: EulerEarnFactory
+      address: "0xA53a5Dc91f9FFF09cADAc5E1013598ddf1cb4E8C"
+      startBlock: 22811589
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Vault
+        - TrackingActiveAccount
+        - TrackingVaultBalance
+      abis:
+        - name: EulerEarnFactory
+          file: ./abis/EulerEarnFactory.json
+      eventHandlers:
+        - event: CreateEulerEarn(indexed address,indexed address,address,uint256,indexed address,string,string,bytes32)
+          handler: handleCreateEulerEarn
+      file: ./src/factories/euler-earn-factory.ts
+templates:
+  - kind: ethereum
+    name: EulerVault
+    network: hashkeychain
+    source:
+      abi: EulerVault
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TrackingActiveAccount
+        - TrackingVaultBalance
+      abis:
+        - name: EulerVault
+          file: ./abis/EulerVault.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+          calls:
+            balanceOfFrom: EulerVault[event.address].balanceOf(event.params.from)
+            balanceOfTo: EulerVault[event.address].balanceOf(event.params.to)
+            debtOfFrom: EulerVault[event.address].debtOf(event.params.from)
+            debtOfTo: EulerVault[event.address].debtOf(event.params.to)
+        - event: Borrow(indexed address,uint256)
+          handler: handleBorrow
+          calls:
+            balanceOf: EulerVault[event.address].balanceOf(event.params.account)
+            debtOf: EulerVault[event.address].debtOf(event.params.account)
+        - event: Repay(indexed address,uint256)
+          handler: handleRepay
+          calls:
+            balanceOf: EulerVault[event.address].balanceOf(event.params.account)
+            debtOf: EulerVault[event.address].debtOf(event.params.account)
+      file: ./src/euler-vault.ts
+  - kind: ethereum
+    name: ERC4626Vault
+    network: hashkeychain
+    source:
+      abi: EulerEarn
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TrackingActiveAccount
+        - TrackingVaultBalance
+      abis:
+        - name: EulerEarn
+          file: ./abis/EulerEarn.json
+        - name: EulerVault
+          file: ./abis/EulerVault.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+          calls:
+            balanceOfFrom: EulerVault[event.address].balanceOf(event.params.from)
+            balanceOfTo: EulerVault[event.address].balanceOf(event.params.to)
+      file: ./src/erc4626-vault.ts

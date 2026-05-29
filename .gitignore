@@ -39,5 +39,4 @@ data
 tests/.bin/
 tests/.latest.json
 
-subgraph.yaml
 .goldsky.json

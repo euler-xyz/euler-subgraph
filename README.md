@@ -5,7 +5,9 @@
 - Node.js (v16 or higher)
 - Corepack (enabled in Node.js)
 - Bun
-- Goldsky CLI (required for all deployments)
+- Graph CLI (`@graphprotocol/graph-cli`)
+- Graph TypeScript (`@graphprotocol/graph-ts`)
+- Goldsky CLI (required for Goldsky deployments)
 
 ### Setting up pnpm with Corepack
 This project uses pnpm 9.12.3. Corepack will automatically manage the correct pnpm version for you.
@@ -50,12 +52,29 @@ pnpm run prepare:mainnet
 pnpm run codegen
 ```
 
-6. Build the subgraph:
+5. Build the subgraph:
 ```bash
 pnpm run build:mainnet
 ```
 
-Note: You can replace `mainnet` with any other supported network (base, arbitrum, swell, etc.) in the above commands.
+Note: You can replace `mainnet` with any other supported network (base, arbitrum, hashkey, swell, etc.) in the above commands.
+
+## HashKey Chain
+
+The HashKey configuration follows the HashKey Chain subgraph documentation:
+
+- Network identifier: `hashkeychain`
+- Chain ID: `eip155:177`
+- Protocol: `ethereum`
+
+Generate types and build the HashKey subgraph:
+
+```bash
+pnpm run codegen
+pnpm run build:hashkey
+```
+
+The checked-in `subgraph.yaml` contains the HashKey network identifier and mainnet factory addresses. HashKey deploys the built subgraph to their Graph Node and provides the query URL after indexing.
 
 ## Available Scripts
 
@@ -74,12 +93,13 @@ pnpm run build:bob
 pnpm run build:unichain
 pnpm run build:avalanche
 pnpm run build:bsc
+pnpm run build:hashkey
 
 # Build scripts with TypeScript
 pnpm run build:scripts
 ```
 
-### Deployment Scripts
+### Goldsky Deployment Scripts
 
 ```bash
 # Deploy to specific networks
@@ -120,6 +140,7 @@ pnpm run prepare:bob
 pnpm run prepare:unichain
 pnpm run prepare:avalanche
 pnpm run prepare:bsc
+pnpm run prepare:hashkey
 
 # Verify account data
 pnpm run verify:accountPositions
@@ -136,7 +157,8 @@ pnpm run deploy:hotfix <hotfix-config.json>
 
 ### Important Notes
 
-- All deployments are handled through Goldsky
+- Existing Euler-hosted deployments are handled through Goldsky
+- HashKey Chain deployments are handled by the HashKey team on their Graph Node
 - Test deployments are available with the `:test` suffix (e.g., `deploy:mainnet:test`)
 - Make sure you have the Goldsky CLI installed and configured with your credentials
 - You can generate a JSON file with all deployment URLs using `pnpm run generate:deployments`
@@ -186,6 +208,9 @@ pnpm run deploy:avalanche
 
 # BSC
 pnpm run deploy:bsc
+
+# HashKey
+pnpm run build:hashkey
 ```
 
 ### Deployments Information
@@ -252,5 +277,6 @@ pnpm run test
   ```bash
   chmod +x scripts/abisAddressesSync.sh
   ```
-- For deployment issues, check your Goldsky CLI configuration and credentials
+- For Goldsky deployment issues, check your Goldsky CLI configuration and credentials
+- For HashKey indexing issues, verify the generated `subgraph.yaml` uses `network: hashkeychain`, the correct factory addresses, and an appropriate start block
 - Make sure you have the correct CLI tools installed and configured
