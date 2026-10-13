@@ -1,256 +1,146 @@
-# Euler Subgraph
+# Euler simple subgraph
 
-## Prerequisites
+The `simple-subgraph` branch is Euler's per-chain fallback data source. It lists every Euler vault on a chain and every account's positions in them, so an app can run on a chain plus its subgraph alone and read everything else on chain.
 
-- Node.js (v16 or higher)
-- Corepack (enabled in Node.js)
-- Bun
-- Goldsky CLI (required for all deployments)
+Each network is deployed to Goldsky as `euler-simple-<slug>`, and the version consumers should read carries the `latest` tag. DeBank reads these subgraphs, so `latest` must stay current on every network (see [Tagging `latest`](#tagging-latest)).
 
-### Setting up pnpm with Corepack
-This project uses pnpm 9.12.3. Corepack will automatically manage the correct pnpm version for you.
+## What it indexes
+
+| Source | Events | Effect |
+| --- | --- | --- |
+| EVault factory (`eVaultFactory`) | `ProxyCreated` | Adds a `Vault` and indexes it with the `EulerVault` template |
+| EulerEarn factory (`eulerEarnFactory`) | `CreateEulerEarn` | Adds a `Vault` and indexes it with the `ERC4626Vault` template |
+| Securitize collateral factory (`securitizeFactory`, only for networks whose addresses define it) | `ContractDeployed` | Adds a `Vault` and indexes it with the `ERC4626Vault` template |
+| `EulerVault` template | `Transfer`, `Borrow`, `Repay` | Updates the account's tracking entities |
+| `ERC4626Vault` template | `Transfer` | Updates the account's tracking entities |
+
+Entities, from [`schema.graphql`](schema.graphql):
+
+- `Vault`: a vault address and the factory that created it.
+- `TrackingActiveAccount`: keyed by the 19-byte address prefix that an owner shares with its 256 sub-accounts. It lists the account-and-vault pairs that hold a deposit (`deposits`) or a borrow (`borrows`).
+- `TrackingVaultBalance`: keyed by account and vault. It holds the `balanceOf` and `debtOf` values read at the account's latest event in that vault.
+
+The manifest sets `indexerHints.prune: auto`, so the subgraph serves current state, not history.
+
+## Networks
+
+Networks are the keys of `networks` in [`scripts/config.ts`](scripts/config.ts). The slug is what the scripts take (`pnpm build:<slug>`) and what the Goldsky name ends with. The Goldsky network is the `network:` value written into `subgraph.yaml`. Addresses are read from `contracts/addresses/<chainId>/`.
+
+| Slug | Chain ID | Goldsky network |
+| --- | --- | --- |
+| `mainnet` | 1 | `mainnet` |
+| `arbitrum` | 42161 | `arbitrum-one` |
+| `base` | 8453 | `base` |
+| `swell` | 1923 | `swell` |
+| `sonic` | 146 | `sonic` |
+| `ink` | 57073 | `ink` |
+| `unichain` | 130 | `unichain` |
+| `avalanche` | 43114 | `avalanche` |
+| `berachain` | 80094 | `berachain-mainnet` |
+| `bob` | 60808 | `bob` |
+| `bsc` | 56 | `bsc` |
+| `worldchain` | 480 | `worldchain` |
+| `hyperevm` | 999 | `hyperevm` |
+| `optimism` | 10 | `optimism` |
+| `gnosis` | 100 | `xdai` |
+| `tacturin` (testnet) | 2390 | `tac-turin` |
+| `tac` | 239 | `tac` |
+| `linea` | 59144 | `linea` |
+| `plasma` | 9745 | `plasma-mainnet` |
+| `mantle` | 5000 | `mantle` |
+| `monad` | 143 | `monad` |
+| `morph` | 2818 | `morph` |
+| `polygon` | 137 | `matic` |
+| `sepolia` (testnet) | 11155111 | `sepolia` |
+
+As of October 2026, euler-interfaces has no `addresses/<chainId>/` folder for `ink`, `worldchain`, `optimism`, `gnosis` and `mantle`, and keeps `swell`, `morph`, `tacturin` and `sepolia` under `addresses/test/`. Those networks build from the committed addresses, and `abisAddressesSync.sh <chainId>` fails for them (`abisAddressesSync.sh test <chainId>` reads `addresses/test/`).
+
+## Local build
+
+You need Node.js 18 or later, Bun, and pnpm 9.12.3. `.npmrc` sets `engine-strict`, so other pnpm versions refuse to run; `corepack enable` picks up the version pinned in `package.json`.
 
 ```bash
-# Enable corepack if not already enabled
 corepack enable
-
-# Install pnpm 9.12.3 using corepack
-corepack prepare pnpm@9.12.3 --activate
-
-# First time setup
-pnpm install
-
-# Corepack will automatically use pnpm 9.12.3 for this project
-# while other projects can use their own versions
+pnpm install --frozen-lockfile
+pnpm prepare:<slug>   # renders template/subgraph.template.yaml into subgraph.yaml
+pnpm codegen          # writes generated/ from subgraph.yaml and schema.graphql
+pnpm build            # compiles into build/
+pnpm test             # Matchstick tests in tests/, after codegen
 ```
 
-## Setup
+Run `pnpm codegen` after every `prepare`: the generated types depend on which data sources the network has. `pnpm build:<slug>` runs `prepare:<slug>` and `graph build` but skips codegen.
 
-1. Install dependencies:
+## Goldsky
+
+Every network deploys to Euler's Goldsky project. Install the CLI with `curl https://goldsky.com | sh` or `npm install -g @goldskycom/cli`, then log in to that project:
 
 ```bash
-pnpm install
+goldsky login                        # browser login; choose the Euler project
+goldsky project list                 # shows the projects you belong to
+goldsky project switch <project-id>  # if another project is active
 ```
 
-2. Run Sync Abis to add a new network:
+Without a browser, create an API key on the project's Settings page and run `goldsky login --token <api-key>`. An API key is bound to the project it was created in.
+
+- Name: `euler-simple-<slug>/<version>`, from `PROTOCOL_VERSION` in `scripts/config.ts`.
+- Endpoint: `https://api.goldsky.com/api/public/<project-id>/subgraphs/euler-simple-<slug>/<version-or-tag>/gn`.
+- `goldsky subgraph list euler-simple-<slug>` shows the deployed versions and their tags.
+
+### Deploying
 
 ```bash
-pnpm run abis:sync
+pnpm prepare:<slug> && pnpm codegen
+pnpm deploy:<slug>
 ```
 
-3. Update `prepare.ts` to include the new network name and start block for syncing. Then run prepare to generate the `subgraph.yaml`.
+`deploy:<slug>` runs `build:<slug>`, then `scripts/deploy.ts` deploys the next patch version: it reads the current version from `deployments.json` if that file exists, otherwise from `goldsky subgraph list`. A network's first deploy is `1.0.1`. For grafted hotfix deploys, see [hotfix/README.md](hotfix/README.md).
+
+`deploy:mainnet:test`, `deploy:base:test` and `deploy:mainnet:swap` deploy under a suffixed name, such as `euler-simple-mainnet-test`.
+
+### Tagging `latest`
+
+Consumers such as DeBank query `.../subgraphs/euler-simple-<slug>/latest/gn`. A new version indexes from `startBlock`, so move `latest` to it only once it has caught up with the chain head; before that, the tag serves partial data.
 
 ```bash
-pnpm run prepare:mainnet
+goldsky subgraph tag create euler-simple-<slug>/<version> --tag latest
 ```
 
-4. Generate code:
+`pnpm generate:deployments` writes the newest version of every network to `deployments.json`, and `pnpm tag:deployments` tags every entry in that file `latest`. Use it only when all of those versions have synced.
+
+### Checking a deployment
+
+With `deployments.json` in place:
 
 ```bash
-pnpm run codegen
+pnpm verify:accountPositions <slug> <address>
+pnpm verify:accountVaultBalances <slug> <address>
 ```
 
-6. Build the subgraph:
-```bash
-pnpm run build:mainnet
-```
+## New network
 
-Note: You can replace `mainnet` with any other supported network (base, arbitrum, swell, etc.) in the above commands.
+1. **Sync the addresses.** Euler's addresses live in [euler-interfaces](https://github.com/euler-xyz/euler-interfaces) under `addresses/<chainId>/`. After `pnpm install`, run on macOS (the script uses BSD `sed -i ''`):
 
-## Available Scripts
+   ```bash
+   ./scripts/abisAddressesSync.sh <chainId>   # same as pnpm abis:sync <chainId>
+   ```
 
-### Build Scripts
+   It clones euler-interfaces at `master` (a branch name as the second argument picks another) and writes `contracts/addresses/<chainId>/` and the TypeScript ABIs under `contracts/abi/`. The subgraph reads only `eVaultFactory`, `eulerEarnFactory` and `securitizeFactory` from those addresses; its ABIs are the JSON files in `abis/`.
 
-```bash
-# Build for specific networks
-pnpm run build:mainnet
-pnpm run build:base
-pnpm run build:arbitrum
-pnpm run build:swell
-pnpm run build:sonic
-pnpm run build:ink
-pnpm run build:berachain
-pnpm run build:bob
-pnpm run build:unichain
-pnpm run build:avalanche
-pnpm run build:bsc
+2. **Export the addresses** from `contracts/addresses/index.ts`:
 
-# Build scripts with TypeScript
-pnpm run build:scripts
-```
+   ```ts
+   export * as <name>Addresses from "./<chainId>"
+   ```
 
-### Deployment Scripts
+3. **Add the network to `scripts/config.ts`.** Copy an existing entry of `networks` and set:
+   - the key: the network slug;
+   - `network`: Goldsky's subgraph slug for the chain. Find the chain on Goldsky's [supported networks](https://docs.goldsky.com/chains/supported-networks) page; its chain page lists the slug under **Subgraphs** (for example `matic` for Polygon, `xdai` for Gnosis, `plasma-mainnet` for Plasma);
+   - `startBlock`: one start block is shared by all data sources. Use the block of the first factory event on the chain, or any block before it. Vaults created before `startBlock` are never indexed.
 
-```bash
-# Deploy to specific networks
-pnpm run deploy:mainnet
-pnpm run deploy:base
-pnpm run deploy:arbitrum
-pnpm run deploy:swell
-pnpm run deploy:sonic
-pnpm run deploy:ink
-pnpm run deploy:berachain
-pnpm run deploy:bob
-pnpm run deploy:unichain
-pnpm run deploy:avalanche
-pnpm run deploy:bsc
+4. **Add the scripts** `prepare:<slug>`, `build:<slug>` and `deploy:<slug>` to `package.json`, next to the existing ones.
 
-# Deploy test versions (with -test suffix)
-pnpm run deploy:mainnet:test
-```
+5. **Build and test** as in [Local build](#local-build).
 
-### Utility Scripts
+6. **Deploy** to the Euler Goldsky project as in [Deploying](#deploying).
 
-```bash
-# Sync ABIs and addresses
-pnpm run abis:sync
-
-# Generate deployments information
-pnpm run generate:deployments
-
-# Prepare configurations for specific networks
-pnpm run prepare:mainnet
-pnpm run prepare:base
-pnpm run prepare:arbitrum
-pnpm run prepare:swell
-pnpm run prepare:sonic
-pnpm run prepare:ink
-pnpm run prepare:berachain
-pnpm run prepare:bob
-pnpm run prepare:unichain
-pnpm run prepare:avalanche
-pnpm run prepare:bsc
-
-# Verify account data
-pnpm run verify:accountPositions
-pnpm run verify:accountVaultBalances
-
-# Run tests
-pnpm run test
-
-# Deploy hotfix (see hotfix/README.md for details)
-pnpm run deploy:hotfix <hotfix-config.json>
-```
-
-## Deployment Guide
-
-### Important Notes
-
-- All deployments are handled through Goldsky
-- Test deployments are available with the `:test` suffix (e.g., `deploy:mainnet:test`)
-- Make sure you have the Goldsky CLI installed and configured with your credentials
-- You can generate a JSON file with all deployment URLs using `pnpm run generate:deployments`
-- For deploying hotfixes using grafting, see [Hotfix Deployment Guide](./hotfix/README.md)
-
-### Network-Specific Deployment
-
-#### Mainnet
-
-```bash
-# Production deployment
-pnpm run deploy:mainnet
-
-# Test deployment
-pnpm run deploy:mainnet:test
-```
-
-#### Other Networks
-
-```bash
-# Base
-pnpm run deploy:base
-
-# Arbitrum
-pnpm run deploy:arbitrum
-
-# Swell
-pnpm run deploy:swell
-
-# Sonic
-pnpm run deploy:sonic
-
-# Ink
-pnpm run deploy:ink
-
-# Berachain
-pnpm run deploy:berachain
-
-# Bob
-pnpm run deploy:bob
-
-# Unichain
-pnpm run deploy:unichain
-
-# Avalanche
-pnpm run deploy:avalanche
-
-# BSC
-pnpm run deploy:bsc
-```
-
-### Deployments Information
-
-The `generate:deployments` command creates a `deployments.json` file that contains information about the latest deployed version of the subgraph for each supported network. This file is automatically updated after each deployment.
-
-#### File Structure
-
-```json
-[
-  {
-    "network": "mainnet",
-    "url": "https://...",
-    "version": "1.2.3"
-  },
-  {
-    "network": "base",
-    "url": "https://...",
-    "version": "1.2.3"
-  }
-  // ... other networks
-]
-```
-
-#### Usage
-
-- The file is used by verification scripts to get the correct subgraph URL for each network
-- It's automatically updated after each deployment
-- It serves as a single source of truth for deployment information
-- Only keeps the latest version for each network
-- Versions are properly sorted (major.minor.patch)
-
-### Verification
-
-To verify account data:
-
-```bash
-# Verify account positions
-pnpm run verify:accountPositions
-
-# Verify account vault balances
-pnpm run verify:accountVaultBalances
-```
-
-## Development
-
-### TypeScript Configuration
-
-The project uses separate TypeScript configurations:
-
-- Main configuration (`tsconfig.json`): For the core subgraph code
-- Scripts configuration (`tsconfig.scripts.json`): For development and utility scripts
-
-### Testing
-
-```bash
-# Run tests
-pnpm run test
-```
-
-## Troubleshooting
-
-- If you encounter permission issues with scripts, run:
-  ```bash
-  chmod +x scripts/abisAddressesSync.sh
-  ```
-- For deployment issues, check your Goldsky CLI configuration and credentials
-- Make sure you have the correct CLI tools installed and configured
+7. **Tag `latest`** once the new version has synced, as in [Tagging `latest`](#tagging-latest).
