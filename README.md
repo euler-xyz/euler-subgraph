@@ -93,7 +93,7 @@ pnpm prepare:<slug> && pnpm codegen
 pnpm deploy:<slug>
 ```
 
-`deploy:<slug>` runs `build:<slug>`, then `scripts/deploy.ts` deploys the next patch version: it reads the current version from `deployments.json` if that file exists, otherwise from `goldsky subgraph list`. A network's first deploy is `1.0.1`. For grafted hotfix deploys, see [hotfix/README.md](hotfix/README.md).
+`deploy:<slug>` runs `build:<slug>`, then `scripts/deploy.ts` deploys the next patch version: it reads the current version from `deployments.json` if that file exists, otherwise from `goldsky subgraph list`. A network's first deploy is `1.0.1`. The [deploy workflow](#deploy-workflow) deploys from GitHub Actions instead, with a version you choose. For grafted hotfix deploys, see [hotfix/README.md](hotfix/README.md).
 
 `deploy:mainnet:test`, `deploy:base:test` and `deploy:mainnet:swap` deploy under a suffixed name, such as `euler-simple-mainnet-test`.
 
@@ -105,7 +105,26 @@ Consumers such as DeBank query `.../subgraphs/euler-simple-<slug>/latest/gn`. A 
 goldsky subgraph tag create euler-simple-<slug>/<version> --tag latest
 ```
 
+The [deploy workflow](#deploy-workflow) with `action: tag` runs the same command.
+
 `pnpm generate:deployments` writes the newest version of every network to `deployments.json`, and `pnpm tag:deployments` tags every entry in that file `latest`. Use it only when all of those versions have synced.
+
+### Deploy workflow
+
+[`.github/workflows/goldsky-deploy.yml`](.github/workflows/goldsky-deploy.yml) deploys one network from GitHub Actions. It only runs when started by hand: Actions → Goldsky deploy → Run workflow, using the workflow from `simple-subgraph`, or
+
+```bash
+gh workflow run goldsky-deploy.yml --ref simple-subgraph \
+  -f network=<slug> -f version=<version> -f action=deploy
+```
+
+- `network`: one of the networks with an `addresses/<chainId>/` folder in euler-interfaces.
+- `version`: the version to deploy or tag, such as `1.0.7`. `goldsky subgraph list euler-simple-<slug>` shows the versions already deployed.
+- `action`: `deploy` (the default) deploys only. `tag` points `latest` at a version that is already deployed. `deploy-and-tag` does both in one run, so `latest` serves partial data until the new version syncs; use it only for a network nothing reads yet.
+
+A deploy syncs the network's addresses from euler-interfaces with `abisAddressesSync.sh`, prints how they differ from the committed files, runs codegen and build, and deploys `euler-simple-<slug>/<version>` with a pinned Goldsky CLI. The synced files are not committed back. The job runs on macOS because the sync script needs BSD `sed`.
+
+Setup, by a repository admin: add a repository secret `GOLDSKY_API_KEY` (Settings → Secrets and variables → Actions) holding an API key from the Euler Goldsky project's Settings page. Without it, the workflow stops at its first step.
 
 ### Checking a deployment
 
@@ -139,8 +158,10 @@ pnpm verify:accountVaultBalances <slug> <address>
 
 4. **Add the scripts** `prepare:<slug>`, `build:<slug>` and `deploy:<slug>` to `package.json`, next to the existing ones.
 
-5. **Build and test** as in [Local build](#local-build).
+5. **Add the network to the deploy workflow:** its slug to the `network` options and its chain ID to the `case` in the `Check inputs` step of `.github/workflows/goldsky-deploy.yml`.
 
-6. **Deploy** to the Euler Goldsky project as in [Deploying](#deploying).
+6. **Build and test** as in [Local build](#local-build).
 
-7. **Tag `latest`** once the new version has synced, as in [Tagging `latest`](#tagging-latest).
+7. **Deploy** to the Euler Goldsky project as in [Deploying](#deploying), or with the [deploy workflow](#deploy-workflow) once this change is on `simple-subgraph`.
+
+8. **Tag `latest`** once the new version has synced, as in [Tagging `latest`](#tagging-latest).

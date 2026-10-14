@@ -1,0 +1,144 @@
+name: Goldsky deploy
+run-name: ${{ inputs.action }} ${{ inputs.network }} ${{ inputs.version }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      network:
+        description: Network slug from scripts/config.ts
+        required: true
+        type: choice
+        # Networks with an addresses/<chainId>/ folder in euler-interfaces.
+        # Each one needs its chain ID in the "Check inputs" step.
+        options:
+          - mainnet
+          - arbitrum
+          - base
+          - sonic
+          - unichain
+          - avalanche
+          - berachain
+          - bob
+          - bsc
+          - hyperevm
+          - tac
+          - linea
+          - plasma
+          - monad
+          - polygon
+      version:
+        description: Version to deploy or tag, e.g. 1.0.7
+        required: true
+        type: string
+      action:
+        description: "deploy: deploy only. tag: point latest at a deployed version. deploy-and-tag: both; latest serves partial data until the new version syncs."
+        required: true
+        type: choice
+        default: deploy
+        options:
+          - deploy
+          - tag
+          - deploy-and-tag
+
+permissions:
+  contents: read
+
+concurrency:
+  group: goldsky-${{ inputs.network }}
+  cancel-in-progress: false
+
+jobs:
+  goldsky:
+    name: ${{ inputs.action }} ${{ inputs.network }} ${{ inputs.version }}
+    # scripts/abisAddressesSync.sh uses BSD sed (sed -i '').
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      NETWORK: ${{ inputs.network }}
+      VERSION: ${{ inputs.version }}
+    steps:
+      - name: Check inputs
+        env:
+          GOLDSKY_TOKEN: ${{ secrets.GOLDSKY_API_KEY }}
+        run: |
+          if [[ -z "$GOLDSKY_TOKEN" ]]; then
+            echo "::error::The GOLDSKY_API_KEY repository secret is not set."
+            exit 1
+          fi
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+            echo "::error::version must look like 1.0.7, or 1.0.7.1 for a hotfix."
+            exit 1
+          fi
+          case "$NETWORK" in
+            mainnet) chain_id=1 ;;
+            arbitrum) chain_id=42161 ;;
+            base) chain_id=8453 ;;
+            sonic) chain_id=146 ;;
+            unichain) chain_id=130 ;;
+            avalanche) chain_id=43114 ;;
+            berachain) chain_id=80094 ;;
+            bob) chain_id=60808 ;;
+            bsc) chain_id=56 ;;
+            hyperevm) chain_id=999 ;;
+            tac) chain_id=239 ;;
+            linea) chain_id=59144 ;;
+            plasma) chain_id=9745 ;;
+            monad) chain_id=143 ;;
+            polygon) chain_id=137 ;;
+            *)
+              echo "::error::No chain ID for network $NETWORK."
+              exit 1
+              ;;
+          esac
+          echo "CHAIN_ID=$chain_id" >> "$GITHUB_ENV"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: 1.4.2
+
+      - name: Resolve the subgraph name
+        run: |
+          protocol_version=$(bun -e 'import { PROTOCOL_VERSION } from "./scripts/config"; console.log(PROTOCOL_VERSION)')
+          echo "SUBGRAPH=euler-${protocol_version}-${NETWORK}/${VERSION}" >> "$GITHUB_ENV"
+
+      - name: Install dependencies
+        if: inputs.action != 'tag'
+        run: pnpm install --frozen-lockfile
+
+      - name: Sync addresses from euler-interfaces
+        if: inputs.action != 'tag'
+        run: |
+          ./scripts/abisAddressesSync.sh "$CHAIN_ID"
+          git --no-pager diff --stat -- "contracts/addresses/$CHAIN_ID"
+
+      - name: Codegen and build
+        if: inputs.action != 'tag'
+        run: |
+          bun scripts/prepare.ts "$NETWORK"
+          pnpm codegen
+          pnpm build
+
+      - name: Install the Goldsky CLI
+        run: npm install --global --ignore-scripts @goldskycom/cli@13.15.1
+
+      - name: Deploy
+        if: inputs.action != 'tag'
+        env:
+          GOLDSKY_TOKEN: ${{ secrets.GOLDSKY_API_KEY }}
+        run: goldsky subgraph deploy "$SUBGRAPH" --path . --token "$GOLDSKY_TOKEN"
+
+      - name: Tag latest
+        if: inputs.action != 'deploy'
+        env:
+          GOLDSKY_TOKEN: ${{ secrets.GOLDSKY_API_KEY }}
+        run: goldsky subgraph tag create "$SUBGRAPH" --tag latest --token "$GOLDSKY_TOKEN"
