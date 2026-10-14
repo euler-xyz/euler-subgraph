@@ -5,27 +5,9 @@ on:
   workflow_dispatch:
     inputs:
       network:
-        description: Network slug from scripts/config.ts
+        description: Network slug from scripts/config.ts, e.g. mainnet
         required: true
-        type: choice
-        # Networks with an addresses/<chainId>/ folder in euler-interfaces.
-        # Each one needs its chain ID in the "Check inputs" step.
-        options:
-          - mainnet
-          - arbitrum
-          - base
-          - sonic
-          - unichain
-          - avalanche
-          - berachain
-          - bob
-          - bsc
-          - hyperevm
-          - tac
-          - linea
-          - plasma
-          - monad
-          - polygon
+        type: string
       version:
         description: Version to deploy or tag, e.g. 1.0.7
         required: true
@@ -65,32 +47,14 @@ jobs:
             echo "::error::The GOLDSKY_API_KEY repository secret is not set."
             exit 1
           fi
+          if [[ ! "$NETWORK" =~ ^[a-z0-9-]+$ ]]; then
+            echo "::error::network must be a slug from scripts/config.ts, such as mainnet."
+            exit 1
+          fi
           if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
             echo "::error::version must look like 1.0.7, or 1.0.7.1 for a hotfix."
             exit 1
           fi
-          case "$NETWORK" in
-            mainnet) chain_id=1 ;;
-            arbitrum) chain_id=42161 ;;
-            base) chain_id=8453 ;;
-            sonic) chain_id=146 ;;
-            unichain) chain_id=130 ;;
-            avalanche) chain_id=43114 ;;
-            berachain) chain_id=80094 ;;
-            bob) chain_id=60808 ;;
-            bsc) chain_id=56 ;;
-            hyperevm) chain_id=999 ;;
-            tac) chain_id=239 ;;
-            linea) chain_id=59144 ;;
-            plasma) chain_id=9745 ;;
-            monad) chain_id=143 ;;
-            polygon) chain_id=137 ;;
-            *)
-              echo "::error::No chain ID for network $NETWORK."
-              exit 1
-              ;;
-          esac
-          echo "CHAIN_ID=$chain_id" >> "$GITHUB_ENV"
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -108,8 +72,37 @@ jobs:
 
       - name: Resolve the subgraph name
         run: |
+          networks=$(bun -e 'import { networks } from "./scripts/config"; console.log(Object.keys(networks).join(" "))')
+          if [[ " $networks " != *" $NETWORK "* ]]; then
+            echo "::error::Unknown network $NETWORK. scripts/config.ts has: $networks"
+            exit 1
+          fi
           protocol_version=$(bun -e 'import { PROTOCOL_VERSION } from "./scripts/config"; console.log(PROTOCOL_VERSION)')
           echo "SUBGRAPH=euler-${protocol_version}-${NETWORK}/${VERSION}" >> "$GITHUB_ENV"
+
+      - name: Resolve the chain ID from euler-interfaces
+        if: inputs.action != 'tag'
+        run: |
+          ref=$(git ls-remote https://github.com/euler-xyz/euler-interfaces.git refs/heads/master | cut -f1)
+          if [[ -z "$ref" ]]; then
+            echo "::error::Could not resolve euler-interfaces master."
+            exit 1
+          fi
+          chains="$RUNNER_TEMP/EulerChains.json"
+          curl -fsSL "https://raw.githubusercontent.com/euler-xyz/euler-interfaces/${ref}/EulerChains.json" -o "$chains"
+          # A network slug is the chain's viemName in EulerChains.json, or its name when it has none, lowercased.
+          chain_id=$(jq -r --arg slug "$NETWORK" \
+            '[.[] | select(((.viemName // .name) | ascii_downcase) == $slug) | .chainId] | if length == 1 then .[0] else empty end' \
+            "$chains")
+          if [[ -z "$chain_id" ]]; then
+            echo "::error::No chain in euler-interfaces EulerChains.json (${ref}) matches network $NETWORK."
+            exit 1
+          fi
+          echo "$NETWORK is chain $chain_id in euler-interfaces ${ref}"
+          {
+            echo "CHAIN_ID=$chain_id"
+            echo "EULER_INTERFACES_REF=$ref"
+          } >> "$GITHUB_ENV"
 
       - name: Install dependencies
         if: inputs.action != 'tag'
@@ -118,8 +111,21 @@ jobs:
       - name: Sync addresses from euler-interfaces
         if: inputs.action != 'tag'
         run: |
-          ./scripts/abisAddressesSync.sh "$CHAIN_ID"
+          ./scripts/abisAddressesSync.sh "$CHAIN_ID" "$EULER_INTERFACES_REF"
           git --no-pager diff --stat -- "contracts/addresses/$CHAIN_ID"
+
+      - name: Check the config reads the synced addresses
+        if: inputs.action != 'tag'
+        run: |
+          bun -e '
+            import { networks } from "./scripts/config"
+            const { NETWORK, CHAIN_ID } = process.env
+            const synced = await import("./contracts/addresses/" + CHAIN_ID + "/coreAddresses.ts")
+            if (networks[NETWORK].eVaultFactory !== synced.coreAddresses.eVaultFactory) {
+              console.log("::error::scripts/config.ts does not read " + NETWORK + " from contracts/addresses/" + CHAIN_ID + ".")
+              process.exit(1)
+            }
+          '
 
       - name: Codegen and build
         if: inputs.action != 'tag'

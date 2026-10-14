@@ -118,11 +118,11 @@ gh workflow run goldsky-deploy.yml --ref simple-subgraph \
   -f network=<slug> -f version=<version> -f action=deploy
 ```
 
-- `network`: one of the networks with an `addresses/<chainId>/` folder in euler-interfaces.
+- `network`: a network slug from `scripts/config.ts`. A deploy also needs the chain in euler-interfaces' [`EulerChains.json`](https://github.com/euler-xyz/euler-interfaces/blob/master/EulerChains.json), where the slug is the chain's `viemName`, or its `name` when it has none, lowercased (`ethereum` has the `viemName` `mainnet`; `hyperEVM` becomes `hyperevm`).
 - `version`: the version to deploy or tag, such as `1.0.7`. `goldsky subgraph list euler-simple-<slug>` shows the versions already deployed.
 - `action`: `deploy` (the default) deploys only. `tag` points `latest` at a version that is already deployed. `deploy-and-tag` does both in one run, so `latest` serves partial data until the new version syncs; use it only for a network nothing reads yet.
 
-A deploy syncs the network's addresses from euler-interfaces with `abisAddressesSync.sh`, prints how they differ from the committed files, runs codegen and build, and deploys `euler-simple-<slug>/<version>` with a pinned Goldsky CLI. The synced files are not committed back. The job runs on macOS because the sync script needs BSD `sed`.
+A deploy takes the chain ID from `EulerChains.json` at the current euler-interfaces `master` commit and syncs the addresses from that same commit with `abisAddressesSync.sh`. It prints how they differ from the committed files, checks that `scripts/config.ts` reads them, runs codegen and build, and deploys `euler-simple-<slug>/<version>` with a pinned Goldsky CLI. The synced files are not committed back. The job runs on macOS because the sync script needs BSD `sed`.
 
 Setup, by a repository admin: add a repository secret `GOLDSKY_API_KEY` (Settings → Secrets and variables → Actions) holding an API key from the Euler Goldsky project's Settings page. Without it, the workflow stops at its first step.
 
@@ -152,16 +152,14 @@ pnpm verify:accountVaultBalances <slug> <address>
    ```
 
 3. **Add the network to `scripts/config.ts`.** Copy an existing entry of `networks` and set:
-   - the key: the network slug;
+   - the key: the network slug. For the [deploy workflow](#deploy-workflow) it must be the chain's `viemName`, or its `name`, in euler-interfaces' `EulerChains.json`, lowercased;
    - `network`: Goldsky's subgraph slug for the chain. Find the chain on Goldsky's [supported networks](https://docs.goldsky.com/chains/supported-networks) page; its chain page lists the slug under **Subgraphs** (for example `matic` for Polygon, `xdai` for Gnosis, `plasma-mainnet` for Plasma);
    - `startBlock`: one start block is shared by all data sources. Use the block of the first factory event on the chain, or any block before it. Vaults created before `startBlock` are never indexed.
 
 4. **Add the scripts** `prepare:<slug>`, `build:<slug>` and `deploy:<slug>` to `package.json`, next to the existing ones.
 
-5. **Add the network to the deploy workflow:** its slug to the `network` options and its chain ID to the `case` in the `Check inputs` step of `.github/workflows/goldsky-deploy.yml`.
+5. **Build and test** as in [Local build](#local-build).
 
-6. **Build and test** as in [Local build](#local-build).
+6. **Deploy** to the Euler Goldsky project as in [Deploying](#deploying), or with the [deploy workflow](#deploy-workflow) once this change is on `simple-subgraph`.
 
-7. **Deploy** to the Euler Goldsky project as in [Deploying](#deploying), or with the [deploy workflow](#deploy-workflow) once this change is on `simple-subgraph`.
-
-8. **Tag `latest`** once the new version has synced, as in [Tagging `latest`](#tagging-latest).
+7. **Tag `latest`** once the new version has synced, as in [Tagging `latest`](#tagging-latest).
