@@ -38,7 +38,7 @@ pnpm install
 pnpm run abis:sync
 ```
 
-3. Update `prepare.ts` to include the new network name and start block for syncing. Then run prepare to generate the `subgraph.yaml`.
+3. Update the `networks` map in [`scripts/config.ts`](./scripts/config.ts) with the new network name, imported contract addresses and `startBlock`. [`scripts/prepare.ts`](./scripts/prepare.ts) reads this configuration to generate `subgraph.yaml`.
 
 ```bash
 pnpm run prepare:mainnet
