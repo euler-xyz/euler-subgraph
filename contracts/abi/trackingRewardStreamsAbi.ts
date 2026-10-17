@@ -3,12 +3,30 @@ export const trackingRewardStreamsAbi = [
     type: "constructor",
     inputs: [
       {
-        name: "_evc",
+        name: "evc",
         type: "address",
         internalType: "address",
       },
+      {
+        name: "epochDuration",
+        type: "uint48",
+        internalType: "uint48",
+      },
     ],
     stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "EPOCH_DURATION",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
   },
   {
     type: "function",
@@ -25,7 +43,46 @@ export const trackingRewardStreamsAbi = [
   },
   {
     type: "function",
-    name: "lastTermsOfUseSignatureTimestamp",
+    name: "MAX_DISTRIBUTION_LENGTH",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "MAX_EPOCHS_AHEAD",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "MAX_REWARDS_ENABLED",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "balanceOf",
     inputs: [
       {
         name: "account",
@@ -33,9 +90,9 @@ export const trackingRewardStreamsAbi = [
         internalType: "address",
       },
       {
-        name: "termsOfUseHash",
-        type: "bytes32",
-        internalType: "bytes32",
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
       },
     ],
     outputs: [
@@ -49,25 +106,456 @@ export const trackingRewardStreamsAbi = [
   },
   {
     type: "function",
-    name: "signTermsOfUse",
+    name: "balanceTrackerHook",
     inputs: [
       {
-        name: "termsOfUseMessage",
-        type: "string",
-        internalType: "string",
+        name: "account",
+        type: "address",
+        internalType: "address",
       },
       {
-        name: "termsOfUseHash",
-        type: "bytes32",
-        internalType: "bytes32",
+        name: "newAccountBalance",
+        type: "uint256",
+        internalType: "uint256",
+      },
+      {
+        name: "forfeitRecentReward",
+        type: "bool",
+        internalType: "bool",
       },
     ],
     outputs: [],
     stateMutability: "nonpayable",
   },
   {
+    type: "function",
+    name: "claimReward",
+    inputs: [
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "recipient",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "ignoreRecentReward",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "currentEpoch",
+    inputs: [],
+    outputs: [
+      {
+        name: "",
+        type: "uint48",
+        internalType: "uint48",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "disableReward",
+    inputs: [
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "forfeitRecentReward",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "earnedReward",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "ignoreRecentReward",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "enableReward",
+    inputs: [
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "enabledRewards",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "address[]",
+        internalType: "address[]",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getEpoch",
+    inputs: [
+      {
+        name: "timestamp",
+        type: "uint48",
+        internalType: "uint48",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint48",
+        internalType: "uint48",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getEpochEndTimestamp",
+    inputs: [
+      {
+        name: "epoch",
+        type: "uint48",
+        internalType: "uint48",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint48",
+        internalType: "uint48",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "getEpochStartTimestamp",
+    inputs: [
+      {
+        name: "epoch",
+        type: "uint48",
+        internalType: "uint48",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint48",
+        internalType: "uint48",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "isRewardEnabled",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "bool",
+        internalType: "bool",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "registerReward",
+    inputs: [
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "startEpoch",
+        type: "uint48",
+        internalType: "uint48",
+      },
+      {
+        name: "rewardAmounts",
+        type: "uint128[]",
+        internalType: "uint128[]",
+      },
+    ],
+    outputs: [],
+    stateMutability: "nonpayable",
+  },
+  {
+    type: "function",
+    name: "rewardAmount",
+    inputs: [
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "rewardAmount",
+    inputs: [
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "epoch",
+        type: "uint48",
+        internalType: "uint48",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "totalRewardClaimed",
+    inputs: [
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "totalRewardRegistered",
+    inputs: [
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "totalRewardedEligible",
+    inputs: [
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "updateReward",
+    inputs: [
+      {
+        name: "rewarded",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        internalType: "address",
+      },
+      {
+        name: "recipient",
+        type: "address",
+        internalType: "address",
+      },
+    ],
+    outputs: [
+      {
+        name: "",
+        type: "uint256",
+        internalType: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+  },
+  {
     type: "event",
-    name: "TermsOfUseSigned",
+    name: "BalanceUpdated",
     inputs: [
       {
         name: "account",
@@ -76,25 +564,148 @@ export const trackingRewardStreamsAbi = [
         internalType: "address",
       },
       {
-        name: "termsOfUseHash",
-        type: "bytes32",
+        name: "rewarded",
+        type: "address",
         indexed: true,
-        internalType: "bytes32",
+        internalType: "address",
       },
       {
-        name: "timestamp",
+        name: "oldBalance",
         type: "uint256",
         indexed: false,
         internalType: "uint256",
       },
       {
-        name: "message",
-        type: "string",
+        name: "newBalance",
+        type: "uint256",
         indexed: false,
-        internalType: "string",
+        internalType: "uint256",
       },
     ],
     anonymous: false,
+  },
+  {
+    type: "event",
+    name: "RewardClaimed",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "rewarded",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "amount",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "RewardDisabled",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "rewarded",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "RewardEnabled",
+    inputs: [
+      {
+        name: "account",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "rewarded",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "RewardRegistered",
+    inputs: [
+      {
+        name: "caller",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "rewarded",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "reward",
+        type: "address",
+        indexed: true,
+        internalType: "address",
+      },
+      {
+        name: "startEpoch",
+        type: "uint256",
+        indexed: false,
+        internalType: "uint256",
+      },
+      {
+        name: "amounts",
+        type: "uint128[]",
+        indexed: false,
+        internalType: "uint128[]",
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: "error",
+    name: "AccumulatorOverflow",
+    inputs: [],
   },
   {
     type: "error",
@@ -108,23 +719,53 @@ export const trackingRewardStreamsAbi = [
   },
   {
     type: "error",
-    name: "InvalidTermsOfUseHash",
+    name: "InvalidAmount",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "InvalidDistribution",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "InvalidEpoch",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "InvalidRecipient",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "NotAuthorized",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "ReentrancyGuardReentrantCall",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "SafeERC20FailedOperation",
     inputs: [
       {
-        name: "actualTermsOfUseHash",
-        type: "bytes32",
-        internalType: "bytes32",
-      },
-      {
-        name: "expectedTermsOfUseHash",
-        type: "bytes32",
-        internalType: "bytes32",
+        name: "token",
+        type: "address",
+        internalType: "address",
       },
     ],
   },
   {
     type: "error",
-    name: "NotAuthorized",
+    name: "TooManyElements",
+    inputs: [],
+  },
+  {
+    type: "error",
+    name: "TooManyRewardsEnabled",
     inputs: [],
   },
 ] as const

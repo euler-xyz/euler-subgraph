@@ -1,5 +1,5 @@
 export * from "./basePerspectiveAbi"
-export * from "./ERC4626EVCCollateralSecuritizeFactory"
+export * from "./erc4626EVCCollateralSecuritizeFactoryAbi"
 export * from "./ethereumVaultConnectorAbi"
 export * from "./eVaultAbi"
 export * from "./feeFlowControllerAbi"
