@@ -5,6 +5,7 @@ import { networks } from '../config'
 import { validateRelease } from './validate.mjs'
 import { writeBuildReceipt } from './receipt.mjs'
 import { createProbeTransport } from './transport.mjs'
+import { createCheckpointProbes } from './probes.mjs'
 import { publishCatalog } from './publish.mjs'
 import { promoteAndPublish } from './promote.mjs'
 
@@ -14,13 +15,6 @@ const parseYaml = (text: string) => Bun.YAML.parse(text) as any
 const [command, network, version, channel = 'stable', checkpointText] = process.argv.slice(2)
 const config = networks[network as keyof typeof networks]
 const receiptPath = resolve(root, '.catalog', `${network}.json`)
-let request: ReturnType<typeof createProbeTransport>['request']
-let ipfsUrl: ReturnType<typeof createProbeTransport>['ipfsUrl']
-async function graphql(endpoint: string, checkpoint: number) {
-  const body = JSON.parse(new TextDecoder().decode(await request(endpoint, { query: `query { _meta(block: {number: ${checkpoint}}) { deployment hasIndexingErrors block { number hash } } trackingActiveAccounts(first: 1, block: {number: ${checkpoint}}) { id addressPrefix deposits borrows } vaults(first: 1, block: {number: ${checkpoint}}) { id factory } }` })))
-  if (body.errors?.length || !Array.isArray(body.data?.trackingActiveAccounts) || !Array.isArray(body.data?.vaults)) throw new Error('Required query capabilities unavailable')
-  return body.data._meta
-}
 try {
   if (!config || !config.chainId) throw new Error('Unsupported network')
   if (command === 'receipt') {
@@ -32,23 +26,18 @@ try {
     const result = await publishCatalog(process.env.CATALOG_GIT_REMOTE, async () => ({ chainId: config.chainId, family: 'euler-simple', channel: version, status: 'retired' }))
     console.log(`Catalog ${result.status}; revision ${result.revision}`)
   } else if (command === 'publish' || command === 'promote') {
-    ;({ request, ipfsUrl } = createProbeTransport({ ipfsGateway: process.env.CATALOG_IPFS_GATEWAY }))
+    const { request, ipfsUrl } = createProbeTransport({ ipfsGateway: process.env.CATALOG_IPFS_GATEWAY })
     const receipt = JSON.parse(readFileSync(receiptPath, 'utf8'))
     if (receipt.network !== network || receipt.chainId !== config.chainId) throw new Error('Receipt network mismatch')
     const rpc = process.env[`RPC_URL_${receipt.chainId}`]
     const remote = process.env.CATALOG_GIT_REMOTE
     if (!rpc || !remote || !checkpointText || !/^\d+$/.test(checkpointText)) throw new Error('Set RPC_URL_<chainId>, CATALOG_GIT_REMOTE and provide checkpoint')
-    const rpcCall = async (method: string, params: unknown[]) => {
-      const body = JSON.parse(new TextDecoder().decode(await request(rpc, { jsonrpc: '2.0', id: 1, method, params })))
-      if (body.error || body.result === undefined) throw new Error('RPC verification failed')
-      return body.result
-    }
     const selection = { version, channel, checkpoint: Number(checkpointText) }
     const probes = {
-      inventory: async () => run('goldsky', ['subgraph', 'list']), graphql,
+      ...createCheckpointProbes({ request, rpc }),
+      inventory: async () => run('goldsky', ['subgraph', 'list']),
       manifest: async (cid: string) => parseYaml(new TextDecoder().decode(await request(ipfsUrl(cid)))),
-      artifact: async (file: string) => request(ipfsUrl(file)),
-      chainCheckpoint: async (block: number) => ({ chainId: Number(await rpcCall('eth_chainId', [])), hash: (await rpcCall('eth_getBlockByNumber', [`0x${block.toString(16)}`, false]))?.hash })
+      artifact: async (file: string) => request(ipfsUrl(file))
     }
     const result = command === 'promote'
       ? await promoteAndPublish(selection, receipt, probes, remote, async (name: string, selectedVersion: string) => { run('goldsky', ['subgraph', 'tag', 'create', `${name}/${selectedVersion}`, '--tag', 'latest']) })

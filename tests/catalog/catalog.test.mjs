@@ -12,7 +12,7 @@ async function evidence() {
     scope: manifestScope(manifest), manifestFingerprint: await fingerprintManifest(manifest, bytes) }
   const observation = { deployment: 'QmCID', hasIndexingErrors: false, block: { number: 100, hash: `0x${'1'.repeat(64)}` } }
   const probes = { inventory: async () => active.endpoint, graphql: async () => observation, manifest: async () => manifest, artifact: bytes,
-    chainCheckpoint: async () => ({ chainId: 1, hash: observation.block.hash }) }
+    chainCheckpoint: async () => ({ chainId: 1, number: 100, hash: observation.block.hash }) }
   return { receipt, probes, observation, selection: { version: '1.2.3.1', channel: 'stable', checkpoint: 100 } }
 }
 test('producer fixture parses and retires authoritatively', () => {
@@ -55,8 +55,8 @@ test('provider, indexing, chain, artifact, scope and promotion mismatches block 
   const cases = [
     { inventory: async () => { throw new Error('provider failed') } },
     { graphql: async () => ({ deployment: 'CID', hasIndexingErrors: true }) },
-    { chainCheckpoint: async () => ({ chainId: 10, hash: `0x${'1'.repeat(64)}` }) },
-    { chainCheckpoint: async () => ({ chainId: 1, hash: `0x${'2'.repeat(64)}` }) },
+    { chainCheckpoint: async () => ({ chainId: 10, number: 100, hash: `0x${'1'.repeat(64)}` }) },
+    { chainCheckpoint: async () => ({ chainId: 1, number: 100, hash: `0x${'2'.repeat(64)}` }) },
     { artifact: async () => Buffer.from('wrong build') },
     { manifest: async () => ({ ...manifest, dataSources: [{ ...manifest.dataSources[0], network: 'wrong' }] }) },
   ]

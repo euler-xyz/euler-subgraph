@@ -61,7 +61,7 @@ async function promotionEvidence() {
   let promoted = false, tags = 0
   const selection = { version: active.version, channel: 'stable', checkpoint: 100 }
   const hash = `0x${'1'.repeat(64)}`
-  const probes = { inventory: async () => active.endpoint, artifact, manifest: async () => manifest, chainCheckpoint: async () => ({ chainId: 1, hash }),
+  const probes = { inventory: async () => active.endpoint, artifact, manifest: async () => manifest, chainCheckpoint: async () => ({ chainId: 1, number: 100, hash }),
     graphql: async endpoint => ({ deployment: endpoint.includes('/latest/') && !promoted ? 'previousCID' : 'selectedCID', hasIndexingErrors: false, block: { number: 100, hash } }) }
   const tag = async (name, version) => { assert.equal(name, receipt.name); assert.equal(version, active.version); tags++; promoted = true }
   return { receipt, selection, probes, tag, tags: () => tags }

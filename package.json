@@ -96,7 +96,8 @@
     "catalog:publish": "bun scripts/catalog/cli.ts publish",
     "test:catalog": "node --test tests/catalog/*.test.mjs",
     "catalog:retire": "bun scripts/catalog/cli.ts retire",
-    "catalog:promote": "bun scripts/catalog/cli.ts promote"
+    "catalog:promote": "bun scripts/catalog/cli.ts promote",
+    "test:catalog:consumers": "node --import ./tests/consumers/loader.mjs --test tests/consumers/catalog.test.mjs"
   },
   "dependencies": {
     "@types/node": "^22.13.10",

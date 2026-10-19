@@ -29,21 +29,23 @@ export function manifestScope(manifest) {
   return manifest.dataSources.map(row => ({ network: row.network, address: row.source?.address?.toLowerCase(), startBlock: row.source?.startBlock })).sort((a, b) => String(a.address).localeCompare(String(b.address)))
 }
 export async function validateRelease(selection, receipt, probes) {
-  if (!['stable', 'candidate'].includes(selection.channel) || !versionPattern.test(selection.version) || !Number.isSafeInteger(selection.checkpoint) || selection.checkpoint < receipt.startBlock) throw new Error('Invalid selection/checkpoint')
+  if (!['stable', 'candidate'].includes(selection.channel) || !versionPattern.test(selection.version) || !Number.isSafeInteger(selection.checkpoint) || selection.checkpoint < 0 || selection.checkpoint < receipt.startBlock) throw new Error('Invalid selection/checkpoint')
   if (receipt.schemaVersion !== 1 || !/^[a-f0-9]{64}$/.test(receipt.manifestFingerprint) || receipt.name !== `euler-simple-${receipt.network}`) throw new Error('Invalid build receipt')
-  const endpoint = selectEndpoint(await probes.inventory(), receipt.name, selection.version)
-  const observation = await probes.graphql(endpoint, selection.checkpoint)
-  if (!observation || typeof observation.deployment !== 'string' || !observation.deployment || observation.hasIndexingErrors !== false
-      || !Number.isSafeInteger(observation.block?.number) || observation.block.number < selection.checkpoint || !/^0x[a-f0-9]{64}$/i.test(observation.block.hash)) throw new Error('Deployment is not indexed at checkpoint')
   const checkpoint = await probes.chainCheckpoint(selection.checkpoint)
-  if (checkpoint.chainId !== receipt.chainId || checkpoint.hash?.toLowerCase() !== observation.block.hash.toLowerCase()) throw new Error('Checkpoint does not match expected chain')
+  if (!checkpoint || checkpoint.chainId !== receipt.chainId || checkpoint.number !== selection.checkpoint || !/^0x[a-f0-9]{64}$/i.test(checkpoint.hash)) throw new Error('Checkpoint does not match expected chain')
+  const matchesCheckpoint = observation => observation?.hasIndexingErrors === false
+    && observation.block?.number === checkpoint.number && typeof observation.block.hash === 'string'
+    && observation.block.hash.toLowerCase() === checkpoint.hash.toLowerCase()
+  const endpoint = selectEndpoint(await probes.inventory(), receipt.name, selection.version)
+  const observation = await probes.graphql(endpoint, checkpoint)
+  if (!observation || typeof observation.deployment !== 'string' || !observation.deployment || !matchesCheckpoint(observation)) throw new Error('Deployment is not indexed at checkpoint')
   const deployed = await probes.manifest(observation.deployment)
   if (await fingerprintManifest(deployed, probes.artifact) !== receipt.manifestFingerprint) throw new Error('Deployed artifacts differ from source build receipt')
   if (JSON.stringify(manifestScope(deployed)) !== JSON.stringify(receipt.scope)) throw new Error('Deployed contract/network scope differs')
   if (selection.channel === 'stable') {
     const alias = new URL(endpoint); const parts = alias.pathname.split('/'); parts[parts.length - 2] = 'latest'; alias.pathname = parts.join('/')
-    const promoted = await probes.graphql(alias.href, selection.checkpoint)
-    if (promoted.deployment !== observation.deployment || promoted.hasIndexingErrors !== false) throw new Error('Selected deployment is not the promoted latest alias')
+    const promoted = await probes.graphql(alias.href, checkpoint)
+    if (!matchesCheckpoint(promoted) || promoted.deployment !== observation.deployment) throw new Error('Selected deployment is not the promoted latest alias')
   }
   const record = { chainId: receipt.chainId, family: 'euler-simple', channel: selection.channel, status: 'active', version: selection.version,
     endpoint, deploymentId: observation.deployment, capabilities, sourceCommit: receipt.sourceCommit, startBlock: receipt.startBlock,

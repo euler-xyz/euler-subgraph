@@ -41,7 +41,7 @@ test('grafted clean build records compiled start block, source commit and exact 
   const hash = `0x${'1'.repeat(64)}`
   const probes = { inventory: async () => 'https://api.goldsky.com/api/public/project_fixture/subgraphs/euler-simple-mainnet/1.2.3.1/gn',
     graphql: async () => ({ deployment: 'QmGraftCID', hasIndexingErrors: false, block: { number: 200, hash } }),
-    chainCheckpoint: async () => ({ chainId: 1, hash }), manifest: async () => compiled, artifact: async file => readFileSync(join(root, 'build', file)) }
+    chainCheckpoint: async () => ({ chainId: 1, number: 200, hash }), manifest: async () => compiled, artifact: async file => readFileSync(join(root, 'build', file)) }
   const selection = { version: '1.2.3.1', channel: 'stable', checkpoint: 200 }
   assert.equal((await validateRelease(selection, receipt, probes)).startBlock, 101)
   await assert.rejects(validateRelease(selection, receipt, { ...probes, artifact: async () => Buffer.from('different build') }))
