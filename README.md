@@ -32,13 +32,15 @@ pnpm install
 pnpm install
 ```
 
-2. Run Sync Abis to add a new network:
+2. To add a network, sync its ABIs and addresses from euler-interfaces `master`. The script takes the chain id and uses macOS `sed`:
 
 ```bash
-pnpm run abis:sync
+pnpm run abis:sync <chainId>
 ```
 
-3. Update `prepare.ts` to include the new network name and start block for syncing. Then run prepare to generate the `subgraph.yaml`.
+It writes `contracts/addresses/<chainId>/`. If the chain has no EulerSwap deployment, add a `swapAddresses.ts` with zero addresses for `eulerSwapFactory` and `eulerSwap`, as for Monad (`contracts/addresses/143/`). Then export the folder from `contracts/addresses/index.ts`.
+
+3. Add the network to `networks` in `scripts/config.ts`: its Graph network name (the Goldsky slug), its addresses, and `startBlock`, the block the chain's EVC was deployed in. Add its `prepare:<network>`, `build:<network>` and `deploy:<network>` scripts to `package.json`, as for the other networks. `scripts/prepare.ts` reads `scripts/config.ts` to generate `subgraph.yaml`:
 
 ```bash
 pnpm run prepare:mainnet
@@ -50,12 +52,12 @@ pnpm run prepare:mainnet
 pnpm run codegen
 ```
 
-6. Build the subgraph:
+5. Build the subgraph:
 ```bash
 pnpm run build:mainnet
 ```
 
-Note: You can replace `mainnet` with any other supported network (base, arbitrum, swell, etc.) in the above commands.
+Note: You can replace `mainnet` with any other network in `scripts/config.ts` (base, arbitrum, monad, etc.) in the above commands.
 
 ## Available Scripts
 

@@ -111,7 +111,7 @@ git checkout "$euler_interfaces_branch"
 cd -
 
 contracts=("BasePerspective" "EthereumVaultConnector" "EVault" "Swapper" "SwapVerifier" "TrackingRewardStreams" "TermsOfUseSigner" "RewardToken" "FeeFlowController" "ERC4626EVCCollateralSecuritizeFactory")
-abis=("basePerspectiveAbi" "ethereumVaultConnectorAbi" "eVaultAbi" "swapperAbi" "swapVerifierAbi" "trackingRewardStreamsAbi" "termsOfUseSignerAbi" "rewardTokenAbi" "feeFlowControllerAbi")
+abis=("basePerspectiveAbi" "ethereumVaultConnectorAbi" "eVaultAbi" "swapperAbi" "swapVerifierAbi" "trackingRewardStreamsAbi" "termsOfUseSignerAbi" "rewardTokenAbi" "feeFlowControllerAbi" "erc4626EVCCollateralSecuritizeFactoryAbi")
 process_abis "$temp_dir" "$abi_path" "${contracts[@]}" "${abis[@]}"
 
 lens_contracts=("AccountLens" "VaultLens" "EulerEarnVaultLens" "UtilsLens")
