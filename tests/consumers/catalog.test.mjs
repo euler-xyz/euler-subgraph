@@ -9,9 +9,14 @@ import { updateCatalog } from '../../scripts/catalog/catalog.mjs'
 import { fingerprintManifest, manifestScope, validateRelease } from '../../scripts/catalog/validate.mjs'
 import { createCheckpointProbes } from '../../scripts/catalog/probes.mjs'
 
-const sdk = await import(sourceUrl('sdk', 'packages/euler-v2-sdk/src/utils/subgraphCatalog.ts'))
-const { AccountVaultsSubgraphAdapter: AccountAdapter } = await import(sourceUrl('sdk', 'packages/euler-v2-sdk/src/services/accountService/adapters/accountOnchainAdapter/accountVaultsSubgraphAdapter.ts'))
-const { VaultTypeSubgraphAdapter: FactoryAdapter } = await import(sourceUrl('sdk', 'packages/euler-v2-sdk/src/services/vaults/vaultMetaService/adapters/VaultTypeSubgraphAdapter.ts'))
+const sdkPackageRoot = resolve(roots.sdk, 'packages/euler-v2-sdk')
+// Rebuild before resolving the supported package entry so source edits cannot hide behind stale output.
+execFileSync('pnpm', ['run', 'build'], { cwd: sdkPackageRoot, stdio: 'inherit' })
+const sdkRequire = createRequire(sourceUrl('sdk', 'packages/euler-v2-sdk/package.json'))
+const sdk = await import(pathToFileURL(sdkRequire.resolve('@eulerxyz/euler-v2-sdk')).href)
+const { AccountVaultsSubgraphAdapter: AccountAdapter, VaultTypeSubgraphAdapter: FactoryAdapter } = sdk
+assert.equal(typeof AccountAdapter, 'function', 'Account discovery must be exported from the public SDK package')
+assert.equal(typeof FactoryAdapter, 'function', 'Factory discovery must be exported from the public SDK package')
 const lite = await import(sourceUrl('lite', 'server/utils/subgraph-catalog.ts'))
 const checked = await import(sourceUrl('lite', 'utils/subgraph-queries.ts'))
 const lifecycle = await import(sourceUrl('lite', 'utils/chain-status.ts'))
@@ -143,7 +148,7 @@ test('source-aware SDK polling rejects its old baseline after an unrelated read 
 function owner(index) { return '0x' + BigInt(index + 1).toString(16).padStart(38, '0') + '00' }
 const vault = '0x' + '3'.repeat(40)
 const passThrough = (_name, fn) => fn
-for (const [name, Accounts, Factories] of [['Lite installed SDK', InstalledAccountAdapter, InstalledFactoryAdapter], ['current SDK source', AccountAdapter, FactoryAdapter]]) {
+for (const [name, Accounts, Factories] of [['Lite installed SDK', InstalledAccountAdapter, InstalledFactoryAdapter], ['current SDK public package', AccountAdapter, FactoryAdapter]]) {
   test(`Lite checked wrapper composes with ${name} for 1001 owners and factory reads`, async () => {
     const pageSizes = []
     globalThis.fetch = async (_url, options) => {
