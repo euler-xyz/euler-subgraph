@@ -192,7 +192,7 @@ pnpm run deploy:bsc
 
 ### Deployments Information
 
-The `generate:deployments` command creates a `deployments.json` file that contains information about the latest deployed version of the subgraph for each supported network. This file is automatically updated after each deployment.
+The `generate:deployments` command creates a `deployments.json` file that contains information about the latest deployed version of the subgraph for each supported network. Run the command explicitly to refresh this local inventory. It does not publish the endpoint catalog.
 
 #### File Structure
 
@@ -215,10 +215,10 @@ The `generate:deployments` command creates a `deployments.json` file that contai
 #### Usage
 
 - The file is used by verification scripts to get the correct subgraph URL for each network
-- It's automatically updated after each deployment
-- It serves as a single source of truth for deployment information
+- Refresh it explicitly with `pnpm run generate:deployments`
+- It is a local inventory for verification scripts; it does not establish operator promotion
 - Only keeps the latest version for each network
-- Versions are properly sorted (major.minor.patch)
+- Its selection compares three version components; use the exact-release catalog tooling for hotfix publication
 
 ### Verification
 
@@ -256,3 +256,7 @@ pnpm run test
   ```
 - For deployment issues, check your Goldsky CLI configuration and credentials
 - Make sure you have the correct CLI tools installed and configured
+
+### Published endpoint catalog
+
+See [catalog operations](catalog/README.md) for the opt-in v1 contract, automatic build receipts, exact-release validation and manual publication after Goldsky promotion. The operator-invoked promotion helper tags one validated release and then publishes; the publish-only retry command never deploys or tags.
