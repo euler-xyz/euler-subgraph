@@ -259,4 +259,4 @@ pnpm run test
 
 ### Published endpoint catalog
 
-See [catalog operations](catalog/README.md) for the opt-in v1 contract, automatic build receipts, exact-release validation and manual publication after Goldsky promotion. The operator-invoked promotion helper tags one validated release and then publishes; the publish-only retry command never deploys or tags.
+To populate the catalog from deployed Simple releases, follow [Publish existing production deployments](catalog/README.md#publish-existing-production-deployments). This uses the publish-only command with matching build evidence and preserves existing Goldsky deployments and tags. See [catalog operations](catalog/README.md) for the opt-in v1 contract, consumer checks, and the separate deployment/promotion flow for new releases.
