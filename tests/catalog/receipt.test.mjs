@@ -13,7 +13,7 @@ async function cleanBuild(fn) {
   const git = (...args) => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim()
   try {
     git('init', '--quiet')
-    writeFileSync(join(root, '.gitignore'), 'build/\n.catalog/\n')
+    writeFileSync(join(root, '.gitignore'), readFileSync(new URL('../../.gitignore', import.meta.url)))
     writeFileSync(join(root, 'source.ts'), 'reviewed source')
     git('add', '.'); git('-c', 'user.name=Test', '-c', 'user.email=test@example.com', '-c', 'commit.gpgsign=false', 'commit', '-qm', 'Fixture source')
     mkdirSync(join(root, 'build'))
@@ -31,6 +31,22 @@ test('clean committed build produces exact artifact/source provenance; dirty reb
   assert.equal(receipt.manifestFingerprint, await fingerprintManifest(manifest(10), file => readFileSync(join(root, 'build', file))))
   writeFileSync(join(root, 'source.ts'), 'uncommitted source')
   assert.equal((await writeBuildReceipt(options)).status, 'dirty'); assert.equal(existsSync(receiptPath), false)
+}))
+test('operator inventory and hotfix JSON do not dirty receipts, while other untracked source still does', async () => cleanBuild(async ({ root, options, receiptPath }) => {
+  mkdirSync(join(root, 'hotfix'))
+  writeFileSync(join(root, 'deployments.json'), JSON.stringify([{ network: 'mainnet', version: '1.2.3' }]))
+  writeFileSync(join(root, 'hotfix/mainnet-1.2.3.json'), JSON.stringify({ chain: 'mainnet', baseVersion: '1.2.3', deploymentId: '' }))
+  assert.equal((await writeBuildReceipt(options)).status, 'written')
+  // The hotfix script records the resolved deployment ID before building.
+  writeFileSync(join(root, 'hotfix/mainnet-1.2.3.json'), JSON.stringify({ chain: 'mainnet', baseVersion: '1.2.3', deploymentId: 'QmBaseCID' }))
+  assert.equal((await writeBuildReceipt(options)).status, 'written')
+  writeFileSync(join(root, 'hotfix/source.ts'), 'unreviewed source')
+  assert.equal((await writeBuildReceipt(options)).status, 'dirty')
+  assert.equal(existsSync(receiptPath), false)
+  rmSync(join(root, 'hotfix/source.ts'))
+  mkdirSync(join(root, 'nested'))
+  writeFileSync(join(root, 'nested/deployments.json'), '[]')
+  assert.equal((await writeBuildReceipt(options)).status, 'dirty')
 }))
 test('grafted clean build records compiled start block, source commit and exact graft/artifact fingerprint', async () => cleanBuild(async ({ root, git, options, writeManifest }) => {
   const compiled = { ...manifest(101), features: ['grafting'], graft: { base: 'QmBaseCID', block: 100 } }

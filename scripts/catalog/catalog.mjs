@@ -1,3 +1,4 @@
+import { CatalogValidationError } from './errors.mjs'
 import { createHash } from 'node:crypto'
 
 export const capabilities = ['account-vault-discovery', 'vault-factory-lookup']
@@ -23,7 +24,7 @@ export function validRecord(row) {
 export function parseCatalog(value) {
   if (!object(value) || value.schemaVersion !== 1 || !nonempty(value.revision)
     || typeof value.publishedAt !== 'string' || !/^\d{4}-\d\d-\d\dT.*(?:Z|[+-]\d\d:\d\d)$/.test(value.publishedAt)
-    || !Number.isFinite(Date.parse(value.publishedAt)) || !Array.isArray(value.deployments)) throw new Error('Invalid catalog envelope')
+    || !Number.isFinite(Date.parse(value.publishedAt)) || !Array.isArray(value.deployments)) throw new CatalogValidationError('Invalid catalog envelope')
   const records = new Map(), diagnostics = [], blocked = new Set()
   for (const row of value.deployments) {
     const key = object(row) && Number.isSafeInteger(row.chainId) && row.chainId > 0 && nonempty(row.family) && nonempty(row.channel) ? identity(row) : undefined
@@ -45,7 +46,7 @@ export function resolveCatalog(parsed, chainId, capability, channel = 'stable') 
 }
 export function updateCatalog(previous, record, now = new Date()) {
   const parsed = parseCatalog(previous)
-  if (parsed.diagnostics.length || !validRecord(record)) throw new Error('Publication requires valid, unique records')
+  if (parsed.diagnostics.length || !validRecord(record)) throw new CatalogValidationError('Publication requires valid, unique records')
   const deployments = previous.deployments.filter(row => identity(row) !== identity(record)).concat(record).sort((a, b) => identity(a).localeCompare(identity(b)))
   const revision = createHash('sha256').update(JSON.stringify(deployments)).digest('hex')
   return { schemaVersion: 1, revision, publishedAt: now.toISOString(), deployments }

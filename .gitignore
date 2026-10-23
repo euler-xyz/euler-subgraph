@@ -41,5 +41,9 @@ tests/.latest.json
 
 subgraph.yaml
 .goldsky.json
+# Operator inventory and mutable hotfix configuration
+/deployments.json
+/hotfix/*.json
+
 # Local build provenance (never contains credentials)
 .catalog/

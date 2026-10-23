@@ -40,7 +40,7 @@ pnpm run abis:sync <chainId>
 
 It writes `contracts/addresses/<chainId>/`. If the chain has no EulerSwap deployment, add a `swapAddresses.ts` with zero addresses for `eulerSwapFactory` and `eulerSwap`, as for Monad (`contracts/addresses/143/`). Then export the folder from `contracts/addresses/index.ts`.
 
-3. Add the network to `networks` in `scripts/config.ts`: its Graph network name (the Goldsky slug), its addresses, and `startBlock`, the block the chain's EVC was deployed in. Add its `prepare:<network>`, `build:<network>` and `deploy:<network>` scripts to `package.json`, as for the other networks. `scripts/prepare.ts` reads `scripts/config.ts` to generate `subgraph.yaml`:
+3. Add the network to `networks` in `scripts/config.ts`: its numeric `chainId`, Graph network name (the Goldsky slug), addresses, and `startBlock`, the block the chain's EVC was deployed in. Add its `prepare:<network>`, `build:<network>` and `deploy:<network>` scripts to `package.json`, as for the other networks. `scripts/prepare.ts` reads `scripts/config.ts` to generate `subgraph.yaml`:
 
 ```bash
 pnpm run prepare:mainnet
