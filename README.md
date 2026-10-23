@@ -40,7 +40,7 @@ pnpm run abis:sync <chainId>
 
 It writes `contracts/addresses/<chainId>/`. If the chain has no EulerSwap deployment, add a `swapAddresses.ts` with zero addresses for `eulerSwapFactory` and `eulerSwap`, as for Monad (`contracts/addresses/143/`). Then export the folder from `contracts/addresses/index.ts`.
 
-3. Add the network to `networks` in `scripts/config.ts`: its Graph network name (the Goldsky slug), its addresses, and `startBlock`, the block the chain's EVC was deployed in. Add its `prepare:<network>`, `build:<network>` and `deploy:<network>` scripts to `package.json`, as for the other networks. `scripts/prepare.ts` reads `scripts/config.ts` to generate `subgraph.yaml`:
+3. Add the network to `networks` in `scripts/config.ts`: its numeric `chainId`, Graph network name (the Goldsky slug), addresses, and `startBlock`, the block the chain's EVC was deployed in. Add its `prepare:<network>`, `build:<network>` and `deploy:<network>` scripts to `package.json`, as for the other networks. `scripts/prepare.ts` reads `scripts/config.ts` to generate `subgraph.yaml`:
 
 ```bash
 pnpm run prepare:mainnet
@@ -192,7 +192,7 @@ pnpm run deploy:bsc
 
 ### Deployments Information
 
-The `generate:deployments` command creates a `deployments.json` file that contains information about the latest deployed version of the subgraph for each supported network. This file is automatically updated after each deployment.
+The `generate:deployments` command creates a `deployments.json` file that contains information about the latest deployed version of the subgraph for each supported network. Run the command explicitly to refresh this local inventory. It does not publish the endpoint catalog.
 
 #### File Structure
 
@@ -215,10 +215,10 @@ The `generate:deployments` command creates a `deployments.json` file that contai
 #### Usage
 
 - The file is used by verification scripts to get the correct subgraph URL for each network
-- It's automatically updated after each deployment
-- It serves as a single source of truth for deployment information
+- Refresh it explicitly with `pnpm run generate:deployments`
+- It is a local inventory for verification scripts; it does not establish operator promotion
 - Only keeps the latest version for each network
-- Versions are properly sorted (major.minor.patch)
+- Its selection compares three version components; use the exact-release catalog tooling for hotfix publication
 
 ### Verification
 
@@ -256,3 +256,7 @@ pnpm run test
   ```
 - For deployment issues, check your Goldsky CLI configuration and credentials
 - Make sure you have the correct CLI tools installed and configured
+
+### Published endpoint catalog
+
+To populate the catalog from deployed Simple releases, follow [Publish existing production deployments](catalog/README.md#publish-existing-production-deployments). This uses the publish-only command with matching build evidence and preserves existing Goldsky deployments and tags. See [catalog operations](catalog/README.md) for the opt-in v1 contract, consumer checks, and the separate deployment/promotion flow for new releases.

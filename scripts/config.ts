@@ -33,6 +33,7 @@ export type Version = { major: number; minor: number; patch: number; hotfix?: nu
 
 export const networks = {
     mainnet: {
+        chainId: 1,
         network: 'mainnet',
         ...mainnetAddresses.coreAddresses,
         ...mainnetAddresses.swapAddresses,
@@ -41,6 +42,7 @@ export const networks = {
         startBlock: 20529207
     },
     arbitrum: {
+        chainId: 42161,
         network: 'arbitrum-one',
         ...arbitrumAddresses.coreAddresses,
         ...arbitrumAddresses.swapAddresses,
@@ -48,6 +50,7 @@ export const networks = {
         startBlock: 238643655
     },
     base: {
+        chainId: 8453,
         network: 'base',
         ...baseAddresses.coreAddresses,
         ...baseAddresses.swapAddresses,
@@ -55,6 +58,7 @@ export const networks = {
         startBlock: 22282411
     },
     swell: {
+        chainId: 1923,
         network: 'swell',
         ...swellAddresses.coreAddresses,
         ...swellAddresses.swapAddresses,
@@ -62,6 +66,7 @@ export const networks = {
         startBlock: 485376
     },
     sonic: {
+        chainId: 146,
         network: 'sonic',
         ...sonicAddresses.coreAddresses,
         ...sonicAddresses.swapAddresses,
@@ -69,6 +74,7 @@ export const networks = {
         startBlock: 5324457
     },
     ink: {
+        chainId: 57073,
         network: 'ink',
         ...inkAddresses.coreAddresses,
         ...inkAddresses.swapAddresses,
@@ -76,6 +82,7 @@ export const networks = {
         startBlock: 3900333
     },
     unichain: {
+        chainId: 130,
         network: 'unichain',
         ...unichainAddresses.coreAddresses,
         ...unichainAddresses.swapAddresses,
@@ -83,6 +90,7 @@ export const networks = {
         startBlock: 8541547
     },
     avalanche: {
+        chainId: 43114,
         network: 'avalanche',
         ...avalancheAddresses.coreAddresses,
         ...avalancheAddresses.swapAddresses,
@@ -90,6 +98,7 @@ export const networks = {
         startBlock: 56805796
     },
     berachain: {
+        chainId: 80094,
         network: 'berachain-mainnet',
         ...berachainAddresses.coreAddresses,
         ...berachainAddresses.swapAddresses,
@@ -97,6 +106,7 @@ export const networks = {
         startBlock: 1095611
     },
     bob: {
+        chainId: 60808,
         network: 'bob',
         ...bobAddresses.coreAddresses,
         ...bobAddresses.swapAddresses,
@@ -104,6 +114,7 @@ export const networks = {
         startBlock: 13157157
     },
     bsc: {
+        chainId: 56,
         network: 'bsc',
         ...bscAddresses.coreAddresses,
         ...bscAddresses.swapAddresses,
@@ -111,6 +122,7 @@ export const networks = {
         startBlock: 46370000
     },
     worldchain: {
+        chainId: 480,
         network: 'worldchain',
         ...worldchainAddresses.coreAddresses,
         ...worldchainAddresses.swapAddresses,
@@ -118,6 +130,7 @@ export const networks = {
         startBlock: 9800000
     },
     hyperevm: {
+        chainId: 999,
         network: 'hyperevm',
         ...hyperevmAddresses.coreAddresses,
         ...hyperevmAddresses.swapAddresses,
@@ -125,6 +138,7 @@ export const networks = {
         startBlock: 1980586
     },
     optimism: {
+        chainId: 10,
         network: 'optimism',
         ...optimismAddresses.coreAddresses,
         ...optimismAddresses.swapAddresses,
@@ -132,6 +146,7 @@ export const networks = {
         startBlock: 131500000
     },
     gnosis: {
+        chainId: 100,
         network: 'xdai',
         ...gnosisAddresses.coreAddresses,
         ...gnosisAddresses.swapAddresses,
@@ -139,6 +154,7 @@ export const networks = {
         startBlock: 38380000
     },
     tacturin: {
+        chainId: 2390,
         network: 'tac-turin',
         ...tacTurinAddresses.coreAddresses,
         ...tacTurinAddresses.swapAddresses,
@@ -146,6 +162,7 @@ export const networks = {
         startBlock: 5066361
     },
     tac: {
+        chainId: 239,
         network: 'tac',
         ...tacAddresses.coreAddresses,
         ...tacAddresses.swapAddresses,
@@ -153,6 +170,7 @@ export const networks = {
         startBlock: 860000
     },
     linea: {
+        chainId: 59144,
         network: 'linea',
         ...lineaAddresses.coreAddresses,
         ...lineaAddresses.swapAddresses,
@@ -160,6 +178,7 @@ export const networks = {
         startBlock: 17900000
     },
     plasma: {
+        chainId: 9745,
         network: 'plasma-mainnet',
         ...plasmaAddresses.coreAddresses,
         ...plasmaAddresses.swapAddresses,
@@ -167,6 +186,7 @@ export const networks = {
         startBlock: 510000
     },
     mantle: {
+        chainId: 5000,
         network: 'mantle',
         ...mantleAddresses.coreAddresses,
         ...mantleAddresses.swapAddresses,
@@ -174,6 +194,7 @@ export const networks = {
         startBlock: 84500000
     },
     monad: {
+        chainId: 143,
         network: 'monad',
         ...monadAddresses.coreAddresses,
         ...monadAddresses.swapAddresses,
@@ -181,6 +202,7 @@ export const networks = {
         startBlock: 30858000
     },
     morph: {
+        chainId: 2818,
         network: 'morph',
         ...morphAddresses.coreAddresses,
         ...morphAddresses.swapAddresses,
@@ -188,6 +210,7 @@ export const networks = {
         startBlock: 5080000
     },
     polygon: {
+        chainId: 137,
         network: 'matic',
         ...polygonAddresses.coreAddresses,
         ...polygonAddresses.swapAddresses,
@@ -195,6 +218,7 @@ export const networks = {
         startBlock: 86932985
     },
     sepolia: {
+        chainId: 11155111,
         network: 'sepolia',
         ...sepoliaAddresses.coreAddresses,
         ...sepoliaAddresses.swapAddresses,
