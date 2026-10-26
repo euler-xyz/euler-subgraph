@@ -16,6 +16,7 @@ execFileSync('pnpm', ['run', 'build'], { cwd: sdkPackageRoot, stdio: 'inherit' }
 const sdkRequire = createRequire(sourceUrl('sdk', 'packages/euler-v2-sdk/package.json'))
 const sdk = await import(pathToFileURL(sdkRequire.resolve('@eulerxyz/euler-v2-sdk')).href)
 const { AccountVaultsSubgraphAdapter: AccountAdapter, VaultTypeSubgraphAdapter: FactoryAdapter } = sdk
+assert.equal(typeof sdk.withSubgraphQueries, 'function', 'Shared SDK query transport must be exported from the public package')
 assert.equal(typeof AccountAdapter, 'function', 'Account discovery must be exported from the public SDK package')
 assert.equal(typeof FactoryAdapter, 'function', 'Factory discovery must be exported from the public SDK package')
 const lite = await import(sourceUrl('lite', 'server/utils/subgraph-catalog.ts'))
@@ -189,7 +190,7 @@ test('Lite rejects a catalog source replacement between account pages, including
   const adapter = new AccountAdapter({ subgraphURLs: { 1: '/fixture/transition' } }, wrapper)
   const results = await Promise.allSettled(Array.from({ length: 1001 }, (_, i) => adapter.fetchAccountVaults(1, owner(i))))
   assert.equal(page, 2)
-  assert.ok(results.every(result => result.status === 'rejected' && /source changed/i.test(result.reason.message)))
+  assert.ok(results.every(result => result.status === 'rejected' && result.reason?.reason === 'source-changed'))
 })
 
 
@@ -242,7 +243,7 @@ for (const [name, Accounts, Factories] of [['installed SDK', InstalledAccountAda
     await accounts.fetchAccountVaults(1, owner(0))
     assert.deepEqual(await factories.fetchVaultFactories(1, [owner(0)]), [{ id: owner(0), factory: vault }])
     mismatch = true
-    await assert.rejects(accounts.fetchAccountVaults(1, owner(1)), /deployment/i)
-    await assert.rejects(factories.fetchVaultFactories(1, [owner(1)]), /deployment/i)
+    await assert.rejects(accounts.fetchAccountVaults(1, owner(1)), error => error.reason === "source-changed")
+    await assert.rejects(factories.fetchVaultFactories(1, [owner(1)]), error => error.reason === "source-changed")
   })
 }
