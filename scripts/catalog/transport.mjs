@@ -13,8 +13,24 @@ export function createProbeTransport({ fetchImpl = fetch, ipfsGateway = 'https:/
     const response = await fetchImpl(url, { method: body ? 'POST' : 'GET', body: body ? JSON.stringify(body) : undefined,
       headers: body ? { 'content-type': 'application/json' } : undefined, redirect: 'error', signal: AbortSignal.timeout(20000) })
     if (!response.ok) throw new CatalogValidationError('Read-only probe failed')
-    const bytes = new Uint8Array(await response.arrayBuffer())
-    if (bytes.length > 16 * 1024 * 1024) throw new CatalogValidationError('Probe response too large')
+    if (!response.body) return new Uint8Array()
+    const reader = response.body.getReader(), chunks = []
+    let size = 0
+    try {
+      while (true) {
+        const { value, done } = await reader.read()
+        if (done) break
+        size += value.byteLength
+        if (size > 16 * 1024 * 1024) {
+          void reader.cancel().catch(() => {})
+          throw new CatalogValidationError('Probe response too large')
+        }
+        chunks.push(value)
+      }
+    } finally { reader.releaseLock() }
+    const bytes = new Uint8Array(size)
+    let offset = 0
+    for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength }
     return bytes
   }
   return { ipfsUrl, request }
