@@ -5,6 +5,7 @@ import { dirname, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { execFileSync } from 'node:child_process'
 import { roots, sourceUrl } from './loader.mjs'
+import { createGoldskyReader, validateImportedRelease } from '../../scripts/catalog/import.mjs'
 import { updateCatalog } from '../../scripts/catalog/catalog.mjs'
 import { fingerprintManifest, manifestScope, validateRelease } from '../../scripts/catalog/validate.mjs'
 import { createCheckpointProbes } from '../../scripts/catalog/probes.mjs'
@@ -190,3 +191,58 @@ test('Lite rejects a catalog source replacement between account pages, including
   assert.equal(page, 2)
   assert.ok(results.every(result => result.status === 'rejected' && /source changed/i.test(result.reason.message)))
 })
+
+
+async function importedPublication() {
+  const read = createGoldskyReader({ apiKey: 'controlled-project-key', fetchImpl: async (url, options) => {
+    assert.equal(options.method, 'GET'); assert.equal(options.headers.authorization, 'Bearer controlled-project-key')
+    const alias = url.endsWith('/latest')
+    return Response.json({ data: [{ name: 'euler-simple-mainnet', version: alias ? 'latest' : selected.version, network: 'mainnet', status: 'ACTIVE', public_endpoint_enabled: true,
+      graphql_endpoint: alias ? endpoint.replace(`/${selected.version}/`, '/latest/') : endpoint, deployments: [{ deployment_id: deployedCid }],
+      ...(alias ? { tag: { target_version: selected.version } } : {}) }], pagination: { next_page_token: null } })
+  } })
+  const imported = await validateImportedRelease(selected, { network: 'mainnet', chainId: 1 }, { ...checkpointProbes, release: read })
+  assert.equal('sourceCommit' in imported, false); assert.equal('startBlock' in imported, false)
+  return updateCatalog(emptyCatalog, imported, publicationTime)
+}
+
+test('existing-deployment import output composes with all consumers without fabricated build provenance', async () => {
+  const catalog = await importedPublication()
+  const source = await sdk.createSubgraphCatalogResolver({ catalog }).resolve(1, 'account-vault-discovery')
+  assert.deepEqual(source, { endpoint, deploymentId: deployedCid })
+  assert.equal((await makeLite(catalog)(1)).deploymentId, deployedCid)
+  const rows = docs.joinSubgraphCatalog(registry.parseListedEulerChains([{ chainId: 1, name: 'Ethereum', status: 'production', addresses: {} }]), docs.parseSubgraphCatalog(catalog))
+  assert.equal(rows[0].publication.endpoint, endpoint)
+  assert.equal(rows[0].publication.status, 'published')
+  for (const change of [{ sourceCommit: null }, { startBlock: null }, { startBlock: -1 }, { interfacesCommit: ['a'.repeat(40)] }]) {
+    const invalid = { ...catalog, deployments: [{ ...catalog.deployments[0], ...change }] }
+    await assert.rejects(sdk.createSubgraphCatalogResolver({ catalog: invalid }).resolve(1, 'account-vault-discovery'), expectReason('invalid'))
+    await assert.rejects(makeLite(invalid)(1), expectReason('invalid'))
+    assert.equal(docs.parseSubgraphCatalog(invalid).entries.get(1).status, 'invalid')
+  }
+})
+
+for (const [name, Accounts, Factories] of [['installed SDK', InstalledAccountAdapter, InstalledFactoryAdapter], ['current SDK', AccountAdapter, FactoryAdapter]]) {
+  test(`Lite imported catalog executes account/factory reads and rejects CID drift with ${name}`, async () => {
+    const catalog = await importedPublication(), resolve = makeLite(catalog)
+    const wrapper = checked.withCheckedSubgraphQueries(passThrough, resolve)
+    let mismatch = false
+    globalThis.fetch = async (url, options) => {
+      assert.equal(url, endpoint)
+      const { query, variables: { ids } } = JSON.parse(options.body)
+      return Response.json({ data: { _meta: { deployment: mismatch ? 'wrongCID' : deployedCid }, ...(query.includes('trackingActiveAccounts')
+        ? { trackingActiveAccounts: ids.map(id => ({ id, deposits: [], borrows: [] })) }
+        : { vaults: ids.map(id => ({ id, factory: vault })) }) } })
+    }
+    // Lite supplies per-chain browser proxy URLs (and server SDK bundled maps).
+    // Its checked wrapper resolves the real imported endpoint at query time.
+    const config = { subgraphURLs: { 1: '/api/internal/proxy/subgraph/1' } }
+    const accounts = new Accounts(config, wrapper)
+    const factories = new Factories(config, wrapper)
+    await accounts.fetchAccountVaults(1, owner(0))
+    assert.deepEqual(await factories.fetchVaultFactories(1, [owner(0)]), [{ id: owner(0), factory: vault }])
+    mismatch = true
+    await assert.rejects(accounts.fetchAccountVaults(1, owner(1)), /deployment/i)
+    await assert.rejects(factories.fetchVaultFactories(1, [owner(1)]), /deployment/i)
+  })
+}

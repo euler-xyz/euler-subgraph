@@ -80,3 +80,11 @@ test('manifest fingerprint resolves IPFS links and includes every artifact', asy
   deployed.dataSources[0].mapping.file = { '/': '/ipfs/mappingCID' }
   assert.equal(await fingerprintManifest(manifest, bytes), await fingerprintManifest(deployed, bytes))
 })
+
+
+test('artifact-verified publication still requires complete build provenance after imports become supported', async () => {
+  for (const change of [{ sourceCommit: undefined }, { sourceCommit: null }, { sourceCommit: 'invalid' }, { startBlock: undefined }, { startBlock: null }, { startBlock: -1 }]) {
+    const { receipt, probes, selection } = await evidence()
+    await assert.rejects(validateRelease(selection, { ...receipt, ...change }, probes), /Invalid build receipt/)
+  }
+})

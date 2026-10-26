@@ -31,7 +31,9 @@ export function manifestScope(manifest) {
 }
 export async function validateRelease(selection, receipt, probes) {
   if (!['stable', 'candidate'].includes(selection.channel) || !versionPattern.test(selection.version) || !Number.isSafeInteger(selection.checkpoint) || selection.checkpoint < 0 || selection.checkpoint < receipt.startBlock) throw new CatalogValidationError('Invalid selection/checkpoint')
-  if (receipt.schemaVersion !== 1 || !/^[a-f0-9]{64}$/.test(receipt.manifestFingerprint) || receipt.name !== `euler-simple-${receipt.network}`) throw new CatalogValidationError('Invalid build receipt')
+  if (receipt.schemaVersion !== 1 || !/^[a-f0-9]{64}$/.test(receipt.manifestFingerprint) || receipt.name !== `euler-simple-${receipt.network}`
+    || typeof receipt.sourceCommit !== 'string' || !/^[a-f0-9]{40}$/i.test(receipt.sourceCommit)
+    || !Number.isSafeInteger(receipt.startBlock) || receipt.startBlock < 0) throw new CatalogValidationError('Invalid build receipt')
   const checkpoint = await probes.chainCheckpoint(selection.checkpoint)
   if (!checkpoint || checkpoint.chainId !== receipt.chainId || checkpoint.number !== selection.checkpoint || !/^0x[a-f0-9]{64}$/i.test(checkpoint.hash)) throw new CatalogValidationError('Checkpoint does not match expected chain')
   const matchesCheckpoint = observation => observation?.hasIndexingErrors === false

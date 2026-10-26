@@ -16,9 +16,9 @@ export function validRecord(row) {
   if (!object(row) || !Number.isSafeInteger(row.chainId) || row.chainId <= 0 || !nonempty(row.family) || !nonempty(row.channel)) return false
   if (row.status === 'retired') return true
   return row.status === 'active' && versionPattern.test(row.version) && publicEndpoint(row.endpoint)
-    && nonempty(row.deploymentId) && /^[a-f0-9]{40}$/i.test(row.sourceCommit)
-    && (row.interfacesCommit === undefined || /^[a-f0-9]{40}$/i.test(row.interfacesCommit))
-    && Number.isSafeInteger(row.startBlock) && row.startBlock >= 0
+    && nonempty(row.deploymentId) && (row.sourceCommit === undefined || typeof row.sourceCommit === 'string' && /^[a-f0-9]{40}$/i.test(row.sourceCommit))
+    && (row.interfacesCommit === undefined || typeof row.interfacesCommit === 'string' && /^[a-f0-9]{40}$/i.test(row.interfacesCommit))
+    && (row.startBlock === undefined || Number.isSafeInteger(row.startBlock) && row.startBlock >= 0)
     && Array.isArray(row.capabilities) && row.capabilities.every(nonempty)
 }
 export function parseCatalog(value) {

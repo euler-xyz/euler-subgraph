@@ -259,4 +259,4 @@ pnpm run test
 
 ### Published endpoint catalog
 
-To populate the catalog from deployed Simple releases, follow [Publish existing production deployments](catalog/README.md#publish-existing-production-deployments). This uses the publish-only command with matching build evidence and preserves existing Goldsky deployments and tags. See [catalog operations](catalog/README.md) for the opt-in v1 contract, consumer checks, and the separate deployment/promotion flow for new releases.
+To populate the catalog from deployed Simple releases, follow [Publish existing production deployments](catalog/README.md#publish-existing-production-deployments). The explicit import command discovers and validates deployed releases without build receipts or IPFS access and preserves existing Goldsky deployments and tags. Imported records omit unverified build provenance; artifact-verified publication remains available separately. See [catalog operations](catalog/README.md) for the opt-in v1 contract, consumer checks, and the separate deployment/promotion flow for new releases.

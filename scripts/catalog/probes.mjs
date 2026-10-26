@@ -26,7 +26,7 @@ export function createCheckpointProbes({ request, rpc }) {
       if (!blockHashPattern.test(checkpoint?.hash)) throw new CatalogValidationError('Invalid checkpoint hash')
       const block = `{hash: "${checkpoint.hash}"}`
       const body = decode(await request(endpoint, { query: `query { _meta(block: ${block}) { deployment hasIndexingErrors block { number hash } } trackingActiveAccounts(first: 1, block: ${block}) { id addressPrefix deposits borrows } vaults(first: 1, block: ${block}) { id factory } }` }))
-      if (body.errors?.length || !Array.isArray(body.data?.trackingActiveAccounts) || !Array.isArray(body.data?.vaults)) throw new CatalogValidationError('Required query capabilities unavailable')
+      if (body.errors?.length || !Array.isArray(body.data?.trackingActiveAccounts) || !Array.isArray(body.data?.vaults)) throw new CatalogValidationError('Required query capabilities or checkpoint data unavailable')
       return body.data._meta
     }
   }

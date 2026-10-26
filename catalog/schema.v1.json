@@ -99,9 +99,7 @@
                 "version",
                 "endpoint",
                 "deploymentId",
-                "capabilities",
-                "sourceCommit",
-                "startBlock"
+                "capabilities"
               ]
             }
           }

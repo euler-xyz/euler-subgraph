@@ -174,3 +174,58 @@ test('CLI retirement failures direct operators to retry retirement, not publicat
   assert.match(result.text, /Retry catalog:retire/)
   assert.doesNotMatch(result.text, /Retry catalog:publish/)
 }))
+
+
+const importFetch = async (url, options) => {
+  if (String(url).includes('/api/v1/')) {
+    assert.equal(options.method, 'GET'); assert.equal(options.redirect, 'error')
+    assert.equal(options.headers.authorization, `Bearer ${secret}`)
+    const alias = String(url).endsWith('/latest')
+    return Response.json({ data: [{ name: 'euler-simple-mainnet', version: alias ? 'latest' : '1.2.3', network: 'mainnet', status: 'ACTIVE', public_endpoint_enabled: true,
+      graphql_endpoint: alias ? endpoint.replace('/1.2.3/', '/latest/') : endpoint, deployments: [{ deployment_id: 'QmFixture' }], ...(alias ? { tag: { target_version: '1.2.3' } } : {}) }], pagination: { next_page_token: null } })
+  }
+  assert.equal(options.headers?.authorization, undefined)
+  assert.ok(!String(url).includes('ipfs'), 'Import must never read IPFS')
+  return controlledFetch(url, options)
+}
+const noCli = () => { throw new Error('Import must not run Goldsky CLI commands') }
+
+test('CLI imports without receipts or build files, publishes locally, and retries without deployment/tagging', async t => commandFixture(async ({ invoke, root, remote, receiptPath }) => {
+  t.mock.method(globalThis, 'fetch', importFetch)
+  rmSync(receiptPath); rmSync(join(root, 'build'), { recursive: true })
+  const env = { GOLDSKY_API_KEY: secret, RPC_URL_1: 'https://rpc.example.com', CATALOG_GIT_REMOTE: remote }
+  const options = { argv: ['import', 'mainnet', '1.2.3', 'stable', '100'], env, run: noCli }
+  let result = await invoke(options)
+  assert.equal(result.code, 0, result.text)
+  assert.match(result.text, /source\/build provenance is not verified/)
+  const published = JSON.parse(git(remote, 'show', 'catalog:v1/catalog.json'))
+  assert.equal(published.deployments[0].endpoint, endpoint)
+  for (const field of ['sourceCommit', 'startBlock', 'interfacesCommit']) assert.equal(field in published.deployments[0], false)
+  const head = git(remote, 'rev-parse', 'catalog')
+  result = await invoke(options)
+  assert.equal(result.code, 0, result.text)
+  assert.equal(git(remote, 'rev-parse', 'catalog'), head)
+}))
+
+test('CLI import dry-run needs no receipt or remote and cannot publish, deploy or retag', async t => commandFixture(async ({ invoke, remote, receiptPath }) => {
+  t.mock.method(globalThis, 'fetch', importFetch)
+  rmSync(receiptPath)
+  const result = await invoke({ argv: ['import', 'mainnet', '1.2.3', 'stable', '100', '--dry-run'], run: noCli,
+    env: { GOLDSKY_API_KEY: secret, RPC_URL_1: 'https://rpc.example.com' } })
+  assert.equal(result.code, 0, result.text)
+  assert.match(result.text, /validated without publication/)
+  assert.match(result.text, /QmFixture/)
+  assert.throws(() => git(remote, 'rev-parse', 'refs/heads/catalog'))
+}))
+
+test('CLI import failures are credential-safe and preserve the catalog remote', async t => commandFixture(async ({ invoke, remote }) => {
+  const mock = t.mock.method(globalThis, 'fetch', importFetch)
+  const options = { argv: ['import', 'mainnet', '1.2.3', 'stable', '100'], run: noCli,
+    env: { GOLDSKY_API_KEY: secret, RPC_URL_1: 'https://rpc.example.com', CATALOG_GIT_REMOTE: remote } }
+  for (const override of [{ env: { ...options.env, GOLDSKY_API_KEY: '' } }, { argv: [...options.argv, '--unknown'] }]) {
+    const result = await invoke({ ...options, ...override }); assert.equal(result.code, 1); assert.match(result.text, /Retry catalog:import/)
+  }
+  mock.mock.mockImplementation(async () => { throw new Error(secret) })
+  assert.equal((await invoke(options)).code, 1)
+  assert.throws(() => git(remote, 'rev-parse', 'refs/heads/catalog'))
+}))

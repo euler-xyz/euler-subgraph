@@ -28,6 +28,8 @@ export function catalogFailureMessage(command, error) {
   if (command === 'receipt') return 'Catalog receipt failed.' + validationDetail(error)
   if (command === 'publish') return 'Catalog publication failed or is unconfirmed.' + validationDetail(error)
     + ' Retry catalog:publish against the selected release to reconcile; check receipt, release, indexing, RPC and Git access.'
+  if (command === 'import') return 'Catalog import failed or is unconfirmed.' + validationDetail(error)
+    + ' Retry catalog:import for the selected release; check Goldsky API, indexing, RPC and Git access. This command never deploys or retags.'
   if (command === 'retire') return 'Catalog retirement failed or is unconfirmed.' + validationDetail(error)
     + ' Retry catalog:retire to reconcile; check Git access and the existing catalog.'
   return 'Catalog command failed.' + validationDetail(error)
