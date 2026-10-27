@@ -108,7 +108,7 @@ test('CLI receipt rejects unsafe network paths without deleting files outside th
   const sentinel = join(root, 'source.json')
   writeFileSync(sentinel, 'retained file')
   const result = await invoke({ argv: ['receipt', '../source'] })
-  assert.equal(result.code, 0); assert.match(result.text, /Unsupported network/)
+  assert.equal(result.code, 1); assert.match(result.text, /Unsupported network/)
   assert.equal(readFileSync(sentinel, 'utf8'), 'retained file')
 }))
 
@@ -228,4 +228,43 @@ test('CLI import failures are credential-safe and preserve the catalog remote', 
   mock.mock.mockImplementation(async () => { throw new Error(secret) })
   assert.equal((await invoke(options)).code, 1)
   assert.throws(() => git(remote, 'rev-parse', 'refs/heads/catalog'))
+}))
+
+
+test('CLI rejects unsupported flags, excess arguments and invalid selections before any side effects', async t => commandFixture(async ({ root, remote, receiptPath, invoke }) => {
+  let requests = 0, commands = 0
+  t.mock.method(globalThis, 'fetch', async (...args) => { requests++; return importFetch(...args) })
+  const run = () => { commands++; return endpoint }
+  const env = { GOLDSKY_API_KEY: secret, RPC_URL_1: 'https://rpc.example.com', CATALOG_GIT_REMOTE: remote }
+  const originalReceipt = readFileSync(receiptPath, 'utf8')
+  const validCommands = [
+    ['receipt', 'mainnet'],
+    ['retire', 'mainnet', 'stable'],
+    ['publish', 'mainnet', '1.2.3', 'stable', '100'],
+    ['promote', 'mainnet', '1.2.3', 'stable', '100'],
+    ['import', 'mainnet', '1.2.3', 'stable', '100'],
+  ]
+  const invalid = validCommands.flatMap(argv => [
+    [...argv, '--unexpected'], [...argv, 'extra'], argv.slice(0, -1),
+    [argv[0], 'constructor', ...argv.slice(2)],
+    [argv[0], '../mainnet', ...argv.slice(2)],
+    ...(argv[0] === 'import' ? [[...argv, '--dry-run', '--dry-run']] : [[...argv, '--dry-run']]),
+  ])
+  for (const command of ['import', 'publish', 'promote']) {
+    for (const [version, channel, checkpoint] of [
+      ['latest', 'stable', '100'], ['1.2.3', '--dry-run', '100'], ['1.2.3', 'stable', 'Infinity'],
+      ['1.2.3', 'stable', '-1'], ['1.2.3', 'stable', '9007199254740992'],
+    ]) invalid.push([command, 'mainnet', version, channel, checkpoint])
+  }
+  invalid.push(['promote', 'mainnet', '1.2.3', 'candidate', '100'])
+  invalid.push(['retire', 'mainnet', '--dry-run'], [], ['unknown', 'mainnet'])
+  for (const argv of invalid) {
+    const result = await invoke({ argv, run, env })
+    assert.equal(result.code, 1, `Must reject ${JSON.stringify(argv)}: ${result.text}`)
+    assert.equal(requests, 0, `No RPC, GraphQL or Goldsky API reads for ${JSON.stringify(argv)}`)
+    assert.equal(commands, 0, `No Goldsky inventory or tag commands for ${JSON.stringify(argv)}`)
+    assert.equal(readFileSync(receiptPath, 'utf8'), originalReceipt, 'Usage errors must retain existing receipt evidence')
+    assert.throws(() => git(remote, 'rev-parse', 'refs/heads/catalog'), 'No publication on invalid arguments')
+  }
+  assert.equal(readFileSync(join(root, 'source.ts'), 'utf8'), 'reviewed source')
 }))

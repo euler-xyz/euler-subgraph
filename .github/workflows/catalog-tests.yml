@@ -5,9 +5,8 @@ on:
     paths:
       - '.github/workflows/catalog-tests.yml'
       - '.gitignore'
-      - 'scripts/catalog/**'
-      - 'scripts/config.ts'
-      - 'scripts/deploy-hotfix.ts'
+      - 'scripts/**'
+      - 'template/**'
       - 'tests/catalog/**'
       - 'catalog/**'
       - 'package.json'
@@ -15,9 +14,8 @@ on:
     paths:
       - '.github/workflows/catalog-tests.yml'
       - '.gitignore'
-      - 'scripts/catalog/**'
-      - 'scripts/config.ts'
-      - 'scripts/deploy-hotfix.ts'
+      - 'scripts/**'
+      - 'template/**'
       - 'tests/catalog/**'
       - 'catalog/**'
       - 'package.json'

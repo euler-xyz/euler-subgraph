@@ -8,15 +8,38 @@ import { createCheckpointProbes } from './probes.mjs'
 import { publishCatalog } from './publish.mjs'
 import { promoteAndPublish } from './promote.mjs'
 import { CatalogValidationError, catalogFailureMessage } from './errors.mjs'
+import { versionPattern } from './catalog.mjs'
+
+class CatalogUsageError extends CatalogValidationError {}
+
+function validateArguments(argv) {
+  const [command, , version, channel, checkpoint] = argv
+  const usage = command === 'receipt' ? 'bun scripts/catalog/cli.ts receipt <network>'
+    : command === 'retire' ? 'catalog:retire <network> <stable|candidate>'
+      : `catalog:${command} <network> <version> <${command === 'promote' ? 'stable' : 'stable|candidate'}> <checkpoint>${command === 'import' ? ' [--dry-run]' : ''}`
+  const fail = () => { throw new CatalogUsageError(`Usage: ${usage}`) }
+  if (!['receipt', 'retire', 'import', 'publish', 'promote'].includes(command)) {
+    throw new CatalogUsageError('Usage: catalog:import, catalog:publish or catalog:promote <network> <version> <channel> <checkpoint>; catalog:retire <network> <stable|candidate>; bun scripts/catalog/cli.ts receipt <network>')
+  }
+  if (command === 'receipt') { if (argv.length !== 2) fail() }
+  else if (command === 'retire') {
+    if (argv.length !== 3 || !['stable', 'candidate'].includes(version)) fail()
+  } else {
+    if (argv.length !== 5 && !(command === 'import' && argv.length === 6 && argv[5] === '--dry-run')) fail()
+    if (!versionPattern.test(version) || !['stable', 'candidate'].includes(channel)
+      || command === 'promote' && channel !== 'stable'
+      || !/^\d+$/.test(checkpoint) || !Number.isSafeInteger(Number(checkpoint))) fail()
+  }
+}
 
 // The CLI and offline regressions share this dispatcher. Its runner receives argument arrays.
 export async function runCatalogCommand({ argv, networks, root, parseManifest, run, env = process.env, output = console }) {
-  const [command, network, version, channel = 'stable', checkpointText] = argv
+  const [command, network, version, channel, checkpointText] = argv
   let receiptPath
   try {
-    if (!['receipt', 'retire', 'import', 'publish', 'promote'].includes(command)) throw new CatalogValidationError('Usage: catalog:import, catalog:publish or catalog:promote <network> <version> <stable|candidate> <checkpoint>; catalog:retire <network> <stable|candidate>; bun scripts/catalog/cli.ts receipt <network>')
+    validateArguments(argv)
     const config = /^[a-z0-9]+$/.test(network) && Object.hasOwn(networks, network) ? networks[network] : undefined
-    if (!config || !Number.isSafeInteger(config.chainId) || config.chainId <= 0) throw new CatalogValidationError('Unsupported network or missing chainId in scripts/config.ts')
+    if (!config || !Number.isSafeInteger(config.chainId) || config.chainId <= 0) throw new CatalogUsageError('Unsupported network or missing chainId in scripts/config.ts')
     receiptPath = resolve(root, '.catalog', `${network}.json`)
     if (command === 'receipt') {
       const result = await writeBuildReceipt({ root, network, config, parseManifest })
@@ -27,8 +50,7 @@ export async function runCatalogCommand({ argv, networks, root, parseManifest, r
       const result = await publishCatalog(env.CATALOG_GIT_REMOTE, async () => ({ chainId: config.chainId, family: 'euler-simple', channel: version, status: 'retired' }))
       output.log(`Catalog ${result.status}; revision ${result.revision}`)
     } else if (command === 'import') {
-      const dryRun = argv.length === 6 && argv[5] === '--dry-run'
-      if (argv.length !== 5 && !dryRun) throw new CatalogValidationError('Usage: catalog:import <network> <version> <stable|candidate> <checkpoint> [--dry-run]')
+      const dryRun = argv[5] === '--dry-run'
       const rpc = env[`RPC_URL_${config.chainId}`], remote = env.CATALOG_GIT_REMOTE
       if (!rpc || (!dryRun && !remote) || !checkpointText || !/^\d+$/.test(checkpointText)) throw new CatalogValidationError('Set RPC_URL_<chainId>, CATALOG_GIT_REMOTE (unless --dry-run) and provide checkpoint')
       const { request } = createProbeTransport()
@@ -64,7 +86,7 @@ export async function runCatalogCommand({ argv, networks, root, parseManifest, r
     return 0
   } catch (error) {
     output.error(catalogFailureMessage(command, error))
-    if (command !== 'receipt') return 1
+    if (command !== 'receipt' || error instanceof CatalogUsageError) return 1
     if (receiptPath) {
       try { rmSync(receiptPath, { force: true }) } catch { /* Keep manual builds available if local cleanup fails. */ }
     }

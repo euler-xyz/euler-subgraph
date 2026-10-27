@@ -1,5 +1,6 @@
-import { execSync } from 'child_process'
-import { Network, NETWORKS, PROTOCOL_VERSION, Version } from './config'
+import { execFileSync } from 'child_process'
+import { Network, networks, PROTOCOL_VERSION, Version } from './config'
+import { parseNetworkArguments } from './network-command.mjs'
 import { compareVersions, formatVersion, parseVersion } from './utils/utils'
 import { existsSync, readFileSync } from 'fs'
 
@@ -16,7 +17,7 @@ function getLatestVersion(network: Network, subgraphName: string): Version {
       console.warn('Deployments file not found, using goldsky subgraph list')
     }
 
-    const result = execSync('goldsky subgraph list').toString()
+    const result = execFileSync('goldsky', ['subgraph', 'list']).toString()
     const lines = result.split('\n')
       .filter(line => line.includes(subgraphName))
       .map(line => {
@@ -48,7 +49,7 @@ function incrementVersion(version: Version): Version {
   }
 }
 
-function deployNewVersion(network: Network, fork: string) {
+function deployNewVersion(network: Network, fork?: 'test' | 'swap') {
   const subgraphName = fork ? `euler-${PROTOCOL_VERSION}-${network}-${fork}` : `euler-${PROTOCOL_VERSION}-${network}`
   const currentVersion = getLatestVersion(network, subgraphName)
   const newVersion = incrementVersion(currentVersion)
@@ -60,7 +61,7 @@ function deployNewVersion(network: Network, fork: string) {
   try {
     console.log(`Deploying ${subgraphName} v${versionString}...`)
     console.log(`>> goldsky subgraph deploy ${subgraphName}/${versionString}`)
-    execSync(`goldsky subgraph deploy ${subgraphName}/${versionString}`, { stdio: 'inherit' })
+    execFileSync('goldsky', ['subgraph', 'deploy', `${subgraphName}/${versionString}`], { stdio: 'inherit' })
     console.log(`Successfully deployed v${versionString}`)
   } catch (error) {
     console.error('Error deploying: version: ', versionString, ' fork: ', fork, ' error: ', error)
@@ -69,13 +70,5 @@ function deployNewVersion(network: Network, fork: string) {
   }
 }
 
-// Get network from command line args
-const network = process.argv[2] as Network
-const fork = process.argv[3]
-
-if (!NETWORKS.includes(network)) {
-  console.error(`Invalid network. Must be one of: ${NETWORKS.join(', ')}`)
-  process.exit(1)
-}
-
-deployNewVersion(network, fork) 
+const { network, fork } = parseNetworkArguments(['deploy', ...process.argv.slice(2)], networks)
+deployNewVersion(network as Network, fork)

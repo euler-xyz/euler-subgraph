@@ -220,6 +220,9 @@ function deployHotfix(network: Network, hotfixConfig: HotfixConfig) {
     // Generate subgraph.yaml with grafting
     generateSubgraphWithGrafting(network, hotfixConfig)
 
+    // Generate bindings for the selected manifest before compiling.
+    execFileSync('graph', ['codegen'], { stdio: 'inherit', cwd: join(__dirname, '..') })
+
     // Build the subgraph
     console.log('\nBuilding subgraph...')
     execSync('graph build', { stdio: 'inherit', cwd: join(__dirname, '..') })
