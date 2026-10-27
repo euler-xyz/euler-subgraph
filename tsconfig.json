@@ -6,7 +6,6 @@
   ],
   "exclude": [
     "scripts",
-    "contracts",
     "node_modules",
     "dist"
   ]

@@ -1,207 +1,178 @@
-import {
-    arbitrumAddresses,
-    avalancheAddresses,
-    baseAddresses,
-    berachainAddresses,
-    bobAddresses,
-    bscAddresses,
-    gnosisAddresses,
-    hyperevmAddresses,
-    inkAddresses,
-    mainnetAddresses,
-    optimismAddresses,
-    polygonAddresses,
-    sonicAddresses,
-    swellAddresses,
-    tacAddresses,
-    tacTurinAddresses,
-    unichainAddresses,
-    worldchainAddresses,
-    lineaAddresses,
-    plasmaAddresses,
-    mantleAddresses,
-    monadAddresses,
-    morphAddresses,
-    sepoliaAddresses
-} from '../contracts/addresses'
-
 export const PROTOCOL_VERSION = "simple"
-
-export type Network = typeof NETWORKS[number]
 
 export type Version = { major: number; minor: number; patch: number; hotfix?: number }
 
 export const networks = {
     mainnet: {
+        chainId: 1,
         network: 'mainnet',
-        ...mainnetAddresses.coreAddresses,
-        ...mainnetAddresses.swapAddresses,
-        ...mainnetAddresses.peripheryAddresses,
-
-        startBlock: 20529207
+        eVaultFactory: '0x29a56a1b8214D9Cf7c5561811750D5cBDb45CC8e',
+        eulerEarnFactory: '0x59709B029B140C853FE28d277f83C3a65e308aF4',
+        securitizeFactory: '0x5F51D980F15fE6075aE30394dc35De57A4f76Cbb',
+        startBlock: 20529207,
     },
     arbitrum: {
+        chainId: 42161,
         network: 'arbitrum-one',
-        ...arbitrumAddresses.coreAddresses,
-        ...arbitrumAddresses.swapAddresses,
-        ...arbitrumAddresses.peripheryAddresses,
-        startBlock: 238643655
+        eVaultFactory: '0x78Df1CF5bf06a7f27f2ACc580B934238C1b80D50',
+        eulerEarnFactory: '0xB9B5d62B9fE9E1B505466e75817aB178A1D2ec9d',
+        startBlock: 238643655,
     },
     base: {
+        chainId: 8453,
         network: 'base',
-        ...baseAddresses.coreAddresses,
-        ...baseAddresses.swapAddresses,
-        ...baseAddresses.peripheryAddresses,
-        startBlock: 22282411
+        eVaultFactory: '0x7F321498A801A191a93C840750ed637149dDf8D0',
+        eulerEarnFactory: '0x75F49a2621b6DeC6a5baB22ce961bF3e676EFAE6',
+        startBlock: 22282411,
     },
     swell: {
+        chainId: 1923,
         network: 'swell',
-        ...swellAddresses.coreAddresses,
-        ...swellAddresses.swapAddresses,
-        ...swellAddresses.peripheryAddresses,
-        startBlock: 485376
+        eVaultFactory: '0x238bF86bb451ec3CA69BB855f91BDA001aB118b9',
+        eulerEarnFactory: '0x3073e1B42f8Cc933f2d678DdA10acDE51F4E49a3',
+        startBlock: 485376,
     },
     sonic: {
+        chainId: 146,
         network: 'sonic',
-        ...sonicAddresses.coreAddresses,
-        ...sonicAddresses.swapAddresses,
-        ...sonicAddresses.peripheryAddresses,
-        startBlock: 5324457
+        eVaultFactory: '0xF075cC8660B51D0b8a4474e3f47eDAC5fA034cFB',
+        eulerEarnFactory: '0x3397ec7d28cF645A017869Fe4B41c75f5B0b75a8',
+        startBlock: 5324457,
     },
     ink: {
+        chainId: 57073,
         network: 'ink',
-        ...inkAddresses.coreAddresses,
-        ...inkAddresses.swapAddresses,
-        ...inkAddresses.peripheryAddresses,
-        startBlock: 3900333
+        eVaultFactory: '0xD17587B7da4383bE4b64bD2D0c87119a17Ee5130',
+        eulerEarnFactory: '0x0000000000000000000000000000000000000000',
+        startBlock: 3900333,
     },
     unichain: {
+        chainId: 130,
         network: 'unichain',
-        ...unichainAddresses.coreAddresses,
-        ...unichainAddresses.swapAddresses,
-        ...unichainAddresses.peripheryAddresses,
-        startBlock: 8541547
+        eVaultFactory: '0xbAd8b5BDFB2bcbcd78Cc9f1573D3Aad6E865e752',
+        eulerEarnFactory: '0xD785adD5F081F56616898E45b90dE307e3DC7d3E',
+        startBlock: 8541547,
     },
     avalanche: {
+        chainId: 43114,
         network: 'avalanche',
-        ...avalancheAddresses.coreAddresses,
-        ...avalancheAddresses.swapAddresses,
-        ...avalancheAddresses.peripheryAddresses,
-        startBlock: 56805796
+        eVaultFactory: '0xaf4B4c18B17F6a2B32F6c398a3910bdCD7f26181',
+        eulerEarnFactory: '0x574B00f5a0C56D370F19fa887a5545d74F52fAC2',
+        startBlock: 56805796,
     },
     berachain: {
+        chainId: 80094,
         network: 'berachain-mainnet',
-        ...berachainAddresses.coreAddresses,
-        ...berachainAddresses.swapAddresses,
-        ...berachainAddresses.peripheryAddresses,
-        startBlock: 1095611
+        eVaultFactory: '0x5C13fb43ae9BAe8470f646ea647784534E9543AF',
+        eulerEarnFactory: '0x9cbc3030e6d133D1AAa148D598FD82D70263495c',
+        startBlock: 1095611,
     },
     bob: {
+        chainId: 60808,
         network: 'bob',
-        ...bobAddresses.coreAddresses,
-        ...bobAddresses.swapAddresses,
-        ...bobAddresses.peripheryAddresses,
-        startBlock: 13157157
+        eVaultFactory: '0x046a9837A61d6b6263f54F4E27EE072bA4bdC7e4',
+        eulerEarnFactory: '0x8F01c6640A1c0a6085C79843F861fF0F89b9fED6',
+        startBlock: 13157157,
     },
     bsc: {
+        chainId: 56,
         network: 'bsc',
-        ...bscAddresses.coreAddresses,
-        ...bscAddresses.swapAddresses,
-        ...bscAddresses.peripheryAddresses,
-        startBlock: 46370000
+        eVaultFactory: '0x7F53E2755eB3c43824E162F7F6F087832B9C9Df6',
+        eulerEarnFactory: '0xc456d04E3F43597CC7E5a2AF284fF4C4AdDA0cb1',
+        startBlock: 46370000,
     },
     worldchain: {
+        chainId: 480,
         network: 'worldchain',
-        ...worldchainAddresses.coreAddresses,
-        ...worldchainAddresses.swapAddresses,
-        ...worldchainAddresses.peripheryAddresses,
-        startBlock: 9800000
+        eVaultFactory: '0xba31C9e91E909E47F2F4F174936811A1E2123B57',
+        eulerEarnFactory: '0x0000000000000000000000000000000000000000',
+        startBlock: 9800000,
     },
     hyperevm: {
+        chainId: 999,
         network: 'hyperevm',
-        ...hyperevmAddresses.coreAddresses,
-        ...hyperevmAddresses.swapAddresses,
-        ...hyperevmAddresses.peripheryAddresses,
-        startBlock: 1980586
+        eVaultFactory: '0xcF5552580fD364cdBBFcB5Ae345f75674c59273A',
+        eulerEarnFactory: '0x587DD8285c01526769aB4803e4F02433ddbBc00E',
+        startBlock: 1980586,
     },
     optimism: {
+        chainId: 10,
         network: 'optimism',
-        ...optimismAddresses.coreAddresses,
-        ...optimismAddresses.swapAddresses,
-        ...optimismAddresses.peripheryAddresses,
-        startBlock: 131500000
+        eVaultFactory: '0x7943231a109703937bB7fb3D4dfB55D824deDe99',
+        eulerEarnFactory: '0x83d4459F556d612837664117B94Befaf79b0Cc26',
+        startBlock: 131500000,
     },
     gnosis: {
+        chainId: 100,
         network: 'xdai',
-        ...gnosisAddresses.coreAddresses,
-        ...gnosisAddresses.swapAddresses,
-        ...gnosisAddresses.peripheryAddresses,
-        startBlock: 38380000
+        eVaultFactory: '0x4CB405C3515841c9BBFB363CD3105479e15ce5B0',
+        eulerEarnFactory: '0x0000000000000000000000000000000000000000',
+        startBlock: 38380000,
     },
     tacturin: {
+        chainId: 2390,
         network: 'tac-turin',
-        ...tacTurinAddresses.coreAddresses,
-        ...tacTurinAddresses.swapAddresses,
-        ...tacTurinAddresses.peripheryAddresses,
-        startBlock: 5066361
+        eVaultFactory: '0x1229C14e3b345E0272597cD71d39d297ee57C96e',
+        eulerEarnFactory: '0x0000000000000000000000000000000000000000',
+        startBlock: 5066361,
     },
     tac: {
+        chainId: 239,
         network: 'tac',
-        ...tacAddresses.coreAddresses,
-        ...tacAddresses.swapAddresses,
-        ...tacAddresses.peripheryAddresses,
-        startBlock: 860000
+        eVaultFactory: '0x2b21621b8Ef1406699a99071ce04ec14cCd50677',
+        eulerEarnFactory: '0x7670572aa76E6140400A948e7AAFAB0210a86d9f',
+        startBlock: 860000,
     },
     linea: {
+        chainId: 59144,
         network: 'linea',
-        ...lineaAddresses.coreAddresses,
-        ...lineaAddresses.swapAddresses,
-        ...lineaAddresses.peripheryAddresses,
-        startBlock: 17900000
+        eVaultFactory: '0x84711986Fd3BF0bFe4a8e6d7f4E22E67f7f27F04',
+        eulerEarnFactory: '0x377879A039343FEc7564e54616e519328951DA6D',
+        startBlock: 17900000,
     },
     plasma: {
+        chainId: 9745,
         network: 'plasma-mainnet',
-        ...plasmaAddresses.coreAddresses,
-        ...plasmaAddresses.swapAddresses,
-        ...plasmaAddresses.peripheryAddresses,
-        startBlock: 510000
+        eVaultFactory: '0x42388213C6F56D7E1477632b58Ae6Bba9adeEeA3',
+        eulerEarnFactory: '0xA3843A73e6a9F81309B931237Ca4759B3B02ff0E',
+        startBlock: 510000,
     },
     mantle: {
+        chainId: 5000,
         network: 'mantle',
-        ...mantleAddresses.coreAddresses,
-        ...mantleAddresses.swapAddresses,
-        ...mantleAddresses.peripheryAddresses,
-        startBlock: 84500000
+        eVaultFactory: '0x47Aaf2f062aa1D55AFa602f5C9597588f71E2d76',
+        eulerEarnFactory: '0xcAFd42604Cbb4c8CA3352b2eff082d8a8Ebc4850',
+        startBlock: 84500000,
     },
     monad: {
+        chainId: 143,
         network: 'monad',
-        ...monadAddresses.coreAddresses,
-        ...monadAddresses.swapAddresses,
-        ...monadAddresses.peripheryAddresses,
-        startBlock: 30858000
+        eVaultFactory: '0xba4Dd672062dE8FeeDb665DD4410658864483f1E',
+        eulerEarnFactory: '0xF463d4Acb650cc6C4E1D6cD4D0d1b0cb224094cF',
+        startBlock: 30858000,
     },
     morph: {
+        chainId: 2818,
         network: 'morph',
-        ...morphAddresses.coreAddresses,
-        ...morphAddresses.swapAddresses,
-        ...morphAddresses.peripheryAddresses,
-        startBlock: 5080000
+        eVaultFactory: '0x1a1bdF62Fe7170c652f03fF153977C26fBe7b2E1',
+        eulerEarnFactory: '0x4A6727aA2d1979C0366751c7a81615500f0186E4',
+        startBlock: 5080000,
     },
     polygon: {
+        chainId: 137,
         network: 'matic',
-        ...polygonAddresses.coreAddresses,
-        ...polygonAddresses.swapAddresses,
-        ...polygonAddresses.peripheryAddresses,
-        startBlock: 86932985
+        eVaultFactory: '0xB1771a13e2a13fCafA89B00335915E732B9466b7',
+        eulerEarnFactory: '0x0000000000000000000000000000000000000000',
+        startBlock: 86932985,
     },
     sepolia: {
+        chainId: 11155111,
         network: 'sepolia',
-        ...sepoliaAddresses.coreAddresses,
-        ...sepoliaAddresses.swapAddresses,
-        ...sepoliaAddresses.peripheryAddresses,
-        startBlock: 9000000
-    }
+        eVaultFactory: '0xEB07789D76392302dc9181Aca1e07836F9257B5a',
+        eulerEarnFactory: '0x7fe7Bf375e43564acc90BE17bCEca1905337018d',
+        startBlock: 9000000,
+    },
 }
 
-
-export const NETWORKS = Object.keys(networks)
+export type Network = keyof typeof networks
+export const NETWORKS = Object.keys(networks) as Network[]

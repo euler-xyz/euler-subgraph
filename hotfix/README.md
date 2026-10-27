@@ -57,7 +57,8 @@ The script will:
 - Attempt to fetch the deployment ID if not provided
 - Find the latest hotfix version for the base version (e.g., if 1.0.12.1 exists, next will be 1.0.12.2)
 - Generate a new `subgraph.yaml` with grafting configuration
-- Build the subgraph
+- Generate bindings and build the subgraph
+- Attempt a local catalog receipt for artifact-verified publication
 - Deploy the new hotfix version (e.g., `1.0.12.1`, `1.0.12.2`, etc.)
 
 ## Important Notes

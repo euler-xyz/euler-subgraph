@@ -1,5 +1,5 @@
-import { execSync } from 'child_process'
-import { existsSync, readFileSync, writeFileSync } from 'fs'
+import { execSync, execFileSync } from 'child_process'
+import { existsSync, readFileSync, writeFileSync, rmSync } from 'fs'
 import { join } from 'path'
 import { Network, NETWORKS, networks, PROTOCOL_VERSION, Version } from './config'
 import { formatVersion, parseVersion } from './utils/utils'
@@ -220,9 +220,25 @@ function deployHotfix(network: Network, hotfixConfig: HotfixConfig) {
     // Generate subgraph.yaml with grafting
     generateSubgraphWithGrafting(network, hotfixConfig)
 
+    // Generate bindings for the selected manifest before compiling.
+    execFileSync('graph', ['codegen'], { stdio: 'inherit', cwd: join(__dirname, '..') })
+
     // Build the subgraph
     console.log('\nBuilding subgraph...')
     execSync('graph build', { stdio: 'inherit', cwd: join(__dirname, '..') })
+
+    // Catalog provenance captures the compiled graft as well as its artifacts.
+    // Receipt failures leave the existing operator deployment flow available.
+    const receiptPath = join(__dirname, '..', '.catalog', `${network}.json`)
+    try {
+      rmSync(receiptPath, { force: true })
+      execFileSync('bun', [join(__dirname, 'catalog/cli.ts'), 'receipt', network], {
+        stdio: 'inherit', cwd: join(__dirname, '..')
+      })
+    } catch {
+      try { rmSync(receiptPath, { force: true }) } catch { /* Receipt cleanup must not block manual deployment. */ }
+      console.warn('Catalog receipt unavailable; commit the source and rebuild before catalog publication.')
+    }
 
     // Deploy
     console.log(`\nDeploying ${subgraphName} v${versionString}...`)

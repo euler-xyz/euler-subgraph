@@ -1,0 +1,270 @@
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
+import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { runCatalogCommand } from '../../scripts/catalog/command.mjs'
+import { writeBuildReceipt } from '../../scripts/catalog/receipt.mjs'
+
+const secret = 'credential-that-must-not-be-logged'
+const config = { chainId: 1, network: 'mainnet', startBlock: 10, eVaultFactory: '0x111', eulerEarnFactory: '0x222' }
+const manifest = { dataSources: [config.eVaultFactory, config.eulerEarnFactory].map(address => ({ network: 'mainnet', source: { address, startBlock: 10 }, mapping: { file: 'mapping.wasm' } })) }
+const endpoint = 'https://api.goldsky.com/api/public/project_fixture/subgraphs/euler-simple-mainnet/1.2.3/gn'
+const hash = `0x${'1'.repeat(64)}`
+const git = (cwd, ...args) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim()
+async function commandFixture(fn) {
+  const directory = mkdtempSync(join(tmpdir(), 'catalog-command-')), root = join(directory, 'source'), remote = join(directory, 'remote.git')
+  mkdirSync(root)
+  try {
+    git(root, 'init', '--quiet')
+    git(directory, 'init', '--bare', '--quiet', remote)
+    writeFileSync(join(root, '.gitignore'), readFileSync(new URL('../../.gitignore', import.meta.url)))
+    writeFileSync(join(root, 'source.ts'), 'reviewed source')
+    git(root, 'add', '.')
+    git(root, '-c', 'user.name=Test', '-c', 'user.email=test@example.com', '-c', 'commit.gpgsign=false', 'commit', '-qm', 'Fixture source')
+    mkdirSync(join(root, 'build'))
+    writeFileSync(join(root, 'build/subgraph.yaml'), JSON.stringify(manifest))
+    writeFileSync(join(root, 'build/mapping.wasm'), 'compiled mapping')
+    await writeBuildReceipt({ root, network: 'mainnet', config, parseManifest: JSON.parse })
+    const receiptPath = join(root, '.catalog/mainnet.json')
+    const invoke = async (overrides = {}) => {
+      const lines = []
+      const output = Object.fromEntries(['log', 'warn', 'error'].map(level => [level, message => lines.push({ level, message })]))
+      const code = await runCatalogCommand({ root, argv: ['publish', 'mainnet', '1.2.3', 'stable', '100'], networks: { mainnet: config },
+        parseManifest: JSON.parse, run: () => endpoint, env: { RPC_URL_1: `https://rpc.example.com/${secret}`, CATALOG_GIT_REMOTE: remote }, ...overrides, output })
+      const text = lines.map(line => line.message).join('\n')
+      assert.ok(!text.includes(secret), text)
+      return { code, lines, text }
+    }
+    await fn({ root, remote, receiptPath, invoke })
+  } finally { rmSync(directory, { recursive: true, force: true }) }
+}
+const controlledFetch = async (url, options) => {
+  if (String(url).includes('rpc.example.com')) {
+    const { method } = JSON.parse(options.body)
+    return Response.json({ result: method === 'eth_chainId' ? '0x1' : { number: '0x64', hash } })
+  }
+  if (String(url).includes('api.goldsky.com')) return Response.json({ data: { trackingActiveAccounts: [], vaults: [], _meta: { deployment: 'QmFixture', hasIndexingErrors: false, block: { number: 100, hash } } } })
+  if (String(url).endsWith('/QmFixture')) return Response.json({ ...manifest, dataSources: manifest.dataSources.map(row => ({ ...row, mapping: { file: { '/': '/ipfs/QmMapping' } } })) })
+  if (String(url).endsWith('/QmMapping')) return new Response('compiled mapping')
+  throw new Error(`Unexpected provider URL ${url}`)
+}
+
+test('CLI dispatcher exposes safe network, receipt and required configuration errors', async () => commandFixture(async ({ invoke, receiptPath }) => {
+  const cases = [
+    [{ argv: ['publish', 'unknown', '1.2.3', 'stable', '100'] }, /Unsupported network/],
+    [{ networks: { mainnet: { ...config, chainId: undefined } } }, /missing chainId/],
+    [{ env: {} }, /Set RPC_URL_<chainId>, CATALOG_GIT_REMOTE and provide checkpoint/],
+  ]
+  for (const [options, expected] of cases) {
+    const result = await invoke(options)
+    assert.equal(result.code, 1); assert.match(result.text, expected)
+  }
+  writeFileSync(receiptPath, JSON.stringify({ network: 'base', chainId: 8453 }))
+  let result = await invoke()
+  assert.equal(result.code, 1); assert.match(result.text, /Receipt network mismatch/)
+  writeFileSync(receiptPath, `${secret} invalid JSON`)
+  result = await invoke()
+  assert.equal(result.code, 1); assert.match(result.text, /Missing or unreadable build receipt/)
+}))
+
+test('CLI publication exposes exact-release validation while preserving the remote', async t => commandFixture(async ({ invoke, remote }) => {
+  t.mock.method(globalThis, 'fetch', controlledFetch)
+  const result = await invoke({ run: () => '' })
+  assert.equal(result.code, 1)
+  assert.match(result.text, /Exact release endpoint missing or ambiguous/)
+  assert.throws(() => git(remote, 'rev-parse', 'refs/heads/catalog'))
+}))
+
+test('CLI suppresses raw fetch, child-process and parser errors, including a spoofed error name', async t => commandFixture(async ({ invoke }) => {
+  const fetchMock = t.mock.method(globalThis, 'fetch', controlledFetch)
+  for (const error of [new Error(`fetch failed at https://user:${secret}@example.com`), Object.assign(new Error(secret), { name: 'CatalogValidationError' }), { message: secret }]) {
+    fetchMock.mock.mockImplementation(async () => { throw error })
+    assert.equal((await invoke()).code, 1)
+  }
+  fetchMock.mock.mockImplementation(async () => new Response(`${secret} invalid JSON`))
+  assert.equal((await invoke()).code, 1)
+  fetchMock.mock.mockImplementation(controlledFetch)
+  const result = await invoke({ run: () => { throw Object.assign(new Error(`command failed: ${secret}`), { stdout: secret, stderr: secret }) } })
+  assert.equal(result.code, 1)
+  assert.match(result.text, /Catalog publication failed or is unconfirmed/)
+  const gitFailure = await invoke({ env: { RPC_URL_1: `https://rpc.example.com/${secret}`, CATALOG_GIT_REMOTE: `/absent/${secret}/remote.git` } })
+  assert.equal(gitFailure.code, 1); assert.match(gitFailure.text, /Cannot read publication branch/)
+  const credentialRemote = await invoke({ env: { RPC_URL_1: `https://rpc.example.com/${secret}`, CATALOG_GIT_REMOTE: `https://user:${secret}@example.com/repo.git` } })
+  assert.equal(credentialRemote.code, 1); assert.match(credentialRemote.text, /Use Git credential helpers/)
+}))
+
+test('CLI receipt errors remain nonfatal, clear stale evidence and describe the continuing deploy flow', async () => commandFixture(async ({ invoke, receiptPath }) => {
+  const result = await invoke({ argv: ['receipt', 'mainnet'], parseManifest: () => { throw new Error(secret) } })
+  assert.equal(result.code, 0)
+  assert.equal(existsSync(receiptPath), false)
+  assert.match(result.text, /Catalog receipt failed/)
+  assert.match(result.text, /Build remains usable for manual deployment/)
+  assert.doesNotMatch(result.text, /no deployment or promotion was performed/)
+}))
+
+test('CLI receipt rejects unsafe network paths without deleting files outside the receipt directory', async () => commandFixture(async ({ root, invoke }) => {
+  const sentinel = join(root, 'source.json')
+  writeFileSync(sentinel, 'retained file')
+  const result = await invoke({ argv: ['receipt', '../source'] })
+  assert.equal(result.code, 1); assert.match(result.text, /Unsupported network/)
+  assert.equal(readFileSync(sentinel, 'utf8'), 'retained file')
+}))
+
+test('CLI receipt records clean builds and explains dirty builds without preventing deployment', async () => commandFixture(async ({ root, invoke, receiptPath }) => {
+  let result = await invoke({ argv: ['receipt', 'mainnet'] })
+  assert.equal(result.code, 0); assert.match(result.text, /receipt recorded locally/)
+  writeFileSync(join(root, 'source.ts'), 'uncommitted source')
+  result = await invoke({ argv: ['receipt', 'mainnet'] })
+  assert.equal(result.code, 0); assert.match(result.text, /source tree has uncommitted files/)
+  assert.match(result.text, /Build remains usable for manual deployment/)
+  assert.equal(existsSync(receiptPath), false)
+}))
+
+test('CLI promotion separates safe preflight errors from unconfirmed tag outcomes', async t => commandFixture(async ({ invoke, remote }) => {
+  t.mock.method(globalThis, 'fetch', controlledFetch)
+  const argv = ['promote', 'mainnet', '1.2.3', 'stable', '100']
+  let tags = 0
+  let result = await invoke({ argv, run: () => '' })
+  assert.equal(result.code, 1)
+  assert.match(result.text, /Promotion preflight failed; no tag was changed/)
+  assert.match(result.text, /Exact release endpoint missing or ambiguous/)
+  result = await invoke({ argv, run: (program, args) => {
+    assert.equal(program, 'goldsky')
+    if (args[1] === 'list') return endpoint
+    assert.deepEqual(args, ['subgraph', 'tag', 'create', 'euler-simple-mainnet/1.2.3', '--tag', 'latest'])
+    tags++; throw new Error(secret)
+  } })
+  assert.equal(result.code, 1); assert.equal(tags, 1)
+  assert.match(result.text, /Promotion outcome unconfirmed/)
+  assert.doesNotMatch(result.text, /no tag was changed/)
+  assert.throws(() => git(remote, 'rev-parse', 'refs/heads/catalog'))
+}))
+
+test('CLI post-promotion publication failures preserve safe validation detail and require publish-only retry', async t => commandFixture(async ({ invoke, remote }) => {
+  const fetchMock = t.mock.method(globalThis, 'fetch', controlledFetch)
+  let tags = 0
+  for (const rawProviderFailure of [false, true]) {
+    fetchMock.mock.mockImplementation(async (url, options) => {
+      if (String(url).includes('/latest/')) {
+        if (rawProviderFailure) throw new Error(secret)
+        return Response.json({ data: { trackingActiveAccounts: [], vaults: [], _meta: { deployment: 'wrongCID', hasIndexingErrors: false, block: { number: 100, hash } } } })
+      }
+      return controlledFetch(url, options)
+    })
+    const result = await invoke({ argv: ['promote', 'mainnet', '1.2.3', 'stable', '100'], run: (_program, args) => {
+      if (args[1] === 'list') return endpoint
+      tags++; return ''
+    } })
+    assert.equal(result.code, 1)
+    assert.match(result.text, /Promotion succeeded; catalog publication failed or is unconfirmed/)
+    assert.match(result.text, /Retry catalog:publish without retagging/)
+    assert.doesNotMatch(result.text, /no tag was changed|Goldsky was not changed/)
+    if (!rawProviderFailure) assert.match(result.text, /Selected deployment is not the promoted latest alias/)
+    assert.throws(() => git(remote, 'rev-parse', 'refs/heads/catalog'))
+  }
+  assert.equal(tags, 2)
+}))
+
+test('CLI retirement failures direct operators to retry retirement, not publication', async () => commandFixture(async ({ invoke }) => {
+  const result = await invoke({ argv: ['retire', 'mainnet', 'stable'], env: {} })
+  assert.equal(result.code, 1)
+  assert.match(result.text, /Provide retirement channel and CATALOG_GIT_REMOTE/)
+  assert.match(result.text, /Retry catalog:retire/)
+  assert.doesNotMatch(result.text, /Retry catalog:publish/)
+}))
+
+
+const importFetch = async (url, options) => {
+  if (String(url).includes('/api/v1/')) {
+    assert.equal(options.method, 'GET'); assert.equal(options.redirect, 'error')
+    assert.equal(options.headers.authorization, `Bearer ${secret}`)
+    const alias = String(url).endsWith('/latest')
+    return Response.json({ data: [{ name: 'euler-simple-mainnet', version: alias ? 'latest' : '1.2.3', network: 'mainnet', status: 'ACTIVE', public_endpoint_enabled: true,
+      graphql_endpoint: alias ? endpoint.replace('/1.2.3/', '/latest/') : endpoint, deployments: [{ deployment_id: 'QmFixture' }], ...(alias ? { tag: { target_version: '1.2.3' } } : {}) }], pagination: { next_page_token: null } })
+  }
+  assert.equal(options.headers?.authorization, undefined)
+  assert.ok(!String(url).includes('ipfs'), 'Import must never read IPFS')
+  return controlledFetch(url, options)
+}
+const noCli = () => { throw new Error('Import must not run Goldsky CLI commands') }
+
+test('CLI imports without receipts or build files, publishes locally, and retries without deployment/tagging', async t => commandFixture(async ({ invoke, root, remote, receiptPath }) => {
+  t.mock.method(globalThis, 'fetch', importFetch)
+  rmSync(receiptPath); rmSync(join(root, 'build'), { recursive: true })
+  const env = { GOLDSKY_API_KEY: secret, RPC_URL_1: 'https://rpc.example.com', CATALOG_GIT_REMOTE: remote }
+  const options = { argv: ['import', 'mainnet', '1.2.3', 'stable', '100'], env, run: noCli }
+  let result = await invoke(options)
+  assert.equal(result.code, 0, result.text)
+  assert.match(result.text, /source\/build provenance is not verified/)
+  const published = JSON.parse(git(remote, 'show', 'catalog:v1/catalog.json'))
+  assert.equal(published.deployments[0].endpoint, endpoint)
+  for (const field of ['sourceCommit', 'startBlock', 'interfacesCommit']) assert.equal(field in published.deployments[0], false)
+  const head = git(remote, 'rev-parse', 'catalog')
+  result = await invoke(options)
+  assert.equal(result.code, 0, result.text)
+  assert.equal(git(remote, 'rev-parse', 'catalog'), head)
+}))
+
+test('CLI import dry-run needs no receipt or remote and cannot publish, deploy or retag', async t => commandFixture(async ({ invoke, remote, receiptPath }) => {
+  t.mock.method(globalThis, 'fetch', importFetch)
+  rmSync(receiptPath)
+  const result = await invoke({ argv: ['import', 'mainnet', '1.2.3', 'stable', '100', '--dry-run'], run: noCli,
+    env: { GOLDSKY_API_KEY: secret, RPC_URL_1: 'https://rpc.example.com' } })
+  assert.equal(result.code, 0, result.text)
+  assert.match(result.text, /validated without publication/)
+  assert.match(result.text, /QmFixture/)
+  assert.throws(() => git(remote, 'rev-parse', 'refs/heads/catalog'))
+}))
+
+test('CLI import failures are credential-safe and preserve the catalog remote', async t => commandFixture(async ({ invoke, remote }) => {
+  const mock = t.mock.method(globalThis, 'fetch', importFetch)
+  const options = { argv: ['import', 'mainnet', '1.2.3', 'stable', '100'], run: noCli,
+    env: { GOLDSKY_API_KEY: secret, RPC_URL_1: 'https://rpc.example.com', CATALOG_GIT_REMOTE: remote } }
+  for (const override of [{ env: { ...options.env, GOLDSKY_API_KEY: '' } }, { argv: [...options.argv, '--unknown'] }]) {
+    const result = await invoke({ ...options, ...override }); assert.equal(result.code, 1); assert.match(result.text, /Retry catalog:import/)
+  }
+  mock.mock.mockImplementation(async () => { throw new Error(secret) })
+  assert.equal((await invoke(options)).code, 1)
+  assert.throws(() => git(remote, 'rev-parse', 'refs/heads/catalog'))
+}))
+
+
+test('CLI rejects unsupported flags, excess arguments and invalid selections before any side effects', async t => commandFixture(async ({ root, remote, receiptPath, invoke }) => {
+  let requests = 0, commands = 0
+  t.mock.method(globalThis, 'fetch', async (...args) => { requests++; return importFetch(...args) })
+  const run = () => { commands++; return endpoint }
+  const env = { GOLDSKY_API_KEY: secret, RPC_URL_1: 'https://rpc.example.com', CATALOG_GIT_REMOTE: remote }
+  const originalReceipt = readFileSync(receiptPath, 'utf8')
+  const validCommands = [
+    ['receipt', 'mainnet'],
+    ['retire', 'mainnet', 'stable'],
+    ['publish', 'mainnet', '1.2.3', 'stable', '100'],
+    ['promote', 'mainnet', '1.2.3', 'stable', '100'],
+    ['import', 'mainnet', '1.2.3', 'stable', '100'],
+  ]
+  const invalid = validCommands.flatMap(argv => [
+    [...argv, '--unexpected'], [...argv, 'extra'], argv.slice(0, -1),
+    [argv[0], 'constructor', ...argv.slice(2)],
+    [argv[0], '../mainnet', ...argv.slice(2)],
+    ...(argv[0] === 'import' ? [[...argv, '--dry-run', '--dry-run']] : [[...argv, '--dry-run']]),
+  ])
+  for (const command of ['import', 'publish', 'promote']) {
+    for (const [version, channel, checkpoint] of [
+      ['latest', 'stable', '100'], ['1.2.3', '--dry-run', '100'], ['1.2.3', 'stable', 'Infinity'],
+      ['1.2.3', 'stable', '-1'], ['1.2.3', 'stable', '9007199254740992'],
+    ]) invalid.push([command, 'mainnet', version, channel, checkpoint])
+  }
+  invalid.push(['promote', 'mainnet', '1.2.3', 'candidate', '100'])
+  invalid.push(['retire', 'mainnet', '--dry-run'], [], ['unknown', 'mainnet'])
+  for (const argv of invalid) {
+    const result = await invoke({ argv, run, env })
+    assert.equal(result.code, 1, `Must reject ${JSON.stringify(argv)}: ${result.text}`)
+    assert.equal(requests, 0, `No RPC, GraphQL or Goldsky API reads for ${JSON.stringify(argv)}`)
+    assert.equal(commands, 0, `No Goldsky inventory or tag commands for ${JSON.stringify(argv)}`)
+    assert.equal(readFileSync(receiptPath, 'utf8'), originalReceipt, 'Usage errors must retain existing receipt evidence')
+    assert.throws(() => git(remote, 'rev-parse', 'refs/heads/catalog'), 'No publication on invalid arguments')
+  }
+  assert.equal(readFileSync(join(root, 'source.ts'), 'utf8'), 'reviewed source')
+}))

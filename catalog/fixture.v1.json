@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "revision": "fixture-v1",
+  "publishedAt": "2026-10-19T00:00:00.000Z",
+  "deployments": [
+    {
+      "chainId": 1,
+      "family": "euler-simple",
+      "channel": "stable",
+      "status": "active",
+      "version": "1.2.3.1",
+      "endpoint": "https://api.goldsky.com/api/public/project_fixture/subgraphs/euler-simple-mainnet/1.2.3.1/gn",
+      "deploymentId": "QmFixtureDeployment",
+      "capabilities": [
+        "account-vault-discovery",
+        "vault-factory-lookup"
+      ],
+      "sourceCommit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "startBlock": 20529207
+    },
+    {
+      "chainId": 8453,
+      "family": "euler-simple",
+      "channel": "stable",
+      "status": "retired"
+    }
+  ]
+}

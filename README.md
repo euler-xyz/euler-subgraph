@@ -2,9 +2,9 @@
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js 24.22 or newer in the Node 24 line
 - Corepack (enabled in Node.js)
-- Bun
+- Bun 1.3 or newer
 - Goldsky CLI (required for all deployments)
 
 ### Setting up pnpm with Corepack
@@ -26,173 +26,64 @@ pnpm install
 
 ## Setup
 
-1. Install dependencies:
+Install the locked dependencies:
 
 ```bash
-pnpm install
+pnpm install --frozen-lockfile
 ```
 
-2. To add a network, sync its ABIs and addresses from euler-interfaces `master`. The script takes the chain id and uses macOS `sed`:
+## Add a network
 
-```bash
-pnpm run abis:sync <chainId>
-```
+1. Add one entry to `networks` in `scripts/config.ts`. The key is a lowercase alphanumeric name used by the commands and the Goldsky subgraph name. Set:
+   - `chainId`: the numeric chain ID.
+   - `network`: the Graph network name supported by Goldsky.
+   - `eVaultFactory` and `eulerEarnFactory`: from euler-interfaces `addresses/<chainId>/CoreAddresses.json`.
+   - `securitizeFactory`: from `addresses/<chainId>/PeripheryAddresses.json`, only when the address is nonzero. Omit the field otherwise.
+   - `startBlock`: the block in which the chain's EVC was deployed.
 
-It writes `contracts/addresses/<chainId>/`. If the chain has no EulerSwap deployment, add a `swapAddresses.ts` with zero addresses for `eulerSwapFactory` and `eulerSwap`, as for Monad (`contracts/addresses/143/`). Then export the folder from `contracts/addresses/index.ts`.
+   The template reads these values directly. Adding a network requires no per-network package scripts. The subgraph mappings use the checked-in `abis/` files.
 
-3. Add the network to `networks` in `scripts/config.ts`: its Graph network name (the Goldsky slug), its addresses, and `startBlock`, the block the chain's EVC was deployed in. Add its `prepare:<network>`, `build:<network>` and `deploy:<network>` scripts to `package.json`, as for the other networks. `scripts/prepare.ts` reads `scripts/config.ts` to generate `subgraph.yaml`:
+2. Commit the reviewed source, log in to Goldsky, and deploy from the clean commit:
 
-```bash
-pnpm run prepare:mainnet
-```
+   ```bash
+   pnpm run deploy <network>
+   ```
 
-4. Generate code:
+   This prepares `subgraph.yaml`, runs Graph code generation and compilation, attempts a local catalog build receipt, and deploys the next version through Goldsky. To build without deploying, run `pnpm run build <network>`. A dirty checkout remains buildable and deployable but cannot produce artifact-verification evidence; retain the clean build and its `.catalog/<network>.json` receipt for publication.
 
-```bash
-pnpm run codegen
-```
+3. Once the release has caught up, set `RPC_URL_<chainId>` and `CATALOG_GIT_REMOTE`, select a recent retained checkpoint, and run:
 
-5. Build the subgraph:
-```bash
-pnpm run build:mainnet
-```
+   ```bash
+   pnpm run catalog:promote <network> <version> stable <checkpoint-block>
+   ```
 
-Note: You can replace `mainnet` with any other network in `scripts/config.ts` (base, arbitrum, monad, etc.) in the above commands.
+   This validates the selected release, changes its `latest` tag, and publishes the catalog record. Artifact-verified promotion requires retrievable deployed artifacts. See [catalog operations](catalog/README.md#build-deploy-promote-publish) for checkpoint selection, receipt requirements, artifact access and the explicit import flow for existing deployments. Goldsky deployments, promotion and catalog publication are operator-invoked; merging code or running CI performs none of them.
 
-## Available Scripts
+## Available scripts
 
-### Build Scripts
+| Command | Purpose |
+| --- | --- |
+| `pnpm run prepare <network>` | Render `subgraph.yaml` for one configured network. |
+| `pnpm run build <network>` | Prepare, generate bindings, compile, and attempt a local catalog receipt. |
+| `pnpm run deploy <network>` | Build and manually deploy the next Goldsky version. |
+| `pnpm run deploy <network> test` | Build and deploy the `-test` subgraph. |
+| `pnpm run deploy <network> swap` | Build and deploy the `-swap` subgraph. |
+| `pnpm run deploy:hotfix <hotfix-config.json>` | Deploy a grafted hotfix; see the [hotfix guide](hotfix/README.md). |
+| `pnpm run generate:deployments` | Refresh the local deployment inventory. |
+| `pnpm run verify:accountPositions` | Verify indexed account positions. |
+| `pnpm run verify:accountVaultBalances` | Verify indexed account vault balances. |
+| `pnpm run test` | Run mapping tests with Graph's test runner. |
+| `pnpm run test:catalog` | Run offline catalog and command regressions with Node 24.22 or newer. |
 
-```bash
-# Build for specific networks
-pnpm run build:mainnet
-pnpm run build:base
-pnpm run build:arbitrum
-pnpm run build:swell
-pnpm run build:sonic
-pnpm run build:ink
-pnpm run build:berachain
-pnpm run build:bob
-pnpm run build:unichain
-pnpm run build:avalanche
-pnpm run build:bsc
+The generic prepare/build/deploy commands and the catalog commands reject unknown flags and excess arguments before starting work. `catalog:import` explicitly supports a final `--dry-run`; `pnpm run deploy`, publication, promotion and retirement commands do not. The package's `prepare` install lifecycle does not select a network; an explicit `pnpm run prepare <network>` does.
 
-# Build scripts with TypeScript
-pnpm run build:scripts
-```
+## Deployment guide
 
-### Deployment Scripts
-
-```bash
-# Deploy to specific networks
-pnpm run deploy:mainnet
-pnpm run deploy:base
-pnpm run deploy:arbitrum
-pnpm run deploy:swell
-pnpm run deploy:sonic
-pnpm run deploy:ink
-pnpm run deploy:berachain
-pnpm run deploy:bob
-pnpm run deploy:unichain
-pnpm run deploy:avalanche
-pnpm run deploy:bsc
-
-# Deploy test versions (with -test suffix)
-pnpm run deploy:mainnet:test
-```
-
-### Utility Scripts
-
-```bash
-# Sync ABIs and addresses
-pnpm run abis:sync
-
-# Generate deployments information
-pnpm run generate:deployments
-
-# Prepare configurations for specific networks
-pnpm run prepare:mainnet
-pnpm run prepare:base
-pnpm run prepare:arbitrum
-pnpm run prepare:swell
-pnpm run prepare:sonic
-pnpm run prepare:ink
-pnpm run prepare:berachain
-pnpm run prepare:bob
-pnpm run prepare:unichain
-pnpm run prepare:avalanche
-pnpm run prepare:bsc
-
-# Verify account data
-pnpm run verify:accountPositions
-pnpm run verify:accountVaultBalances
-
-# Run tests
-pnpm run test
-
-# Deploy hotfix (see hotfix/README.md for details)
-pnpm run deploy:hotfix <hotfix-config.json>
-```
-
-## Deployment Guide
-
-### Important Notes
-
-- All deployments are handled through Goldsky
-- Test deployments are available with the `:test` suffix (e.g., `deploy:mainnet:test`)
-- Make sure you have the Goldsky CLI installed and configured with your credentials
-- You can generate a JSON file with all deployment URLs using `pnpm run generate:deployments`
-- For deploying hotfixes using grafting, see [Hotfix Deployment Guide](./hotfix/README.md)
-
-### Network-Specific Deployment
-
-#### Mainnet
-
-```bash
-# Production deployment
-pnpm run deploy:mainnet
-
-# Test deployment
-pnpm run deploy:mainnet:test
-```
-
-#### Other Networks
-
-```bash
-# Base
-pnpm run deploy:base
-
-# Arbitrum
-pnpm run deploy:arbitrum
-
-# Swell
-pnpm run deploy:swell
-
-# Sonic
-pnpm run deploy:sonic
-
-# Ink
-pnpm run deploy:ink
-
-# Berachain
-pnpm run deploy:berachain
-
-# Bob
-pnpm run deploy:bob
-
-# Unichain
-pnpm run deploy:unichain
-
-# Avalanche
-pnpm run deploy:avalanche
-
-# BSC
-pnpm run deploy:bsc
-```
+All deployments use the Goldsky CLI and the operator's credentials. Test and swap forks have their own subgraph names and do not select or publish a stable catalog record. [Catalog operations](catalog/README.md) describes the separately invoked publication commands.
 
 ### Deployments Information
 
-The `generate:deployments` command creates a `deployments.json` file that contains information about the latest deployed version of the subgraph for each supported network. This file is automatically updated after each deployment.
+The `generate:deployments` command creates a `deployments.json` file that contains information about the latest deployed version of the subgraph for each supported network. Run the command explicitly to refresh this local inventory. It does not publish the endpoint catalog.
 
 #### File Structure
 
@@ -215,10 +106,10 @@ The `generate:deployments` command creates a `deployments.json` file that contai
 #### Usage
 
 - The file is used by verification scripts to get the correct subgraph URL for each network
-- It's automatically updated after each deployment
-- It serves as a single source of truth for deployment information
+- Refresh it explicitly with `pnpm run generate:deployments`
+- It is a local inventory for verification scripts; it does not establish operator promotion
 - Only keeps the latest version for each network
-- Versions are properly sorted (major.minor.patch)
+- Its selection compares three version components; use the exact-release catalog tooling for hotfix publication
 
 ### Verification
 
@@ -234,13 +125,6 @@ pnpm run verify:accountVaultBalances
 
 ## Development
 
-### TypeScript Configuration
-
-The project uses separate TypeScript configurations:
-
-- Main configuration (`tsconfig.json`): For the core subgraph code
-- Scripts configuration (`tsconfig.scripts.json`): For development and utility scripts
-
 ### Testing
 
 ```bash
@@ -250,9 +134,9 @@ pnpm run test
 
 ## Troubleshooting
 
-- If you encounter permission issues with scripts, run:
-  ```bash
-  chmod +x scripts/abisAddressesSync.sh
-  ```
 - For deployment issues, check your Goldsky CLI configuration and credentials
 - Make sure you have the correct CLI tools installed and configured
+
+### Published endpoint catalog
+
+To populate the catalog from deployed Simple releases, follow [Publish existing production deployments](catalog/README.md#publish-existing-production-deployments). The explicit import command discovers and validates deployed releases without build receipts or IPFS access and preserves existing Goldsky deployments and tags. Imported records omit unverified build provenance; artifact-verified publication remains available separately. See [catalog operations](catalog/README.md) for the opt-in v1 contract, consumer checks, and the separate deployment/promotion flow for new releases.
