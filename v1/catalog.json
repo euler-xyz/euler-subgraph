@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "revision": "31fe8c01e19e0fcc9f737a068417b11d31b868058e1a852f0a29566c5197075f",
+  "publishedAt": "2026-10-27T11:52:54.941Z",
+  "deployments": [
+    {
+      "chainId": 1,
+      "family": "euler-simple",
+      "channel": "stable",
+      "status": "active",
+      "version": "1.0.2",
+      "endpoint": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-simple-mainnet/1.0.2/gn",
+      "deploymentId": "QmarAreSkQbcWfUbKJW2EJ1N3XyAGxzHVnzG85F8B3ZmSe",
+      "capabilities": [
+        "account-vault-discovery",
+        "vault-factory-lookup"
+      ]
+    }
+  ]
+}
