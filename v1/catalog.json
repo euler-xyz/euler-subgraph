@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "revision": "da3d50e0251d7b341709a7163c8409ba78fc16d5a1f410556399b434388444c7",
-  "publishedAt": "2026-10-27T11:53:07.310Z",
+  "revision": "31153964b0865392665151743ebfcd7ca25968f628a3ddd8bf34c26f4d525b82",
+  "publishedAt": "2026-10-27T11:53:09.502Z",
   "deployments": [
     {
       "chainId": 1,
@@ -76,6 +76,19 @@
       "version": "1.0.1",
       "endpoint": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-simple-bsc/1.0.1/gn",
       "deploymentId": "QmYrPoWBnJQYZbMtXKwxwamV4Pa45EjXVooAqyqhpx2i5q",
+      "capabilities": [
+        "account-vault-discovery",
+        "vault-factory-lookup"
+      ]
+    },
+    {
+      "chainId": 999,
+      "family": "euler-simple",
+      "channel": "stable",
+      "status": "active",
+      "version": "1.0.2",
+      "endpoint": "https://api.goldsky.com/api/public/project_cm4iagnemt1wp01xn4gh1agft/subgraphs/euler-simple-hyperevm/1.0.2/gn",
+      "deploymentId": "Qmd4PUQ6iAjNeg1Ud2PYL6tVwEdmfp96w9A5bf3De9U99p",
       "capabilities": [
         "account-vault-discovery",
         "vault-factory-lookup"
