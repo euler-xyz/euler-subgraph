@@ -29,13 +29,13 @@ test('inlined existing network configuration preserves selected addresses, netwo
     }
     assert.notEqual(config.securitizeFactory, zero)
   }
-  assert.equal(networks.polygon.securitizeFactory, undefined)
+  assert.equal(networks.gnosis.securitizeFactory, undefined)
   assert.equal(networks.morph.securitizeFactory, undefined)
 })
 
 test('generic commands support configured networks and a newly added key without package scripts', () => {
   const configured = { ...networks, newchain: { ...networks.base, chainId: 12345, network: 'new-chain' } }
-  for (const network of ['mainnet', 'polygon', 'morph', 'newchain']) {
+  for (const network of ['mainnet', 'gnosis', 'morph', 'newchain']) {
     for (const command of ['prepare', 'build', 'deploy']) {
       for (const fork of command === 'deploy' ? [undefined, 'test', 'swap'] : [undefined]) {
         const calls = []
@@ -53,7 +53,7 @@ test('generic commands support configured networks and a newly added key without
 test('network commands reject missing, unknown, shell-like and excess arguments before any tool invocation', () => {
   const invalid = [[], ['unknown', 'mainnet'], ['deploy', 'mainnet', 'test', 'extra'], ['build', 'mainnet', 'test']]
   for (const command of ['prepare', 'build', 'deploy']) {
-    for (const network of [undefined, 'missing', 'constructor', '__proto__', '../mainnet', 'mainnet;touch /tmp/sentinel']) {
+    for (const network of [undefined, 'missing', 'polygon', 'constructor', '__proto__', '../mainnet', 'mainnet;touch /tmp/sentinel']) {
       invalid.push([command, ...(network === undefined ? [] : [network])])
     }
     invalid.push([command, 'mainnet', '--dry-run'], [command, 'mainnet', '--unexpected'])
