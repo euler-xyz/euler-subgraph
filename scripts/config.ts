@@ -158,13 +158,6 @@ export const networks = {
         eulerEarnFactory: '0x4A6727aA2d1979C0366751c7a81615500f0186E4',
         startBlock: 5080000,
     },
-    polygon: {
-        chainId: 137,
-        network: 'matic',
-        eVaultFactory: '0xB1771a13e2a13fCafA89B00335915E732B9466b7',
-        eulerEarnFactory: '0x0000000000000000000000000000000000000000',
-        startBlock: 86932985,
-    },
     sepolia: {
         chainId: 11155111,
         network: 'sepolia',
