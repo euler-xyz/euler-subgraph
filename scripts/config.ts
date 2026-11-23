@@ -165,6 +165,13 @@ export const networks = {
         eulerEarnFactory: '0x7fe7Bf375e43564acc90BE17bCEca1905337018d',
         startBlock: 9000000,
     },
+    arc: {
+        chainId: 5042,
+        network: 'arc-mainnet',
+        eVaultFactory: '0x37079FE02d6Ae8926C50CA2712144f817Df91747',
+        eulerEarnFactory: '0x49A462C31D19F97E1346aa7240F10dD63598b299',
+        startBlock: 32727546,
+    }
 }
 
 export type Network = keyof typeof networks
